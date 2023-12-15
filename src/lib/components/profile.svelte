@@ -72,7 +72,9 @@
     <div class="arrow-up"></div>
     <div class="menu" id="menu" style="--state: {state}; --height: {height}" on:mouseleave={fold}>
         <ul>
-            <a href="http:\\sejm.gov.pl" class="menu0">SEJM</a>
+            <li>
+                <a href="http:\\sejm.gov.pl" class="menu0">SEJM</a>
+            </li>
         </ul>
     </div>
 </div>
@@ -127,7 +129,7 @@
         text-align: center;
     }
 
-    .menu li {
+    .menu ul {
         list-style: none;
     }
 
