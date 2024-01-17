@@ -5,6 +5,12 @@
     // Actual height of menu
     let height = '0px'
 
+    // Menu elements
+    let list = [
+        {data: 'settings.svg', text: 'Settings', display: 'none', opacity: '0%'},
+        {data: 'logout.svg', text: 'Logout', display: 'none', opacity: '0%'},
+    ]
+
     // Function which is unfolding user menu
     function unfold()
     {
@@ -18,19 +24,50 @@
         changer(0, 1, 5, false)
     }
 
+
+    // Making menu element visible
+    function addElement(id, way)
+    {
+        if (way == 1)
+        {
+            list[id]['display'] = 'block' 
+            let i = 0
+            var intervalStart = setInterval (() => {
+                if (list[id]['opacity'] != '100%' && list[id]['display'] == 'block')
+                {
+                    i = i + 5
+                    list[id]['opacity'] = `${i}%`
+                }
+                else 
+                {
+                    clearInterval(intervalStart)
+                    return 0
+                }
+            }, 10)
+        }
+    }
+
     // Function which is dynamicly changing state of menu
     function changer (expected, interval, howMuchToAdd, whichWay)
     {
         if (whichWay)
         {
             const intervalStart = setInterval(() => {
-                if (height.substring(0, height.length - 2) > expected || height.substring(0, height.length - 2) == expected)
+                if (height.substring(0, height.length - 2) >= expected)
                 {
                     clearInterval(intervalStart)
                     return 0
                 }
                 height = height.substring(0, height.length - 2)
                 height = parseInt(height) + howMuchToAdd
+                if (parseInt(height) == 125)
+                {
+                    addElement(0, 1)
+                }
+                if (parseInt(height) == 150)
+                {
+                    addElement(1, 1)
+                }
                 height = String(height) + 'px'
             }, interval)
         }
@@ -46,6 +83,11 @@
                 if (height.substring(0, height.length - 2) <= expected)
                 {
                     clearInterval(intervalStart)
+                }
+                for (let i = 0; i < 2; i++)
+                {
+                    list[i]['display'] = 'none'
+                    list[i]['opacity'] = '0%'
                 }
                 height = height.substring(0, height.length - 2)
                 height = parseInt(height) - howMuchToAdd
@@ -72,9 +114,15 @@
     <div class="arrow-up"></div>
     <div class="menu" id="menu" style="--state: {state}; --height: {height}" on:mouseleave={fold}>
         <ul>
-            <li>
-                <a href="http:\\sejm.gov.pl" class="menu0">SEJM</a>
-            </li>
+            {#each list as item}
+                <li style="display: {item['display']}; opacity: {item['opacity']}">
+                    <button>
+                        <object data={item['data']} title="{item['data']}" width="25" height="25"></object>
+                        <!-- svelte-ignore a11y-missing-attribute -->
+                        <a>{item['text']}</a>
+                    </button>
+                </li>
+            {/each}
         </ul>
     </div>
 </div>
@@ -131,6 +179,47 @@
 
     .menu ul {
         list-style: none;
+    }
+
+    .menu ul li {
+        text-align: center;
+        padding: 10px;
+        position: relative;
+        bottom: 0;
+        left: 15%;
+        right: 0;
+        top: 0;
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-left: auto;
+        margin-right: auto;
+        top: 80px
+    }
+
+    .menu ul li button {
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        width: 90px;
+        height: 37px;
+
+        background: none;
+        border: none;
+        position: relative;
+        z-index: 10;
+
+        background: var(--white);
+        
+        transition: background 0.3s ease;
+
+        border: solid 2px var(--2);
+        border-radius: 10px;
+    }
+
+    .menu ul li button a {
+        margin-left: 10px;
     }
 
     .profile {
