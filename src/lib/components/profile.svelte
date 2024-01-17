@@ -7,15 +7,27 @@
 
     // Menu elements
     let list = [
-        {data: 'settings.svg', text: 'Settings', display: 'none', opacity: '0%'},
-        {data: 'logout.svg', text: 'Logout', display: 'none', opacity: '0%'},
+        {data0: 'M12.296 9.015a3 3 0 1 0-.59 5.97 3 3 0 0 0 .59-5.97v0ZM19.518 12a7.238 7.238 0 0 1-.072.975l2.12 1.662a.507.507 0 0 1 .114.644l-2.005 3.469a.507.507 0 0 1-.615.215l-2.105-.847a.753.753 0 0 0-.711.082 7.703 7.703 0 0 1-1.01.588.747.747 0 0 0-.413.569l-.316 2.244a.519.519 0 0 1-.5.43h-4.01a.52.52 0 0 1-.501-.415l-.315-2.242a.753.753 0 0 0-.422-.573 7.278 7.278 0 0 1-1.006-.59.75.75 0 0 0-.708-.08l-2.105.848a.507.507 0 0 1-.616-.215L2.32 15.295a.506.506 0 0 1 .114-.644l1.792-1.406a.752.752 0 0 0 .28-.66 6.392 6.392 0 0 1 0-1.165.75.75 0 0 0-.284-.654L2.431 9.36a.507.507 0 0 1-.111-.641L4.325 5.25a.507.507 0 0 1 .616-.215l2.105.847a.755.755 0 0 0 .71-.082 7.71 7.71 0 0 1 1.01-.587.747.747 0 0 0 .414-.57L9.495 2.4a.52.52 0 0 1 .5-.43h4.01a.52.52 0 0 1 .502.416l.315 2.241a.753.753 0 0 0 .421.573c.351.17.687.366 1.006.59a.75.75 0 0 0 .709.08l2.104-.848a.507.507 0 0 1 .616.215l2.005 3.469a.506.506 0 0 1-.115.644l-1.791 1.406a.752.752 0 0 0-.284.66c.016.195.026.39.026.585Z', 
+        text: 'Settings', display: 'none', opacity: '0%', id: 0},
+
+        {data0: 'M14.25 15.75v1.875a1.875 1.875 0 0 1-1.875 1.875h-7.5A1.875 1.875 0 0 1 3 17.625V6.375A1.875 1.875 0 0 1 4.875 4.5H12c1.036 0 2.25.84 2.25 1.875V8.25', 
+        data1: 'M17.25 15.75 21 12l-3.75-3.75', 
+        data2: 'M8.25 12h12', 
+        text: 'Logout', display: 'none', opacity: '0%', id: 1},
     ]
 
     // Function which is unfolding user menu
     function unfold()
     {
-        state = 'block'
-        changer(200, 1, 5, true)
+        if (state == 'block') 
+        {
+            changer(0, 1, 5, false)
+        }
+        else 
+        {
+            state = 'block'
+            changer(200, 1, 5, true)
+        }
     }
 
     // Funcion which is folding user menu
@@ -95,6 +107,15 @@
             }, interval)
         }
     }
+
+    // Changing colour of the svg element on hover
+    function svgChanger(id)
+    {
+        let svgDoc = id.contentDocument
+        let svgElements = svgDoc.querySelectorAll('path, rect, circle, /* inne elementy SVG */')
+        
+    }
+
 </script>
 
 <div class="profile">
@@ -116,8 +137,9 @@
         <ul>
             {#each list as item}
                 <li style="display: {item['display']}; opacity: {item['opacity']}">
-                    <button>
-                        <object data={item['data']} title="{item['data']}" width="25" height="25"></object>
+                    <button on:mouseover={svgChanger(item['id'])}>
+                        <!-- <object data={item['data']} title="{item['data']}" width="25" height="25" id='{item['id']}'></object> -->
+                        <svg width="46" height="46" fill="none" stroke="#4d4b50" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="{item['data0']}"></path><path d="{item['data1']}"></path><path d="{item['data2']}"></path></svg>
                         <!-- svelte-ignore a11y-missing-attribute -->
                         <a>{item['text']}</a>
                     </button>
@@ -134,7 +156,7 @@
         border-left: 15px solid transparent;
         border-right: 15px solid transparent;
         
-        border-bottom: 15px solid var(--1);
+        border-bottom: 15px solid var(--3);
 
         position: absolute;
         top: -13px;
@@ -153,7 +175,7 @@
         height: var(--height);
 
         background: linear-gradient(
-            to bottom,
+            to top,
             var(--1),
             var(--3)
         );
@@ -212,14 +234,31 @@
 
         background: var(--white);
         
-        transition: background 0.3s ease;
+        transition: background 0.6s ease;
 
         border: solid 2px var(--2);
         border-radius: 10px;
+
+        font-family: 'Rubik', sans-serif;
+        font-weight: bold;
+    }
+
+    .menu ul li button:hover {
+        background: var(--2);
+    }
+
+    .menu ul li button:hover a {
+        color: var(--white);
+    }
+
+    .menu ul li button:hover svg {
+        stroke: var(--white);
     }
 
     .menu ul li button a {
         margin-left: 10px;
+        margin-right: 4px;
+        color: var(--grey);
     }
 
     .profile {
