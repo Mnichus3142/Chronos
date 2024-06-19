@@ -1,12 +1,25 @@
 <script>
     import Profile from '$lib/components/profile.svelte'
+    import { onMount } from 'svelte'
+    import {page} from '$app/stores'
+
+    let isOnCorrectPage = false
+
+    onMount(() => {
+        if ($page.url.pathname.substr($page.url.pathname.lastIndexOf('/')) != '/')
+        {
+            isOnCorrectPage = true; 
+        }
+    })
 </script>
 
 <div class='block'>
     <p>Time menager</p>
 </div>
 
-<Profile></Profile>
+{#if isOnCorrectPage}
+  <Profile></Profile>
+{/if}
 
 <style>
     .block {
@@ -27,6 +40,8 @@
 
         overflow-y: hidden;
         overflow-x: hidden;
+
+        position: static;
     }
 
     p {

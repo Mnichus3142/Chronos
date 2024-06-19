@@ -14,5 +14,8 @@
 		"svelte": "^4.2.7",
 		"vite": "^4.5.1"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"svelte-fullscreen": "^2.0.0"
+	}
 }
