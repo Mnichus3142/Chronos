@@ -112,8 +112,6 @@
     function svgChanger(id)
     {
         let svgDoc = id.contentDocument
-        let svgElements = svgDoc.querySelectorAll('path, rect, circle, /* inne elementy SVG */')
-        
     }
 
 </script>

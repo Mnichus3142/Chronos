@@ -1,11 +1,23 @@
 <script>
     import Banner from '$lib/components/banner.svelte'
     import { onMount, onDestroy } from 'svelte'
+    import {clickOutside} from '$lib/functions/clickOutside.js';
 
     let width
     let slide = "0px"
     let element
     let resizeObserver
+
+    let username = ""
+    let password = ""
+
+    let usrLabel = "40px"
+    let passLabel = "40px"
+
+    let underlineColor = "#14A684"
+
+    let usrUnderline = "grey"
+    let passUnderline = "grey"
 
     onMount(() => {
         resizeObserver = new ResizeObserver(dispatchResize)
@@ -36,12 +48,36 @@
         }
     }
 
-    function dispatchResize (event) 
+    function dispatchResize () 
     {
         if (slide != '0px')
         {
             slide = "-" + width + "px"
         }
+    }
+
+    function moveLabel (field)
+    {
+        if (field == "usr")
+        {
+            usrLabel = "0px"
+            usrUnderline = underlineColor
+        }
+
+        if (field == "pass")
+        {
+            passLabel = "0px"
+            passUnderline = underlineColor
+        }
+    }
+
+    function resetLabels ()
+    {
+        usrLabel = "40px"
+        usrUnderline = "grey"
+        
+        passLabel = "40px"
+        passUnderline = "grey"
     }
 </script>
 
@@ -51,14 +87,30 @@
         <div class="formBackground">
             <div class="container login">
                 <form class="form">
-                    <h3>Login</h3>
+                    <p>Log in</p>
+
+                    <label for="username" style="--labelPosition: {usrLabel}">
+                        <!-- svelte-ignore a11y-missing-attribute -->
+                        <object data="/svg/user.svg"></object>
+                        Username
+                    </label>
+                    <input type="text" style="--underlineColor: {usrUnderline}" bind:value={username} id="username" on:click={() => moveLabel("usr")} use:clickOutside on:click_outside={resetLabels}>
+
+                    <label for="password" style="--labelPosition: {passLabel}">
+                        <!-- svelte-ignore a11y-missing-attribute -->
+                        <object data="/svg/lock.svg"></object>
+                        Password
+                    </label>
+                    <input type="password" style="--underlineColor: {passUnderline}" bind:value={password} id="password"on:click={() => moveLabel("pass")} use:clickOutside on:click_outside={resetLabels}>
                 </form>
             </div>
-            <div class="container register" id="register">
+
+            <div class="container register">
                 <form class="form">
                     
                 </form>
             </div>
+
             <div class="curtain" style="--slide: {slide}" bind:clientWidth={width} bind:this={element}>
                 <button on:click={slider}>
                     Naduś
@@ -83,13 +135,61 @@
     .form
     {
         font-family: 'Rubik', sans-serif;
-        font-size: 30px;
+        font-size: 40px;
+
+        color: #0D1B2A;
 
         display: flex;
         justify-content: center;
-        place-items: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 0px;
 
         height: 60vh;
+        min-height: 600px;
+    }
+
+    .form p
+    {
+        font-weight: bolder;
+        margin-bottom: 40px;
+    }
+
+    .form label
+    {
+        font-size: 25px;
+        margin: 10px;
+
+        position: relative;
+        top: var(--labelPosition);
+        left: -80px;
+
+        transition: all 0.1s;
+    }
+
+    .form label object
+    {
+        fill: #0D1B2A;
+        position: relative;
+        top: 5px;
+        height: 30px;
+    }
+
+    .form input
+    {
+        border: none;
+        height: 35px;
+        width: 300px;
+
+        border-bottom: 2px solid var(--underlineColor);
+
+        font-family: 'Rubik', sans-serif;
+        font-size: 20px;
+    }
+
+    .form input:focus
+    {
+        outline: none;
     }
 
     .content {
