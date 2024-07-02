@@ -8,6 +8,9 @@
 
     let load = false
 
+    let alert = false
+    let alertMessage = ""
+
     let width
     let slide = "0px"
     let element
@@ -165,15 +168,78 @@
             passRegisterConfirmUnderline = "grey"
         }
     }
+
+    function error(message)
+    {
+        alert = true
+        alertMessage = message
+    }
+
+    function resetError ()
+    {
+        alert = false
+        alertMessage = ""
+    }
+
+    async function sha256(message) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(message);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+        return hashHex;
+    }
+
+    const handleLogin = async (event) =>
+    {
+        event.preventDefault()
+
+        if (username != "" && password != "")
+        {
+            const hashed = await sha256(password)
+
+            const formData = {
+                username,
+                hashed
+            }
+
+            try {
+                const response = await fetch('/api/login/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+            } 
+            
+            catch (error) {
+                console.error('Error:', error)
+            }
+
+            return 0
+        }
+
+        error("Username and/or password is empty")
+    }
 </script>
 
 <body>
     {#if load}
         <Banner></Banner>
+        {#if alert}
+            <div class="alert"  use:clickOutside on:click_outside={resetError}>
+                {alertMessage}
+                <br>
+                <p style="font-size: 20px; color: #FFEDCB; margin-top: 10px;">
+                    Click outside to close
+                </p>
+            </div>
+        {/if}
         <div class="content">
             <div class="formBackground">
                 <div class="container login">
-                    <form class="form" style="--visibilityLogin: {visibilityLogin}" method="post" action="?/login">
+                    <form class="form" style="--visibilityLogin: {visibilityLogin}">
                         <p>User Login</p>
 
                         <label for="username" style="--labelPosition: {usrLabel}">
@@ -195,7 +261,7 @@
                         </label>
                         <input type="password" style="--underlineColor: {passUnderline}" bind:value={password} id="password" on:click={() => moveLabel("pass")} use:clickOutside on:click_outside={resetLabels} name="password">
 
-                        <button style="--underlineColor: {underlineColor}" type="submit">
+                        <button style="--underlineColor: {underlineColor}" on:click={handleLogin}>
                             <div>Submit</div>
                         </button>
 
@@ -208,7 +274,7 @@
                 </div>
 
                 <div class="container register">
-                    <form class="form" style="--visibilityRegister: {visibilityRegister}" method="post">
+                    <form class="form" style="--visibilityRegister: {visibilityRegister}">
                         <p>Register</p>
 
                         <label for="username" style="--labelPosition: {usrLabel}">
@@ -218,7 +284,7 @@
                             </svg>
                             Username
                         </label>
-                        <input type="text" style="--underlineColor: {usrUnderline}" bind:value={username} id="username" on:click={() => moveLabel("usr")} use:clickOutside on:click_outside={resetLabels}>
+                        <input type="text" style="--underlineColor: {usrUnderline}" bind:value={username} id="username" on:click={() => moveLabel("usr")} use:clickOutside on:click_outside={resetLabels} name="username">
 
                         <label for="passwordRegister" style="--labelPosition: {passLabelRegister}">
                             <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="left: -3px;">
@@ -228,7 +294,7 @@
                             </svg>
                             Password
                         </label>
-                        <input type="password" style="--underlineColor: {passRegisterUnderline}" bind:value={passwordRegister} id="passwordRegister" on:click={() => moveLabel("passRegister")} use:clickOutside on:click_outside={resetLabels}>
+                        <input type="password" style="--underlineColor: {passRegisterUnderline}" bind:value={passwordRegister} id="passwordRegister" on:click={() => moveLabel("passRegister")} use:clickOutside on:click_outside={resetLabels} name="password">
 
                         <label for="passwordRegisterConfirm" style="--labelPosition: {passLabelRegisterConfirm}; left: -32px;">
                             <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="left: -3px;">
@@ -238,7 +304,7 @@
                             </svg>
                             Confirm password
                         </label>
-                        <input type="password" style="--underlineColor: {passRegisterConfirmUnderline}" bind:value={passwordRegisterConfirm} id="passwordRegisterConfirm" on:click={() => moveLabel("passRegisterConfirm")} use:clickOutside on:click_outside={resetLabels}>
+                        <input type="password" style="--underlineColor: {passRegisterConfirmUnderline}" bind:value={passwordRegisterConfirm} id="passwordRegisterConfirm" on:click={() => moveLabel("passRegisterConfirm")} use:clickOutside on:click_outside={resetLabels} name="passwordConfirmation">
 
                         <button style="--underlineColor: {underlineColor}">
                             <div>Submit</div>
@@ -285,14 +351,39 @@
 
     .alert
     {
-        background-color: red;
-
-        margin-top: 50px;
-        margin-bottom: 0px;
-
+        font-family: 'Rubik', sans-serif;
         font-size: 30px;
 
         text-align: center;
+
+        border-radius: 10px;
+        background: linear-gradient(
+            to bottom,
+            var(--3),
+            var(--2)
+        );
+
+        color: white;
+
+        width: 300px;
+        height: 200px;
+        padding: 10px;
+
+        position: absolute;
+        margin: auto;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        z-index: 5;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
+        animation: alert 1s;
     }
 
     .form
@@ -442,14 +533,6 @@
         transition: all 0.1s;
     }
 
-    .form button object
-    {
-        fill: #0D1B2A;
-        position: relative;
-        top: 7px;
-        height: 30px;
-    }
-
     .content {
         background-color: var(--white);
         width: 100vw;
@@ -588,5 +671,33 @@
     .register form
     {
         visibility: var(--visibilityRegister);
+    }
+
+    @keyframes alert 
+    {
+        0%
+        {
+            transform: scale(100%);
+        }
+
+        20%
+        {
+            transform: scale(120%);
+        }
+
+        40% 
+        {
+            transform: scale(100%);
+        }
+        
+        60%
+        {
+            transform: scale(120%);
+        }
+
+        80%
+        {
+            transform: scale(100%);
+        }
     }
 </style>
