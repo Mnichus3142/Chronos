@@ -3,6 +3,11 @@
     import { onMount, onDestroy } from 'svelte'
     import {clickOutside} from '$lib/functions/clickOutside.js';
 
+    /** @type {import('./$types').ActionData} */
+	export let form;
+
+    let load = false
+
     let width
     let slide = "0px"
     let element
@@ -18,7 +23,7 @@
     let passLabelRegister = "40px"
     let passLabelRegisterConfirm = "40px"
 
-    let underlineColor = "#14A684"
+    const underlineColor = "#14A684"
 
     let usrUnderline = "grey"
     let passUnderline = "grey"
@@ -31,6 +36,16 @@
     let visibilityRegister = "hidden"
 
     onMount(() => {
+        if (document.readyState === 'complete') 
+        {
+            initPage()
+        } 
+
+        else 
+        {
+            window.addEventListener('load', initPage)
+        }
+        
         resizeObserver = new ResizeObserver(dispatchResize)
 
         if (element) 
@@ -64,6 +79,10 @@
     $: if (passwordRegisterConfirm)
     {
         moveLabel("passRegisterConfirm")
+    }
+
+    function initPage() {
+      load = true
     }
 
     function slider()
@@ -149,81 +168,102 @@
 </script>
 
 <body>
-    <Banner></Banner>
-    <div class="content">
-        <div class="formBackground">
-            <div class="container login">
-                <form class="form" style="--visibilityLogin: {visibilityLogin}">
-                    <p>User Login</p>
+    {#if load}
+        <Banner></Banner>
+        <div class="content">
+            <div class="formBackground">
+                <div class="container login">
+                    <form class="form" style="--visibilityLogin: {visibilityLogin}" method="post" action="?/login">
+                        <p>User Login</p>
 
-                    <label for="username" style="--labelPosition: {usrLabel}">
-                        <!-- svelte-ignore a11y-missing-attribute -->
-                        <object data="/svg/user.svg"></object>
-                        Username
-                    </label>
-                    <input type="text" style="--underlineColor: {usrUnderline}" bind:value={username} id="username" on:click={() => moveLabel("usr")} use:clickOutside on:click_outside={resetLabels}>
+                        <label for="username" style="--labelPosition: {usrLabel}">
+                            <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path>
+                                <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
+                            </svg>
+                            Username
+                        </label>
+                        <input type="text" style="--underlineColor: {usrUnderline}" bind:value={username} id="username" on:click={() => moveLabel("usr")} use:clickOutside on:click_outside={resetLabels} name="username">
 
-                    <label for="password" style="--labelPosition: {passLabel}">
-                        <!-- svelte-ignore a11y-missing-attribute -->
-                        <object data="/svg/lock.svg"></object>
-                        Password
-                    </label>
-                    <input type="password" style="--underlineColor: {passUnderline}" bind:value={password} id="password" on:click={() => moveLabel("pass")} use:clickOutside on:click_outside={resetLabels}>
+                        <label for="password" style="--labelPosition: {passLabel}">
+                            <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="left: -3px;">
+                                <path d="M17 11H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2Z"></path>
+                                <path d="M12 17a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"></path>
+                                <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+                            </svg>
+                            Password
+                        </label>
+                        <input type="password" style="--underlineColor: {passUnderline}" bind:value={password} id="password" on:click={() => moveLabel("pass")} use:clickOutside on:click_outside={resetLabels} name="password">
 
-                    <button style="--underlineColor: {underlineColor}">
-                        <div>Submit</div>
-                    </button>
-                </form>
-            </div>
+                        <button style="--underlineColor: {underlineColor}" type="submit">
+                            <div>Submit</div>
+                        </button>
 
-            <div class="container register">
-                <form class="form" style="--visibilityRegister: {visibilityRegister}">
-                    <p>Register</p>
+                        {#if form?.alert}
+                            <div class="alert">
+                                {form?.message}
+                            </div>
+                        {/if}
+                    </form>
+                </div>
 
-                    <label for="username" style="--labelPosition: {usrLabel}">
-                        <!-- svelte-ignore a11y-missing-attribute -->
-                        <object data="/svg/user.svg"></object>
-                        Username
-                    </label>
-                    <input type="text" style="--underlineColor: {usrUnderline}" bind:value={username} id="username" on:click={() => moveLabel("usr")} use:clickOutside on:click_outside={resetLabels}>
+                <div class="container register">
+                    <form class="form" style="--visibilityRegister: {visibilityRegister}" method="post">
+                        <p>Register</p>
 
-                    <label for="passwordRegister" style="--labelPosition: {passLabelRegister}">
-                        <!-- svelte-ignore a11y-missing-attribute -->
-                        <object data="/svg/lock.svg"></object>
-                        Password
-                    </label>
-                    <input type="password" style="--underlineColor: {passRegisterUnderline}" bind:value={passwordRegister} id="passwordRegister" on:click={() => moveLabel("passRegister")} use:clickOutside on:click_outside={resetLabels}>
+                        <label for="username" style="--labelPosition: {usrLabel}">
+                            <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path>
+                                <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
+                            </svg>
+                            Username
+                        </label>
+                        <input type="text" style="--underlineColor: {usrUnderline}" bind:value={username} id="username" on:click={() => moveLabel("usr")} use:clickOutside on:click_outside={resetLabels}>
 
-                    <label for="passwordRegisterConfirm" style="--labelPosition: {passLabelRegisterConfirm}; left: -32px;">
-                        <!-- svelte-ignore a11y-missing-attribute -->
-                        <object data="/svg/lock.svg"></object>
-                        Confirm password
-                    </label>
-                    <input type="password" style="--underlineColor: {passRegisterConfirmUnderline}" bind:value={passwordRegisterConfirm} id="passwordRegisterConfirm" on:click={() => moveLabel("passRegisterConfirm")} use:clickOutside on:click_outside={resetLabels}>
+                        <label for="passwordRegister" style="--labelPosition: {passLabelRegister}">
+                            <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="left: -3px;">
+                                <path d="M17 11H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2Z"></path>
+                                <path d="M12 17a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"></path>
+                                <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+                            </svg>
+                            Password
+                        </label>
+                        <input type="password" style="--underlineColor: {passRegisterUnderline}" bind:value={passwordRegister} id="passwordRegister" on:click={() => moveLabel("passRegister")} use:clickOutside on:click_outside={resetLabels}>
 
-                    <button style="--underlineColor: {underlineColor}">
-                        <div>Submit</div>
-                    </button>
-                </form>
-            </div>
+                        <label for="passwordRegisterConfirm" style="--labelPosition: {passLabelRegisterConfirm}; left: -32px;">
+                            <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="left: -3px;">
+                                <path d="M17 11H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2Z"></path>
+                                <path d="M12 17a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"></path>
+                                <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+                            </svg>
+                            Confirm password
+                        </label>
+                        <input type="password" style="--underlineColor: {passRegisterConfirmUnderline}" bind:value={passwordRegisterConfirm} id="passwordRegisterConfirm" on:click={() => moveLabel("passRegisterConfirm")} use:clickOutside on:click_outside={resetLabels}>
 
-            <div class="curtain" style="--slide: {slide}" bind:clientWidth={width} bind:this={element}>
-                {#if state == "login"}
-                    <p>Do you want to register?</p>
-                    <p class="paragraph">You will get access to many interesting features, and the registration process will only take a moment. Click the button below</p>
-                    <button on:click={slider} style="--underlineColor: {underlineColor}">
-                        I want to register!
-                    </button>
-                {:else}
-                    <p>Or maybe you already have an account?</p>
-                    <p class="paragraph">Click the button below to go to login page, and get access to your acconunt in just a while</p>
-                    <button on:click={slider} style="--underlineColor: {underlineColor}" class="loginEncourager">
-                        I want to log in!
-                    </button>
-                {/if}
+                        <button style="--underlineColor: {underlineColor}">
+                            <div>Submit</div>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="curtain" style="--slide: {slide}" bind:clientWidth={width} bind:this={element}>
+                    {#if state == "login"}
+                        <p>Do you want to register?</p>
+                        <p class="paragraph">You will get access to many interesting features, and the registration process will only take a moment. Click the button below</p>
+                        <button on:click={slider} style="--underlineColor: {underlineColor}">
+                            I want to register!
+                        </button>
+                    {:else}
+                        <p>Or maybe you already have an account?</p>
+                        <p class="paragraph">Click the button below to go to login page, and get access to your acconunt in just a while</p>
+                        <button on:click={slider} style="--underlineColor: {underlineColor}" class="loginEncourager">
+                            I want to log in!
+                        </button>
+                    {/if}
+                </div>
             </div>
         </div>
-    </div>
+    {/if}
 </body>
 
 <style>
@@ -241,6 +281,18 @@
     .login form
     {
         visibility: var(--visibilityLogin);
+    }
+
+    .alert
+    {
+        background-color: red;
+
+        margin-top: 50px;
+        margin-bottom: 0px;
+
+        font-size: 30px;
+
+        text-align: center;
     }
 
     .form
@@ -280,9 +332,9 @@
         transition: all 0.1s;
     }
 
-    .form label object
+    .form label svg
     {
-        fill: var(--underlineColor);
+        color: var(--underlineColor);
         position: relative;
         top: 5px;
         height: 30px;
