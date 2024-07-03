@@ -1,16 +1,33 @@
-import { error, json } from '@sveltejs/kit';
+import { error, json } from '@sveltejs/kit'
+import { Client } from 'pg'
 
 export const POST = async ({ request }) => {
     try {
-        const { username, hashed } = await request.json()
+        const { user, hashed } = await request.json()
 
-        console.log(username)
-        console.log(hashed)
+        const client = new Client({
+            user: 'postgres',
+            host: '127.0.0.1',
+            database: 'timemenager',
+            password: 'zaq1@WSX',
+            port: 5432
+        })
 
-        return json({ message: 'All good' }, { status: 200 })
+        await client.connect()
+
+        const res = await client.query(`SELECT * FROM users WHERE username = '${user}'`)
+
+        if (res.rows.length != 0)
+        {
+            return json({ message: 'User already exists' }, { status: 202 })
+        }
+
+        client.query(`INSERT INTO users (username, password) VALUES ('${user}', '${hashed}')`)
+
+        return json({ message: 'User added to database, you can now log in' }, { status: 200 })
     } 
 
     catch (error) {
-        return json({ message: 'Error processing request' }, { status: 201 })
+        return json({ message: 'Error while inserting into database' }, { status: 201 })
     }
-};
+}

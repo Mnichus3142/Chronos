@@ -1,7 +1,7 @@
 <script>
     import Banner from '$lib/components/banner.svelte'
     import { onMount, onDestroy } from 'svelte'
-    import {clickOutside} from '$lib/functions/clickOutside.js';
+    import { clickOutside } from '$lib/functions/clickOutside.js'
 
     /** @type {import('./$types').ActionData} */
 	export let form;
@@ -197,9 +197,10 @@
         if (username != "" && password != "")
         {
             const hashed = await sha256(password)
+            const user = username.toLowerCase()
 
             const formData = {
-                username,
+                user,
                 hashed
             }
 
@@ -216,6 +217,55 @@
             catch (error) {
                 console.error('Error:', error)
             }
+
+            return 0
+        }
+
+        error("Username and/or password is empty")
+    }
+
+    const handleRegister = async (event) =>
+    {
+        if (username != "" && passwordRegister != "" && passwordRegisterConfirm != "")
+        {
+            if (passwordRegister === passwordRegisterConfirm)
+            {
+                const hashed = await sha256(passwordRegister)
+                const user = username.toLowerCase()
+
+                const formData = {
+                    user,
+                    hashed
+                }
+
+                try {
+                    const response = await fetch('/api/register/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    })
+
+                    if (response.ok) 
+                    {
+                        const responseData = await response.json()
+                        error(responseData.message)
+                    } 
+                    else 
+                    {
+                        error(`Error: ${response.status} - ${response.message}`)
+                    }
+                } 
+                
+                catch (error) {
+                    console.error('Error:', error)
+                }
+
+                return 0
+            }
+
+            error("Passwords do not match")
 
             return 0
         }
@@ -306,7 +356,7 @@
                         </label>
                         <input type="password" style="--underlineColor: {passRegisterConfirmUnderline}" bind:value={passwordRegisterConfirm} id="passwordRegisterConfirm" on:click={() => moveLabel("passRegisterConfirm")} use:clickOutside on:click_outside={resetLabels} name="passwordConfirmation">
 
-                        <button style="--underlineColor: {underlineColor}">
+                        <button style="--underlineColor: {underlineColor}" on:click={handleRegister}>
                             <div>Submit</div>
                         </button>
                     </form>

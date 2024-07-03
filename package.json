@@ -16,6 +16,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"pg": "^8.12.0",
 		"svelte-fullscreen": "^2.0.0"
 	}
 }
