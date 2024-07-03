@@ -67,21 +67,25 @@
     $: if (username)
     {
         moveLabel("usr")
+        username = username.split(' ').join('')
     }
 
     $: if (password)
     {
         moveLabel("pass")
+        password = password.split(' ').join('')
     }
 
     $: if (passwordRegister)
     {
         moveLabel("passRegister")
+        passwordRegister = passwordRegister.split(' ').join('')
     }
 
     $: if (passwordRegisterConfirm)
     {
         moveLabel("passRegisterConfirm")
+        passwordRegisterConfirm = passwordRegisterConfirm.split(' ').join('')
     }
 
     function initPage() {

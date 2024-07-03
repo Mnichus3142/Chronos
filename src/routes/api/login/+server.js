@@ -26,6 +26,6 @@ export const POST = async ({ request }) => {
     } 
 
     catch (error) {
-        return json({ message: 'Error processing request' }, { status: 201 })
+        return json({ message: 'Error processing request' }, { status: 203 })
     }
 }
