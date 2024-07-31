@@ -1,4 +1,4 @@
-<script>
+ <script>
     import Banner from '$lib/components/banner.svelte'
     import { onMount, onDestroy } from 'svelte'
     import { clickOutside } from '$lib/functions/clickOutside.js'
