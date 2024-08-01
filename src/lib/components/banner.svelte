@@ -1,5 +1,6 @@
 <script>
     import Profile from '$lib/components/profile.svelte'
+    import logo from '$lib/img/logo1.png'
     import { onMount } from 'svelte'
     import {page} from '$app/stores'
 
@@ -14,7 +15,9 @@
 </script>
 
 <div class='block'>
+    <img src="{logo}" alt="Logo" style="height: 60px">
     <p>Time menager</p>
+    <p class="motto">Your time is like gold to us</p>
 </div>
 
 {#if isOnCorrectPage}
@@ -47,10 +50,24 @@
     p {
         font-family: 'Rubik', sans-serif;
         
+        float: left;
 
         font-size: 130%;
-        position: relative;
-        top: 27%;
-        left: 20px;
+        position: absolute;
+        top: 15px;
+        left: 80px;
+    }
+
+    .motto {
+        top: 40px;
+
+        font-size: 15px;
+
+        font-family: "Playwrite HR Lijeva", cursive;
+        font-optical-sizing: auto;
+        font-weight: 200;
+        font-style: normal;
+
+        color: #e9c882;
     }
 </style>
