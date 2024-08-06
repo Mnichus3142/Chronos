@@ -2,6 +2,8 @@
     import Banner from '$lib/components/banner.svelte'
     import { onMount, onDestroy } from 'svelte'
     import { clickOutside } from '$lib/functions/clickOutside.js'
+    import { sha256 } from '$lib/functions/sha256.js'
+    import { validate } from '$lib/functions/passwordValidate.js'
 
     /** @type {import('./$types').ActionData} */
 	export let form;
@@ -179,19 +181,10 @@
         alertMessage = message
     }
 
-    function resetError ()
+    function resetError(message)
     {
         alert = false
         alertMessage = ""
-    }
-
-    async function sha256(message) {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(message);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
-        return hashHex;
     }
 
     const handleLogin = async (event) =>
@@ -216,6 +209,11 @@
                     },
                     body: JSON.stringify(formData)
                 })
+
+                if (response.ok)
+                {
+                    const responseData = await response.json()
+                }
             } 
             
             catch (error) {
@@ -234,54 +232,68 @@
         {
             if (passwordRegister === passwordRegisterConfirm)
             {
-                const hashed = await sha256(passwordRegister)
-                const user = username.toLowerCase()
+                const validator = validate(passwordRegister)
 
-                const formData = {
-                    user,
-                    hashed
-                }
+                if (validator == true)
+                {
+                    const hashed = await sha256(passwordRegister)
+                    const user = username.toLowerCase()
 
-                try {
-                    const response = await fetch('/api/register/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(formData)
-                    })
-
-                    if (response.ok) 
-                    {
-                        const responseData = await response.json()
-                        error(responseData.message)
-                    } 
-                    else 
-                    {
-                        error(`Error: ${response.status} - ${response.message}`)
+                    const formData = {
+                        user,
+                        hashed
                     }
-                } 
-                
-                catch (error) {
-                    console.error('Error:', error)
+
+                    try {
+                        const response = await fetch('/api/register/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(formData)
+                        })
+
+                        if (response.ok) 
+                        {
+                            const responseData = await response.json()
+                            error(responseData.message)
+                        } 
+                        else 
+                        {
+                            error(`Error: ${response.status} - ${response.message}`)
+                        }
+                    } 
+                    
+                    catch (error) {
+                        console.error('Error:', error)
+                    }
+
+                    return true
                 }
 
-                return 0
+                else
+                {
+                    error(validator)
+
+                    return false
+                }
             }
 
             error("Passwords do not match")
 
-            return 0
+            return false
         }
 
         error("Username and/or password is empty")
+
+        return false
     }
 </script>
 
 <body>
     {#if load}
         <Banner></Banner>
-        {#if alert}
+        <!-- {#if alert}
             <div class="alert"  use:clickOutside on:click_outside={resetError}>
                 {alertMessage}
                 <br>
@@ -289,7 +301,7 @@
                     Click outside to close
                 </p>
             </div>
-        {/if}
+        {/if} -->
         <div class="content">
             <div class="formBackground">
                 <div class="container login">
@@ -303,7 +315,7 @@
                             </svg>
                             Username
                         </label>
-                        <input type="text" style="--underlineColor: {usrUnderline}" bind:value={username} id="username" on:click={() => moveLabel("usr")} use:clickOutside on:click_outside={resetLabels} name="username">
+                        <input type="text" style="--underlineColor: {usrUnderline}" bind:value={username} id="username" on:click={() => moveLabel("usr")} use:clickOutside on:click_outside={resetLabels} name="username" on:click={resetError}>
 
                         <label for="password" style="--labelPosition: {passLabel}">
                             <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="left: -3px;">
@@ -313,17 +325,17 @@
                             </svg>
                             Password
                         </label>
-                        <input type="password" style="--underlineColor: {passUnderline}" bind:value={password} id="password" on:click={() => moveLabel("pass")} use:clickOutside on:click_outside={resetLabels} name="password">
+                        <input type="password" style="--underlineColor: {passUnderline}" bind:value={password} id="password" on:click={() => moveLabel("pass")} use:clickOutside on:click_outside={resetLabels} name="password" on:click={resetError}>
+
+                        {#if state == 'register' && alert == true}
+                            <p class="alert" style="">
+                                {alertMessage}
+                            </p>
+                        {/if}
 
                         <button style="--underlineColor: {underlineColor}" on:click={handleLogin}>
                             <div>Submit</div>
                         </button>
-
-                        {#if form?.alert}
-                            <div class="alert">
-                                {form?.message}
-                            </div>
-                        {/if}
                     </form>
                 </div>
 
@@ -338,7 +350,7 @@
                             </svg>
                             Username
                         </label>
-                        <input type="text" style="--underlineColor: {usrUnderline}" bind:value={username} id="username" on:click={() => moveLabel("usr")} use:clickOutside on:click_outside={resetLabels} name="username">
+                        <input type="text" style="--underlineColor: {usrUnderline}" bind:value={username} id="username" on:click={() => moveLabel("usr")} use:clickOutside on:click_outside={resetLabels} name="username" on:click={resetError}>
 
                         <label for="passwordRegister" style="--labelPosition: {passLabelRegister}">
                             <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="left: -3px;">
@@ -348,7 +360,7 @@
                             </svg>
                             Password
                         </label>
-                        <input type="password" style="--underlineColor: {passRegisterUnderline}" bind:value={passwordRegister} id="passwordRegister" on:click={() => moveLabel("passRegister")} use:clickOutside on:click_outside={resetLabels} name="password">
+                        <input type="password" style="--underlineColor: {passRegisterUnderline}" bind:value={passwordRegister} id="passwordRegister" on:click={() => moveLabel("passRegister")} use:clickOutside on:click_outside={resetLabels} name="password" on:click={resetError}>
 
                         <label for="passwordRegisterConfirm" style="--labelPosition: {passLabelRegisterConfirm}; left: -32px;">
                             <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="left: -3px;">
@@ -358,7 +370,13 @@
                             </svg>
                             Confirm password
                         </label>
-                        <input type="password" style="--underlineColor: {passRegisterConfirmUnderline}" bind:value={passwordRegisterConfirm} id="passwordRegisterConfirm" on:click={() => moveLabel("passRegisterConfirm")} use:clickOutside on:click_outside={resetLabels} name="passwordConfirmation">
+                        <input type="password" style="--underlineColor: {passRegisterConfirmUnderline}" bind:value={passwordRegisterConfirm} id="passwordRegisterConfirm" on:click={() => moveLabel("passRegisterConfirm")} use:clickOutside on:click_outside={resetLabels} name="passwordConfirmation" on:click={resetError}>
+
+                        {#if state == 'register' && alert == true}
+                            <p class="alert" style="">
+                                {alertMessage}
+                            </p>
+                        {/if}
 
                         <button style="--underlineColor: {underlineColor}" on:click={handleRegister}>
                             <div>Submit</div>
@@ -370,13 +388,13 @@
                     {#if state == "login"}
                         <p>Do you want to register?</p>
                         <p class="paragraph">You will get access to many interesting features, and the registration process will only take a moment. Click the button below</p>
-                        <button on:click={slider} style="--underlineColor: {underlineColor}">
+                        <button on:click={slider} style="--underlineColor: {underlineColor}" on:click={resetError}>
                             I want to register!
                         </button>
                     {:else}
                         <p>Or maybe you already have an account?</p>
                         <p class="paragraph">Click the button below to go to login page, and get access to your acconunt in just a while</p>
-                        <button on:click={slider} style="--underlineColor: {underlineColor}" class="loginEncourager">
+                        <button on:click={slider} style="--underlineColor: {underlineColor}" class="loginEncourager" on:click={resetError}>
                             I want to log in!
                         </button>
                     {/if}
@@ -406,38 +424,16 @@
     .alert
     {
         font-family: 'Rubik', sans-serif;
-        font-size: 30px;
+        font-size: 15px;
+
+        margin-top: 20px;
+        margin-bottom: -20px;
+
+        color: red;
 
         text-align: center;
 
-        border-radius: 10px;
-        background: linear-gradient(
-            to bottom,
-            var(--3),
-            var(--2)
-        );
-
-        color: white;
-
-        width: 300px;
-        height: 200px;
-        padding: 10px;
-
-        position: absolute;
-        margin: auto;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-
-        z-index: 5;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-
-        animation: alert 1s;
+        animation: alert 0.5s 1;
     }
 
     .form
@@ -455,12 +451,6 @@
 
         height: 60vh;
         min-height: 600px;
-    }
-
-    .form p
-    {
-        font-weight: bolder;
-        margin-bottom: 40px;
     }
 
     .form label
@@ -580,6 +570,7 @@
 
         font-size: 20px;
         margin: 10px;
+        margin-top: 8px;
 
         position: relative;
         top: var(--labelPosition);
@@ -734,22 +725,12 @@
             transform: scale(100%);
         }
 
-        20%
+        50%
         {
             transform: scale(120%);
         }
 
-        40% 
-        {
-            transform: scale(100%);
-        }
-        
-        60%
-        {
-            transform: scale(120%);
-        }
-
-        80%
+        100%
         {
             transform: scale(100%);
         }

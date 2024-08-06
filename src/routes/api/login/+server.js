@@ -19,7 +19,7 @@ export const POST = async ({ request }) => {
 
         if (res.rows[0]["password"] == hashed)
         {
-            //TODO Give a cookie
+            
         }
 
         return json({ message: 'All good' }, { status: 200 })

@@ -16,7 +16,7 @@
 
 <div class='block'>
     <img src="{logo}" alt="Logo" style="height: 60px">
-    <p>Time menager</p>
+    <p>Time Rush</p>
     <p class="motto">Your time is like gold to us</p>
 </div>
 
