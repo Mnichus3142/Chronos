@@ -1,6 +1,6 @@
 export function validate (password)
 {
-    if (password.length > 8)
+    if (password.length >= 8)
     {
         return true
     }

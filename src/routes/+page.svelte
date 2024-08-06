@@ -5,13 +5,15 @@
     import { sha256 } from '$lib/functions/sha256.js'
     import { validate } from '$lib/functions/passwordValidate.js'
 
-    /** @type {import('./$types').ActionData} */
-	export let form;
-
     let load = false
 
-    let alert = false
-    let alertMessage = ""
+    let alerts =
+    {
+        alertLogin: false,
+        alertRegister: false,
+        successRegister: false,
+        alertMessage: ""
+    }
 
     let width
     let slide = "0px"
@@ -175,16 +177,32 @@
         }
     }
 
-    function error(message)
+    function error(message, mode)
     {
-        alert = true
-        alertMessage = message
+        if (mode == 'login')
+        {
+            alerts.alertLogin = true
+        }
+        
+        else 
+        {
+            alerts.alertRegister = true
+        }
+
+        alerts.alertMessage = message
     }
 
-    function resetError(message)
+    function success(message)
     {
-        alert = false
-        alertMessage = ""
+        alerts.successRegister = true
+        alerts.alertMessage = message
+    }
+
+    function resetError()
+    {
+        alerts.alertLogin = false
+        alerts.alertRegister = false
+        alerts.alertMessage = ""
     }
 
     const handleLogin = async (event) =>
@@ -223,11 +241,13 @@
             return 0
         }
 
-        error("Username and/or password is empty")
+        error("Username and/or password is empty", 'login')
     }
 
     const handleRegister = async (event) =>
     {
+        event.preventDefault()
+
         if (username != "" && passwordRegister != "" && passwordRegisterConfirm != "")
         {
             if (passwordRegister === passwordRegisterConfirm)
@@ -256,16 +276,17 @@
                         if (response.ok) 
                         {
                             const responseData = await response.json()
-                            error(responseData.message)
+                            success(responseData.message)
                         } 
+
                         else 
                         {
-                            error(`Error: ${response.status} - ${response.message}`)
+                            error(`Error: ${response.status} - ${response.message}`, 'register')
                         }
                     } 
                     
                     catch (error) {
-                        console.error('Error:', error)
+                        error(`Error: ${error}`, 'register')
                     }
 
                     return true
@@ -273,18 +294,18 @@
 
                 else
                 {
-                    error(validator)
+                    error(validator, 'register')
 
                     return false
                 }
             }
 
-            error("Passwords do not match")
+            error("Passwords do not match", 'register')
 
             return false
         }
 
-        error("Username and/or password is empty")
+        error("Username and/or password is empty", 'register')
 
         return false
     }
@@ -293,15 +314,6 @@
 <body>
     {#if load}
         <Banner></Banner>
-        <!-- {#if alert}
-            <div class="alert"  use:clickOutside on:click_outside={resetError}>
-                {alertMessage}
-                <br>
-                <p style="font-size: 20px; color: #FFEDCB; margin-top: 10px;">
-                    Click outside to close
-                </p>
-            </div>
-        {/if} -->
         <div class="content">
             <div class="formBackground">
                 <div class="container login">
@@ -327,9 +339,9 @@
                         </label>
                         <input type="password" style="--underlineColor: {passUnderline}" bind:value={password} id="password" on:click={() => moveLabel("pass")} use:clickOutside on:click_outside={resetLabels} name="password" on:click={resetError}>
 
-                        {#if state == 'register' && alert == true}
+                        {#if state == 'login' && alerts.alertLogin == true}
                             <p class="alert" style="">
-                                {alertMessage}
+                                {alerts.alertMessage}
                             </p>
                         {/if}
 
@@ -372,9 +384,17 @@
                         </label>
                         <input type="password" style="--underlineColor: {passRegisterConfirmUnderline}" bind:value={passwordRegisterConfirm} id="passwordRegisterConfirm" on:click={() => moveLabel("passRegisterConfirm")} use:clickOutside on:click_outside={resetLabels} name="passwordConfirmation" on:click={resetError}>
 
-                        {#if state == 'register' && alert == true}
+                        {#if state == 'register' && alerts.alertRegister == true}
                             <p class="alert" style="">
-                                {alertMessage}
+                                {alerts.alertMessage}
+                            </p>
+                        {:else if state == 'register' && alerts.successRegister == true}
+                            <p class="alert" style="color: {underlineColor}">
+                                {alerts.alertMessage}
+                            </p>
+                        {:else}
+                            <p class="alert" style="color: white; user-select: none;">
+                                &nbsp;
                             </p>
                         {/if}
 
