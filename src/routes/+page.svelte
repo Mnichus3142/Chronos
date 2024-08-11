@@ -321,23 +321,62 @@
                         <p>User Login</p>
 
                         <label for="username" style="--labelPosition: {usrLabel}">
-                            <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <svg 
+                            width="46" 
+                            height="46" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            stroke-linecap="round" 
+                            stroke-linejoin="round" 
+                            stroke-width="1" 
+                            viewBox="0 0 24 24" 
+                            xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path>
                                 <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
                             </svg>
+
                             Username
                         </label>
-                        <input type="text" style="--underlineColor: {usrUnderline}" bind:value={username} id="username" on:click={() => moveLabel("usr")} use:clickOutside on:click_outside={resetLabels} name="username" on:click={resetError}>
+                        <input 
+                        type="text" 
+                        style="--underlineColor: {usrUnderline}" 
+                        id="username" 
+                        name="username" 
+                        bind:value={username} 
+                        use:clickOutside 
+                        on:click_outside={resetLabels} 
+                        on:click={() => moveLabel("usr")} 
+                        on:click={resetError}>
 
                         <label for="password" style="--labelPosition: {passLabel}">
-                            <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="left: -3px;">
+                            <svg 
+                            width="46" 
+                            height="46" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            stroke-linecap="round" 
+                            stroke-linejoin="round" 
+                            stroke-width="1" 
+                            viewBox="0 0 24 24" 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            style="left: -3px;">
                                 <path d="M17 11H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2Z"></path>
                                 <path d="M12 17a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"></path>
                                 <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
                             </svg>
+
                             Password
                         </label>
-                        <input type="password" style="--underlineColor: {passUnderline}" bind:value={password} id="password" on:click={() => moveLabel("pass")} use:clickOutside on:click_outside={resetLabels} name="password" on:click={resetError}>
+                        <input 
+                        type="password" 
+                        style="--underlineColor: {passUnderline}" 
+                        id="password" 
+                        name="password" 
+                        bind:value={password} 
+                        use:clickOutside 
+                        on:click_outside={resetLabels} 
+                        on:click={() => moveLabel("pass")} 
+                        on:click={resetError}>
 
                         {#if state == 'login' && alerts.alertLogin == true}
                             <p class="alert" style="">
@@ -356,33 +395,92 @@
                         <p>Register</p>
 
                         <label for="username" style="--labelPosition: {usrLabel}">
-                            <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <svg 
+                            width="46" 
+                            height="46" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            stroke-linecap="round" 
+                            stroke-linejoin="round" 
+                            stroke-width="1" 
+                            viewBox="0 0 24 24" 
+                            xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path>
                                 <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
                             </svg>
+
                             Username
                         </label>
-                        <input type="text" style="--underlineColor: {usrUnderline}" bind:value={username} id="username" on:click={() => moveLabel("usr")} use:clickOutside on:click_outside={resetLabels} name="username" on:click={resetError}>
+                        <input 
+                        type="text" 
+                        style="--underlineColor: {usrUnderline}" 
+                        id="username" 
+                        name="username" 
+                        bind:value={username} 
+                        use:clickOutside 
+                        on:click_outside={resetLabels} 
+                        on:click={() => moveLabel("usr")} 
+                        on:click={resetError}>
 
                         <label for="passwordRegister" style="--labelPosition: {passLabelRegister}">
-                            <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="left: -3px;">
+                            <svg 
+                            width="46" 
+                            height="46" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            stroke-linecap="round" 
+                            stroke-linejoin="round" 
+                            stroke-width="1" 
+                            viewBox="0 0 24 24" 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            style="left: -3px;">
                                 <path d="M17 11H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2Z"></path>
                                 <path d="M12 17a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"></path>
                                 <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
                             </svg>
+
                             Password
                         </label>
-                        <input type="password" style="--underlineColor: {passRegisterUnderline}" bind:value={passwordRegister} id="passwordRegister" on:click={() => moveLabel("passRegister")} use:clickOutside on:click_outside={resetLabels} name="password" on:click={resetError}>
+                        <input 
+                        type="password" 
+                        style="--underlineColor: {passRegisterUnderline}" 
+                        id="passwordRegister" 
+                        name="password" 
+                        bind:value={passwordRegister} 
+                        use:clickOutside 
+                        on:click_outside={resetLabels} 
+                        on:click={() => moveLabel("passRegister")} 
+                        on:click={resetError}>
 
                         <label for="passwordRegisterConfirm" style="--labelPosition: {passLabelRegisterConfirm}; left: -32px;">
-                            <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="left: -3px;">
+                            <svg 
+                            width="46" 
+                            height="46" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            stroke-linecap="round" 
+                            stroke-linejoin="round" 
+                            stroke-width="1" 
+                            viewBox="0 0 24 24" 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            style="left: -3px;">
                                 <path d="M17 11H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2Z"></path>
                                 <path d="M12 17a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"></path>
                                 <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
                             </svg>
+
                             Confirm password
                         </label>
-                        <input type="password" style="--underlineColor: {passRegisterConfirmUnderline}" bind:value={passwordRegisterConfirm} id="passwordRegisterConfirm" on:click={() => moveLabel("passRegisterConfirm")} use:clickOutside on:click_outside={resetLabels} name="passwordConfirmation" on:click={resetError}>
+                        <input 
+                        type="password" 
+                        style="--underlineColor: {passRegisterConfirmUnderline}" 
+                        id="passwordRegisterConfirm" 
+                        name="passwordConfirmation" 
+                        bind:value={passwordRegisterConfirm} 
+                        use:clickOutside 
+                        on:click_outside={resetLabels} 
+                        on:click={() => moveLabel("passRegisterConfirm")} 
+                        on:click={resetError}>
 
                         {#if state == 'register' && alerts.alertRegister == true}
                             <p class="alert" style="">
@@ -408,13 +506,20 @@
                     {#if state == "login"}
                         <p>Do you want to register?</p>
                         <p class="paragraph">You will get access to many interesting features, and the registration process will only take a moment. Click the button below</p>
-                        <button on:click={slider} style="--underlineColor: {underlineColor}" on:click={resetError}>
+                        <button 
+                        style="--underlineColor: {underlineColor}" 
+                        on:click={slider} 
+                        on:click={resetError}>
                             I want to register!
                         </button>
                     {:else}
                         <p>Or maybe you already have an account?</p>
                         <p class="paragraph">Click the button below to go to login page, and get access to your acconunt in just a while</p>
-                        <button on:click={slider} style="--underlineColor: {underlineColor}" class="loginEncourager" on:click={resetError}>
+                        <button 
+                        class="loginEncourager" 
+                        style="--underlineColor: {underlineColor}" 
+                        on:click={slider} 
+                        on:click={resetError}>
                             I want to log in!
                         </button>
                     {/if}
