@@ -1,9 +1,18 @@
 import { cookies } from '@sveltejs/kit'
+import { Client } from 'pg'
+import { redirect } from '@sveltejs/kit'
 
-export function load({ cookies })
+export async function load({ cookies })
 {
-    cookies.set('sessionId', "", {
-        path: '/',
-        maxAge: 60 * 60 * 24 * 7
-    })
+    const cookie_value = cookies.get('sessionId')
+
+    if (cookie_value != undefined) {
+        throw redirect(302, '/main')
+    }
+
+    else if (cookie_value == undefined) {
+        cookies.set('sessionId', "undefined", {
+            path: '/',
+        })
+    }
 }

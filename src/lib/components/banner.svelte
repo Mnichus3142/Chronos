@@ -2,12 +2,12 @@
     import Profile from '$lib/components/profile.svelte'
     import logo from '$lib/img/logo1.png'
     import { onMount } from 'svelte'
-    import {page} from '$app/stores'
+    import { page } from '$app/stores'
 
     let isOnCorrectPage = false
 
     onMount(() => {
-        if ($page.url.pathname.substr($page.url.pathname.lastIndexOf('/')) != '/')
+        if ($page.url.pathname.substr($page.url.pathname.lastIndexOf('/')) == '/main')
         {
             isOnCorrectPage = true; 
         }

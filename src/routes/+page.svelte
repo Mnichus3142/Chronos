@@ -4,17 +4,18 @@
     import { clickOutside } from '$lib/functions/clickOutside.js'
     import { sha256 } from '$lib/functions/sha256.js'
     import { validate } from '$lib/functions/passwordValidate.js'
-
+    import { goto } from '$app/navigation';
+	
     let load = false
-
+	
     let alerts =
     {
-        alertLogin: false,
+		alertLogin: false,
         alertRegister: false,
         successRegister: false,
         alertMessage: ""
     }
-
+	
     let width
     let slide = "0px"
     let element
@@ -22,6 +23,7 @@
 
     let username = ""
     let password = ""
+	let rememberMe = false
     let passwordRegister = ""
     let passwordRegisterConfirm = ""
 
@@ -43,6 +45,8 @@
     let visibilityRegister = "hidden"
 
     onMount(() => {
+        goto("/")
+
         if (document.readyState === 'complete') 
         {
             initPage()
@@ -64,7 +68,7 @@
     onDestroy(() => {
         if (resizeObserver && element) 
         {
-            resizeObserver.unobserve(element)
+			resizeObserver.unobserve(element)
         }
     })
 
@@ -202,6 +206,7 @@
     {
         alerts.alertLogin = false
         alerts.alertRegister = false
+		alerts.successRegister = false
         alerts.alertMessage = ""
     }
 
@@ -216,7 +221,8 @@
 
             const formData = {
                 user,
-                hashed
+                hashed,
+				rememberMe
             }
 
             try {
@@ -231,6 +237,16 @@
                 if (response.ok)
                 {
                     const responseData = await response.json()
+
+                    if (responseData.status != 200)
+                    {
+                        error(responseData.message, 'login')
+                    }
+
+                    else
+                    {
+                        goto("/main")
+                    }
                 }
             } 
             
@@ -281,7 +297,7 @@
 
                         else 
                         {
-                            error(`Error: ${response.status} - ${response.message}`, 'register')
+                            error(response.message, 'register')
                         }
                     } 
                     
@@ -340,7 +356,6 @@
                         <input 
                         type="text" 
                         style="--underlineColor: {usrUnderline}" 
-                        id="username" 
                         name="username" 
                         bind:value={username} 
                         use:clickOutside 
@@ -367,6 +382,7 @@
 
                             Password
                         </label>
+
                         <input 
                         type="password" 
                         style="--underlineColor: {passUnderline}" 
@@ -378,8 +394,13 @@
                         on:click={() => moveLabel("pass")} 
                         on:click={resetError}>
 
+						<p style="padding: 0; margin-top: 20px; margin-bottom: -30px; --underlineColor: {underlineColor}" class="custom-checkbox">
+                            <input type="checkbox" bind:checked={rememberMe} id="rememberMeLabel" style="transform: scale(60%);">
+						    <label for="rememberMeLabel" style="font-size: 20px; position: relative; left: 0px; top: 0px; color: grey;">Remember me</label>
+                        </p>
+
                         {#if state == 'login' && alerts.alertLogin == true}
-                            <p class="alert" style="">
+                            <p class="alert" style="margin-top: 30px;">
                                 {alerts.alertMessage}
                             </p>
                         {/if}
@@ -414,7 +435,6 @@
                         <input 
                         type="text" 
                         style="--underlineColor: {usrUnderline}" 
-                        id="username" 
                         name="username" 
                         bind:value={username} 
                         use:clickOutside 
@@ -590,6 +610,8 @@
         left: -80px;
 
         transition: all 0.1s;
+
+        user-select: none;
     }
 
     .form label svg
@@ -841,6 +863,38 @@
     .register form
     {
         visibility: var(--visibilityRegister);
+    }
+
+    .custom-checkbox {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .custom-checkbox input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        background-color: white;
+        border: 2px solid grey;
+        border-radius: 4px;
+        width: 32px;
+        height: 32px;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .custom-checkbox input[type="checkbox"]:checked {
+        background-color: var(--underlineColor);
+        border-color: var(--underlineColor);
+    }
+
+    .custom-checkbox input[type="checkbox"]:checked::after {
+        content: '\2714';
+        color: white;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 16px;
     }
 
     @keyframes alert 

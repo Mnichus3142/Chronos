@@ -1,4 +1,6 @@
 <script>
+    import { clickOutside } from '$lib/functions/clickOutside.js'
+
     // State in which menu is at the moment
     let state = 'none'
 
@@ -131,7 +133,7 @@
 <!-- svelte-ignore a11y-mouse-events-have-key-events -->
 <div class="menuBorder" id='menuBorder' style="--state: {state}; --height: {height}">
     <div class="arrow-up"></div>
-    <div class="menu" id="menu" style="--state: {state}; --height: {height}" on:mouseleave={fold}>
+    <div class="menu" id="menu" style="--state: {state}; --height: {height}" on:mouseleave={fold} use:clickOutside on:click_outside={fold}>
         <ul>
             {#each list as item}
                 <li style="display: {item['display']}; opacity: {item['opacity']}">
