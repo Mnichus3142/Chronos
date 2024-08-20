@@ -6,8 +6,10 @@
     import { validate } from '$lib/functions/passwordValidate.js'
     import { goto } from '$app/navigation';
 	
+    // State of page
     let load = false
 	
+    // Vars for alerts
     let alerts =
     {
 		alertLogin: false,
@@ -16,22 +18,26 @@
         alertMessage: ""
     }
 	
+    // Vars for slider
     let width
     let slide = "0px"
     let element
     let resizeObserver
 
+    // Vars for form
     let username = ""
     let password = ""
 	let rememberMe = false
     let passwordRegister = ""
     let passwordRegisterConfirm = ""
 
+    // Even more vars for form but now interactive
     let usrLabel = "40px"
     let passLabel = "40px"
     let passLabelRegister = "40px"
     let passLabelRegisterConfirm = "40px"
 
+    // Just colors
     const underlineColor = "#14A684"
 
     let usrUnderline = "grey"
@@ -39,14 +45,18 @@
     let passRegisterUnderline = "grey"
     let passRegisterConfirmUnderline = "grey"
 
+    // State of page (which form you want to see)
     let state = "login"
 
+    // Vars for forms so there will be no bugs kappa
     let visibilityLogin = "visible"
     let visibilityRegister = "hidden"
 
     onMount(() => {
+        // FIXME: Reload page? Do I really want it?
         goto("/")
 
+        // Init page when it's loaded
         if (document.readyState === 'complete') 
         {
             initPage()
@@ -57,6 +67,7 @@
             window.addEventListener('load', initPage)
         }
         
+        // Add observer for courtain
         resizeObserver = new ResizeObserver(dispatchResize)
 
         if (element) 
@@ -65,6 +76,7 @@
         }
     })
 
+    // Destroy observer
     onDestroy(() => {
         if (resizeObserver && element) 
         {
@@ -72,6 +84,7 @@
         }
     })
 
+    // Block of reactive elements
     $: if (username)
     {
         moveLabel("usr")
@@ -96,10 +109,12 @@
         passwordRegisterConfirm = passwordRegisterConfirm.split(' ').join('')
     }
 
+    // As it says
     function initPage() {
       load = true
     }
 
+    // As it says
     function slider()
     {
         if (slide == "0px")
@@ -119,6 +134,7 @@
         }
     }
 
+    // As it says
     function dispatchResize () 
     {
         if (slide != '0px')
@@ -127,6 +143,7 @@
         }
     }
 
+    // As it says
     function moveLabel (field)
     {
         if (field == "usr")
@@ -154,6 +171,7 @@
         }
     }
 
+    // As it says
     function resetLabels ()
     {
         if (username == "")
@@ -181,6 +199,7 @@
         }
     }
 
+    // As it says
     function error(message, mode)
     {
         if (mode == 'login')
@@ -196,12 +215,14 @@
         alerts.alertMessage = message
     }
 
+    // As it says
     function success(message)
     {
         alerts.successRegister = true
         alerts.alertMessage = message
     }
 
+    // As it says
     function resetError()
     {
         alerts.alertLogin = false
@@ -210,6 +231,7 @@
         alerts.alertMessage = ""
     }
 
+    // Handle connection with backend for login
     const handleLogin = async (event) =>
     {
         event.preventDefault()
@@ -260,6 +282,7 @@
         error("Username and/or password is empty", 'login')
     }
 
+    // Handle connection with backend for register
     const handleRegister = async (event) =>
     {
         event.preventDefault()

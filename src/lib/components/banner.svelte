@@ -4,6 +4,7 @@
     import { onMount } from 'svelte'
     import { page } from '$app/stores'
 
+    // Check if you are on landing page, if you are then do not show profile
     let isOnCorrectPage = false
 
     onMount(() => {
