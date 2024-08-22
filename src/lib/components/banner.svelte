@@ -8,7 +8,7 @@
     let isOnCorrectPage = false
 
     onMount(() => {
-        if ($page.url.pathname.substr($page.url.pathname.lastIndexOf('/')) == '/main')
+        if ($page.url.pathname.substr($page.url.pathname.lastIndexOf('/')) == '/main' || $page.url.pathname.substr($page.url.pathname.lastIndexOf('/')) == '/main/')
         {
             isOnCorrectPage = true; 
         }
