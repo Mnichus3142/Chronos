@@ -75,8 +75,4 @@ export const POST = async ({ request, cookies }) => {
     catch (error) {
         return json({ message: 'Error processing request / User not exist', status: 203 })
     }
-
-    finally {
-        await client.end()
-    }
 }

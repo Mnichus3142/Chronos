@@ -4,7 +4,7 @@
     import { clickOutside } from '$lib/functions/clickOutside.js'
     import { sha256 } from '$lib/functions/sha256.js'
     import { validate } from '$lib/functions/passwordValidate.js'
-    import { goto } from '$app/navigation';
+    import { goto } from '$app/navigation'
 	
     // State of page
     let load = false
