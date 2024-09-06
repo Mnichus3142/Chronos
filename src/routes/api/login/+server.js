@@ -1,5 +1,6 @@
 import { error, json } from '@sveltejs/kit'
-import { Client } from 'pg'
+import pkg from 'pg';
+const { Client } = pkg;
 import { sha256 } from '$lib/functions/sha256.js'
 import { generateUniqueData } from '../../../lib/functions/generateUniqueData.js'
 

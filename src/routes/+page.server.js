@@ -1,5 +1,6 @@
 import { cookies } from '@sveltejs/kit'
-import { Client } from 'pg'
+import pkg from 'pg';
+const { Client } = pkg;
 import { redirect } from '@sveltejs/kit'
 
 export async function load({ cookies })
