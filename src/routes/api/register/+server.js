@@ -18,7 +18,9 @@ export const POST = async ({ request }) => {
         database: data.database,
         password: data.password,
         port: data.port,
-        ssl: data.ssl,
+        ssl: {
+            ca: await fs.readFile(path.resolve('src/certificate.pem'))
+        }
     })
     
     try {

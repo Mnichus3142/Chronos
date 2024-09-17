@@ -2,19 +2,29 @@ import { cookies } from '@sveltejs/kit'
 import pkg from 'pg';
 const { Client } = pkg;
 import { redirect } from '@sveltejs/kit'
+import fs from 'fs/promises'
+import path from 'path'
 
 export async function load({ cookies })
 {
     // Get cookie value
     const cookie_value = cookies.get('sessionId')
 
+    // Get connection params
+    const filePath = path.resolve('src/connectionParameters.json')
+    const fileContent = await fs.readFile(filePath, 'utf8')
+    const data = JSON.parse(fileContent)
+
     // Create client
     const client = new Client({
-        user: 'postgres',
-        host: '127.0.0.1',
-        database: 'timemenager',
-        password: 'zaq1@WSX',
-        port: 5432
+        user: data.user,
+        host: data.host,
+        database: data.database,
+        password: data.password,
+        port: data.port,
+        ssl: {
+            ca: await fs.readFile(path.resolve('src/certificate.pem'))
+        }
     })
 
     try 
