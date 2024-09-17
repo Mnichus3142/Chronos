@@ -4,5 +4,7 @@
     "database": "timemenager",
     "password": "zaq1@WSX",
     "port": 5432,
-    "ssl": false
+    ssl: {
+            ca: await fs.readFile(path.resolve('src/certificate.pem'))
+    }
 }
