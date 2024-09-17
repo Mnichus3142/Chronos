@@ -5,6 +5,15 @@
     import { sha256 } from '$lib/functions/sha256.js'
     import { validate } from '$lib/functions/passwordValidate.js'
     import { goto } from '$app/navigation'
+    import '../app.css'
+
+    // Tailwind
+    const input = "z-10 h-8 w-72 border-b-2 text-lg focus:outline-none transition-all bg-transparent"
+    const label = "text-3xl text-accentNotActive m-3 relative transition-all select-none -left-16"
+    const formContainer = "bg-background min-h-max min-w-max flex justify-center items-center rounded-xl row-start-1"
+    const form = "font-basic text-3xl text-primary flex justify-center items-center flex-col gap-0"
+    const svg = "relative h-9 float-left"
+    const buttonForForm = "mt-10 p-3 pt-0 pb-1 bg-none border-2 border-solid border-accentNotActive text-accentNotActive text-xl cursor-pointer transition-all rounded-xl before:content-[' '] before:bg-background before:h-2 before:w-4 before:block before:relative before:-top-1 before:transition-all after:content-[' '] after:bg-background after:h-2 after:w-4 after:block after:relative after:top-2 after:left-12 after:transition-all hover:text-accent hover:scale-110 hover:border-accent hover:before:translate-x-12 hover:after:-translate-x-12"
 	
     // State of page
     let load = false
@@ -20,7 +29,7 @@
 	
     // Vars for slider
     let width
-    let slide = "0px"
+    let slide = ""
     let element
     let resizeObserver
 
@@ -32,18 +41,19 @@
     let passwordRegisterConfirm = ""
 
     // Even more vars for form but now interactive
-    let usrLabel = "40px"
-    let passLabel = "40px"
-    let passLabelRegister = "40px"
-    let passLabelRegisterConfirm = "40px"
+    let usrLabel = "top-9"
+    let passLabel = "top-9"
+    let passLabelRegister = "top-9"
+    let passLabelRegisterConfirm = "top-9"
 
     // Just colors
-    const underlineColor = "#14A684"
+    const underlineColor = "border-accent"
+    const underlineColorNotActive = "border-accentNotActive"
 
-    let usrUnderline = "grey"
-    let passUnderline = "grey"
-    let passRegisterUnderline = "grey"
-    let passRegisterConfirmUnderline = "grey"
+    let usrUnderline = "border-accentNotActive"
+    let passUnderline = "border-accentNotActive"
+    let passRegisterUnderline = "border-accentNotActive"
+    let passRegisterConfirmUnderline = "border-accentNotActive"
 
     // State of page (which form you want to see)
     let state = "login"
@@ -117,9 +127,9 @@
     // As it says
     function slider()
     {
-        if (slide == "0px")
+        if (slide == "")
         {
-            slide = "-" + width + "px"
+            slide = "-translate-x-full"
             visibilityLogin = "hidden"
             visibilityRegister = "visible"
             state = "register"
@@ -127,7 +137,7 @@
 
         else 
         {
-            slide = "0px"
+            slide = ""
             visibilityLogin = "visible"
             visibilityRegister = "hidden"
             state = "login"
@@ -137,9 +147,9 @@
     // As it says
     function dispatchResize () 
     {
-        if (slide != '0px')
+        if (slide != '')
         {
-            slide = "-" + width + "px"
+            slide = "-translate-x-full"
         }
     }
 
@@ -148,25 +158,25 @@
     {
         if (field == "usr")
         {
-            usrLabel = "0px"
+            usrLabel = "top-0"
             usrUnderline = underlineColor
         }
 
         if (field == "pass")
         {
-            passLabel = "0px"
+            passLabel = "top-0"
             passUnderline = underlineColor
         }
 
         if (field == "passRegister")
         {
-            passLabelRegister = "0px"
+            passLabelRegister = "top-0"
             passRegisterUnderline = underlineColor
         }
 
         if (field == "passRegisterConfirm")
         {
-            passLabelRegisterConfirm = "0px"
+            passLabelRegisterConfirm = "top-0"
             passRegisterConfirmUnderline = underlineColor
         }
     }
@@ -176,26 +186,26 @@
     {
         if (username == "")
         {
-            usrLabel = "40px"
-            usrUnderline = "grey"
+            usrLabel = "top-9"
+            usrUnderline = underlineColorNotActive
         }
         
         if (password == "")
         {
-            passLabel = "40px"
-            passUnderline = "grey"
+            passLabel = "top-9"
+            passUnderline = underlineColorNotActive
         }
 
         if (passwordRegister == "")
         {
-            passLabelRegister = "40px"
-            passRegisterUnderline = "grey"
+            passLabelRegister = "top-9"
+            passRegisterUnderline = underlineColorNotActive
         }
 
         if (passwordRegisterConfirm == "")
         {
-            passLabelRegisterConfirm = "40px"
-            passRegisterConfirmUnderline = "grey"
+            passLabelRegisterConfirm = "top-9"
+            passRegisterConfirmUnderline = underlineColorNotActive
         }
     }
 
@@ -350,17 +360,17 @@
     }
 </script>
 
-<body>
+<body class="flex flex-col min-h-screen">
     {#if load}
         <Banner></Banner>
-        <div class="content">
-            <div class="formBackground">
-                <div class="container login">
-                    <form class="form" style="--visibilityLogin: {visibilityLogin}">
+        <div class="bg-background w-full flex-1 flex justify-center place-items-center relative">
+            <div class="grid grid-cols-2 bg-gradient-to-b from-secondary to-primary rounded-xl p-2 h-[800px] w-[80%]">
+                <div class="{formContainer} col-start-1">
+                    <form class="{form} {visibilityLogin}">
                         <p>User Login</p>
-
-                        <label for="username" style="--labelPosition: {usrLabel}">
+                        <label for="username" class="{label} {usrLabel}">
                             <svg 
+                            class="{svg}"
                             width="46" 
                             height="46" 
                             fill="none" 
@@ -374,20 +384,22 @@
                                 <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
                             </svg>
 
-                            Username
+                            <p class="float-right">Username</p>
                         </label>
+
                         <input 
+                        class="{input} {usrUnderline}"
                         type="text" 
-                        style="--underlineColor: {usrUnderline}" 
-                        name="username" 
+                        name="username"
                         bind:value={username} 
                         use:clickOutside 
                         on:click_outside={resetLabels} 
                         on:click={() => moveLabel("usr")} 
                         on:click={resetError}>
 
-                        <label for="password" style="--labelPosition: {passLabel}">
+                        <label for="password" class="{label} {passLabel}">
                             <svg 
+                            class="{svg}"
                             width="46" 
                             height="46" 
                             fill="none" 
@@ -403,12 +415,12 @@
                                 <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
                             </svg>
 
-                            Password
+                            <p class="float-right">Password</p>
                         </label>
 
                         <input 
+                        class="{input} {passUnderline}"
                         type="password" 
-                        style="--underlineColor: {passUnderline}" 
                         id="password" 
                         name="password" 
                         bind:value={password} 
@@ -417,29 +429,30 @@
                         on:click={() => moveLabel("pass")} 
                         on:click={resetError}>
 
-						<p style="padding: 0; margin-top: 20px; margin-bottom: -30px; --underlineColor: {underlineColor}" class="custom-checkbox">
-                            <input type="checkbox" bind:checked={rememberMe} id="rememberMeLabel" style="transform: scale(60%);">
-						    <label for="rememberMeLabel" style="font-size: 20px; position: relative; left: 0px; top: 0px; color: grey;">Remember me</label>
+						<p class="inline-flex items-center p-0 mt-5 -mb-7 text-primary scale-125">
+                            <input type="checkbox" bind:checked={rememberMe} id="rememberMeLabel" class="appearance-none bg-background border-2 border-solid border-accentNotActive rounded w-8 h-8 cursor-pointer relative scale-50 checked:bg-accent checked:border-accent checked:after:content-['✓'] checked:after:text-background checked:after:absolute checked:after:-top-1 checked:after:left-1 transition-all">
+						    <label for="rememberMeLabel" class="text-accentNotActive text-lg relative left-0 top-0">Remember me</label>
                         </p>
 
                         {#if state == 'login' && alerts.alertLogin == true}
-                            <p class="alert" style="margin-top: 30px;">
+                            <p class="font-basic text-lg mt-10 -mb-5 text-red-600 animate-pulse">
                                 {alerts.alertMessage}
                             </p>
                         {/if}
 
-                        <button style="--underlineColor: {underlineColor}" on:click={handleLogin}>
+                        <button class="{buttonForForm}" on:click={handleLogin}>
                             <div>Submit</div>
                         </button>
                     </form>
                 </div>
 
-                <div class="container register">
-                    <form class="form" style="--visibilityRegister: {visibilityRegister}">
+                <div class="{formContainer} col-start-2">
+                    <form class="{form} {visibilityRegister}">
                         <p>Register</p>
 
-                        <label for="username" style="--labelPosition: {usrLabel}">
+                        <label for="username" class="{label} {usrLabel}">
                             <svg 
+                            class="{svg}"
                             width="46" 
                             height="46" 
                             fill="none" 
@@ -453,11 +466,11 @@
                                 <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
                             </svg>
 
-                            Username
+                            <p class="float-right">Username</p>
                         </label>
                         <input 
+                        class="{input} {usrUnderline}"
                         type="text" 
-                        style="--underlineColor: {usrUnderline}" 
                         name="username" 
                         bind:value={username} 
                         use:clickOutside 
@@ -465,8 +478,9 @@
                         on:click={() => moveLabel("usr")} 
                         on:click={resetError}>
 
-                        <label for="passwordRegister" style="--labelPosition: {passLabelRegister}">
+                        <label for="passwordRegister" class="{label} {passLabelRegister}">
                             <svg 
+                            class="{svg}"
                             width="46" 
                             height="46" 
                             fill="none" 
@@ -482,11 +496,12 @@
                                 <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
                             </svg>
 
-                            Password
+                            <p class="float-right">Password</p>
                         </label>
+
                         <input 
+                        class="{input} {passRegisterUnderline}"
                         type="password" 
-                        style="--underlineColor: {passRegisterUnderline}" 
                         id="passwordRegister" 
                         name="password" 
                         bind:value={passwordRegister} 
@@ -495,8 +510,9 @@
                         on:click={() => moveLabel("passRegister")} 
                         on:click={resetError}>
 
-                        <label for="passwordRegisterConfirm" style="--labelPosition: {passLabelRegisterConfirm}; left: -32px;">
+                        <label for="passwordRegisterConfirm" class="{label} {passLabelRegisterConfirm} -left-2">
                             <svg 
+                            class="{svg}"
                             width="46" 
                             height="46" 
                             fill="none" 
@@ -512,11 +528,12 @@
                                 <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
                             </svg>
 
-                            Confirm password
+                            <p class="float-right">Confirm password</p>
                         </label>
+
                         <input 
+                        class="{input} {passRegisterConfirmUnderline}"
                         type="password" 
-                        style="--underlineColor: {passRegisterConfirmUnderline}" 
                         id="passwordRegisterConfirm" 
                         name="passwordConfirmation" 
                         bind:value={passwordRegisterConfirm} 
@@ -526,41 +543,40 @@
                         on:click={resetError}>
 
                         {#if state == 'register' && alerts.alertRegister == true}
-                            <p class="alert" style="">
+                            <p class="font-basic text-lg mt-6 -mb-5 text-red-600 animate-pulse">
                                 {alerts.alertMessage}
                             </p>
                         {:else if state == 'register' && alerts.successRegister == true}
-                            <p class="alert" style="color: {underlineColor}">
+                            <p class="font-basic text-lg mt-6 -mb-5 text-accent animate-pulse">
                                 {alerts.alertMessage}
                             </p>
                         {:else}
-                            <p class="alert" style="color: white; user-select: none;">
+                            <p class="font-basic text-lg mt-6 -mb-5 text-accent animate-pulse select-none">
                                 &nbsp;
                             </p>
                         {/if}
 
-                        <button style="--underlineColor: {underlineColor}" on:click={handleRegister}>
+                        <button class="{buttonForForm} mt-6" on:click={handleRegister}>
                             <div>Submit</div>
                         </button>
                     </form>
                 </div>
 
-                <div class="curtain" style="--slide: {slide}" bind:clientWidth={width} bind:this={element}>
+                <div class="z-30 row-start-1 col-start-2 relative bg-gradient-to-t from-primary to-third transition-all flex justify-center items-center flex-col {slide} duration-200" bind:clientWidth={width} bind:this={element}>
                     {#if state == "login"}
-                        <p>Do you want to register?</p>
-                        <p class="paragraph">You will get access to many interesting features, and the registration process will only take a moment. Click the button below</p>
+                        <p class="text-background font-basic text-5xl text-center">Do you want to register?</p>
+                        <p class="text-third font-basic text-xl text-center w-[80%] mt-8">You will get access to many interesting features, and the registration process will only take a moment. Click the button below</p>
                         <button 
-                        style="--underlineColor: {underlineColor}" 
+                        class="bg-none border-2 border-solid border-third rounded-xl text-third p-2 pb-3 cursor-pointer relative top-10 scale-125 transition-all hover:bg-accent hover:border-accent hover:text-background"
                         on:click={slider} 
                         on:click={resetError}>
                             I want to register!
                         </button>
                     {:else}
-                        <p>Or maybe you already have an account?</p>
-                        <p class="paragraph">Click the button below to go to login page, and get access to your acconunt in just a while</p>
-                        <button 
-                        class="loginEncourager" 
-                        style="--underlineColor: {underlineColor}" 
+                        <p class="text-background font-basic text-5xl text-center">Or maybe you already have an account?</p>
+                        <p class="text-third font-basic text-xl text-center w-[80%] mt-8">Click the button below to go to login page, and get access to your acconunt in just a while</p>
+                        <button
+                        class="bg-none border-2 border-solid border-third rounded-xl text-third p-2 pb-3 cursor-pointer relative top-10 scale-125 transition-all hover:bg-accent hover:border-accent hover:text-background"
                         on:click={slider} 
                         on:click={resetError}>
                             I want to log in!
@@ -571,370 +587,3 @@
         </div>
     {/if}
 </body>
-
-<style>
-    *
-    {
-        margin: 0;
-        padding: 0;
-    }
-
-    body
-    {
-        overflow-x: clip;
-    }
-
-    .login form
-    {
-        visibility: var(--visibilityLogin);
-    }
-
-    .alert
-    {
-        font-family: 'Rubik', sans-serif;
-        font-size: 15px;
-
-        margin-top: 20px;
-        margin-bottom: -20px;
-
-        color: red;
-
-        text-align: center;
-
-        animation: alert 0.5s 1;
-    }
-
-    .form
-    {
-        font-family: 'Rubik', sans-serif;
-        font-size: 40px;
-
-        color: #0D1B2A;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        gap: 0px;
-
-        height: 60vh;
-        min-height: 600px;
-    }
-
-    .form label
-    {
-        font-size: 25px;
-        margin: 10px;
-
-        color: var(--underlineColor);
-
-        position: relative;
-        top: var(--labelPosition);
-        left: -80px;
-
-        transition: all 0.1s;
-
-        user-select: none;
-    }
-
-    .form label svg
-    {
-        color: var(--underlineColor);
-        position: relative;
-        top: 5px;
-        height: 30px;
-    }
-
-    .form input
-    {
-        z-index: 2;
-
-        border: none;
-        height: 35px;
-        width: 300px;
-
-        border-bottom: 2px solid var(--underlineColor);
-
-        font-family: 'Rubik', sans-serif;
-        font-size: 20px;
-
-        cursor: text;
-
-        background: none;
-    }
-
-    .form input:focus
-    {
-        outline: none;
-    }
-
-    .form button
-    {
-        margin-top: 40px;
-        padding: 10px;
-        padding-top: 0px;
-        padding-bottom: 3px;
-
-        background: none;
-        border: 2px solid grey;
-        border-radius: 10px;
-
-        cursor: pointer;
-
-        color: grey;
-
-        transition: all 0.1s ease;
-    }
-
-    .form button::before
-    {
-        content: '';
-        background-color: white;
-        height: 5px;
-        width: 15px;
-
-        display: block;
-
-        position: relative;
-        top: -3px;
-
-        transition: all 0.2s ease;
-    }
-
-    .form button::after
-    {
-        content: '';
-        background-color: white;
-        height: 5px;
-        width: 15px;
-
-        display: block;
-
-        position: relative;
-        top: 44px;
-        left: 67px;
-
-        transition: all 0.2s ease;
-    }
-
-    .form button:hover
-    {
-        color: var(--underlineColor);
-        transform: scale(110%);
-        border-color: var(--underlineColor);
-    }
-
-    .form button:hover::before
-    {
-        transform: translateX(67px);
-    }
-
-    .form button:hover::after
-    {
-        transform: translateX(-67px);
-    }
-
-    .form button div
-    {
-        float: right;
-
-        font-size: 20px;
-        margin: 10px;
-        margin-top: 8px;
-
-        position: relative;
-        top: var(--labelPosition);
-
-        transition: all 0.1s;
-    }
-
-    .content {
-        background-color: var(--white);
-        width: 100vw;
-        height: calc(97.5vh - 60px);
-        min-height: 700px;
-    
-        display: flex;
-        justify-content: center;
-        place-items: center;
-
-        position: relative;
-    }
-
-    .formBackground
-    {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-
-        background: linear-gradient(
-            to bottom,
-            var(--2),
-            var(--1)
-        );
-
-        width: fit-content;
-        height: fit-content;
-        padding: 10px;
-        padding-bottom: 10px;
-
-        border-radius: 10px;
-    }
-
-    .container 
-    {
-        background-color: white;
-        height: 60vh;
-        min-height: 600px;
-        width: 30vw;
-        min-width: 500px;
-        
-        border-radius: 10px;
-    }
-
-    .login
-    {
-        grid-column: 1;
-        grid-row: 1;
-    }
-
-    .register
-    {
-        grid-column: 2;
-        grid-row: 1;
-        float: right;
-    }
-
-    .curtain
-    {
-        z-index: 3;
-
-        grid-column: 2;
-        grid-row: 1;
-
-        position: relative;
-        left: var(--slide);
-
-        height: 60vh;
-        min-height: 600px;
-        width: 30vw;
-        min-width: 500px;
-
-        background: linear-gradient(
-            to bottom,
-            var(--2),
-            var(--1)
-        );
-
-        transition: left 0.1s ease;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-    }
-
-    .curtain p
-    {
-        color: white;
-        font-family: 'Rubik', sans-serif;
-        font-size: 45px;
-
-        text-align: center;
-    }
-
-    .curtain .paragraph
-    {
-        font-size: 20px;
-        color: var(--4);
-        text-align: center;
-
-        width: 500px;
-
-        margin-top: 20px;
-    }
-
-    .curtain button
-    {
-        background: none;
-        border: 2px solid var(--4);
-        border-radius: 10px;
-
-        color: var(--4);
-        padding: 10px;
-
-        cursor: pointer;
-
-        position: relative;
-        top: 85px;
-
-        transform: scale(140%);
-        transition: all 0.1s ease;
-    }
-
-    .curtain button:hover
-    {
-        background-color: var(--underlineColor);
-        border-color: var(--underlineColor);
-        color: white;
-    }
-
-    .loginEncourager
-    {
-        margin-top: -20px;
-    }
-
-    .register form
-    {
-        visibility: var(--visibilityRegister);
-    }
-
-    .custom-checkbox {
-        display: inline-flex;
-        align-items: center;
-    }
-
-    .custom-checkbox input[type="checkbox"] {
-        appearance: none;
-        -webkit-appearance: none;
-        background-color: white;
-        border: 2px solid grey;
-        border-radius: 4px;
-        width: 32px;
-        height: 32px;
-        cursor: pointer;
-        position: relative;
-    }
-
-    .custom-checkbox input[type="checkbox"]:checked {
-        background-color: var(--underlineColor);
-        border-color: var(--underlineColor);
-    }
-
-    .custom-checkbox input[type="checkbox"]:checked::after {
-        content: '\2714';
-        color: white;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 16px;
-    }
-
-    @keyframes alert 
-    {
-        0%
-        {
-            transform: scale(100%);
-        }
-
-        50%
-        {
-            transform: scale(120%);
-        }
-
-        100%
-        {
-            transform: scale(100%);
-        }
-    }
-</style>

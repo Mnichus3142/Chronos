@@ -1,5 +1,6 @@
 <script>
     import { goto } from '$app/navigation';
+    import '../../app.css'
 
     const handleLogout = async (event) => 
     {
@@ -226,7 +227,7 @@
         display: var(--state);
         height: var(--height);
         width: 150px;
-        background-color: var(--white);
+        background-color: white;
 
         border-radius: 9px;
 
@@ -266,7 +267,7 @@
         position: relative;
         z-index: 10;
 
-        background: var(--white);
+        background: white;
         
         transition: background 0.6s ease;
 
@@ -282,17 +283,17 @@
     }
 
     .menu ul li button:hover a {
-        color: var(--white);
+        color: white;
     }
 
     .menu ul li button:hover svg {
-        stroke: var(--white);
+        stroke: white;
     }
 
     .menu ul li button a {
         margin-left: 10px;
         margin-right: 4px;
-        color: var(--grey);
+        color: var(--2);
     }
 
     .profile {
