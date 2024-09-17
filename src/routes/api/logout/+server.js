@@ -1,15 +1,24 @@
 import { error, json } from '@sveltejs/kit'
-import pkg from 'pg';
-const { Client } = pkg;
+import pkg from 'pg'
+const { Client } = pkg
+import fs from 'fs/promises'
+import path from 'path'
 
 export const POST = async ({ cookies }) => 
 {
+    // Get connection params
+    const filePath = path.resolve('src/connectionParameters.json')
+    const fileContent = await fs.readFile(filePath, 'utf8')
+    const data = JSON.parse(fileContent)
+
+    // Create client
     const client = new Client({
-        user: 'postgres',
-        host: '127.0.0.1',
-        database: 'timemenager',
-        password: 'zaq1@WSX',
-        port: 5432
+        user: data.user,
+        host: data.host,
+        database: data.database,
+        password: data.password,
+        port: data.port,
+        ssl: data.ssl,
     })
 
     try
@@ -17,7 +26,10 @@ export const POST = async ({ cookies }) =>
         const cookie_value = cookies.get('sessionId')
 
         await client.connect();
-        await client.query(`DELETE FROM cookies WHERE cookie_value = '${cookie_value}'`)
+
+        const insertQuery = 'DELETE FROM cookies WHERE cookie_value = $1'
+        const insertParams = [cookie_value]
+        await client.query(insertQuery, insertParams)
 
         cookies.set('sessionId', undefined, {
             path: '/',

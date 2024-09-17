@@ -23,7 +23,9 @@ export async function load({ cookies })
         if (cookie_value != undefined) {
             // Connect to database and get value from it
             await client.connect();
-            const check = await client.query(`SELECT * FROM cookies WHERE cookie_value = '${cookie_value}'`)
+            const insertQuery = 'SELECT * FROM cookies WHERE cookie_value = $1'
+            const insertParams = [cookie_value]
+            const check = await client.query(insertQuery, insertParams)
 
             // If cookie do not exist in database go to landing page
             if (check.rowCount === 0) {

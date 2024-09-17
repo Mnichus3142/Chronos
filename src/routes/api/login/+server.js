@@ -1,17 +1,26 @@
 import { error, json } from '@sveltejs/kit'
-import pkg from 'pg';
-const { Client } = pkg;
+import pkg from 'pg'
+const { Client } = pkg
 import { sha256 } from '$lib/functions/sha256.js'
 import { generateUniqueData } from '../../../lib/functions/generateUniqueData.js'
+import fs from 'fs/promises'
+import path from 'path'
 
-export const POST = async ({ request, cookies }) => {
+export const POST = async ({ request, cookies }) => 
+{
+    // Get connection params
+    const filePath = path.resolve('src/connectionParameters.json')
+    const fileContent = await fs.readFile(filePath, 'utf8')
+    const data = JSON.parse(fileContent)
+
     // Create client
     const client = new Client({
-        user: 'postgres',
-        host: '127.0.0.1',
-        database: 'timemenager',
-        password: 'zaq1@WSX',
-        port: 5432
+        user: data.user,
+        host: data.host,
+        database: data.database,
+        password: data.password,
+        port: data.port,
+        ssl: data.ssl,
     })
     
     try {
@@ -22,15 +31,20 @@ export const POST = async ({ request, cookies }) => {
         await client.connect()
 
         // Check if user exist
-        const res = await client.query(`SELECT * FROM users WHERE username = '${user}'`)
+        let insertQuery = 'SELECT * FROM users WHERE username = $1'
+        let insertParams = [user]
+        const res = await client.query(insertQuery, insertParams)
+        console.log(res.rows.length)
 
-        if (res.rows.length)
+        if (res.rows.length == 1)
         {
             // Check if password is equal in database and this from user
             if (res.rows[0]["password"] === hashed)
             {
                 // Delete old cookies
-                await client.query(`DELETE FROM cookies WHERE username = '${user}'`)
+                insertQuery = 'DELETE FROM cookies WHERE username = $1'
+                insertParams = [user]
+                await client.query(insertQuery, insertParams)
 
                 // Createe cookie
                 const uniqueData = await generateUniqueData(user)
@@ -61,7 +75,9 @@ export const POST = async ({ request, cookies }) => {
                 }
 
                 // Add cookie value to database
-                await client.query(`INSERT INTO cookies (cookie_value, username, remember_me) VALUES ('${cookieValue}', '${user}', '${rememberMe}')`)
+                insertQuery = 'INSERT INTO cookies (cookie_value, username, remember_me) VALUES ($1, $2, $3)'
+                insertParams  = [cookieValue, user, rememberMe]
+                await client.query(insertQuery, insertParams)
 
                 return json({ message: 'All good', status: 200 })
             }
@@ -75,5 +91,9 @@ export const POST = async ({ request, cookies }) => {
 
     catch (error) {
         return json({ message: 'Error processing request / User not exist', status: 203 })
+    }
+
+    finally {
+        await client.end()
     }
 }

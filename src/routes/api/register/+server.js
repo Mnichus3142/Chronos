@@ -1,15 +1,24 @@
 import { error, json } from '@sveltejs/kit'
-import pkg from 'pg';
-const { Client } = pkg;
+import pkg from 'pg'
+const { Client } = pkg
+import fs from 'fs/promises'
+import path from 'path'
 
 export const POST = async ({ request }) => {
+
+    // Get connection params
+    const filePath = path.resolve('src/connectionParameters.json')
+    const fileContent = await fs.readFile(filePath, 'utf8')
+    const data = JSON.parse(fileContent)
+
     // Create client
     const client = new Client({
-        user: 'postgres',
-        host: '127.0.0.1',
-        database: 'timemenager',
-        password: 'zaq1@WSX',
-        port: 5432
+        user: data.user,
+        host: data.host,
+        database: data.database,
+        password: data.password,
+        port: data.port,
+        ssl: data.ssl,
     })
     
     try {
@@ -20,7 +29,9 @@ export const POST = async ({ request }) => {
         await client.connect()
 
         // Check if user exist
-        const res = await client.query(`SELECT * FROM users WHERE username = '${user}'`)
+        let insertQuery = 'SELECT * FROM users WHERE username = $1'
+        let insertParams = [user]
+        const res = await client.query(insertQuery, insertParams)
 
         // If exist then tell user about it
         if (res.rows.length != 0)
@@ -29,7 +40,9 @@ export const POST = async ({ request }) => {
         }
 
         // Add user to database
-        client.query(`INSERT INTO users (username, password) VALUES ('${user}', '${hashed}')`)
+        insertQuery = 'INSERT INTO users (username, password) VALUES ($1, $2)'
+        insertParams = [user, hashed]
+        await client.query(insertQuery, insertParams)
 
         return json({ message: 'User added to database, you can now log in', status: 200 })
     } 
