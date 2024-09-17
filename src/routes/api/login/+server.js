@@ -20,9 +20,9 @@ export const POST = async ({ request, cookies }) =>
         database: data.database,
         password: data.password,
         port: data.port,
-        ssl: {
-            ca: await fs.readFile(path.resolve('src/certificate.pem'))
-        }
+        ssl: data.ssl && data.ssl.ca ? {
+            ca: data.ssl.ca
+        } :  false
     })
     
     try {
@@ -36,7 +36,6 @@ export const POST = async ({ request, cookies }) =>
         let insertQuery = 'SELECT * FROM users WHERE username = $1'
         let insertParams = [user]
         const res = await client.query(insertQuery, insertParams)
-        console.log(res.rows.length)
 
         if (res.rows.length == 1)
         {
@@ -88,6 +87,11 @@ export const POST = async ({ request, cookies }) =>
             {
                 return json({ message: 'Wrong password', status: 204 })
             }
+        }
+
+        else
+        {
+            return json({ message: 'User not exists', status: 204 })
         }
     }
 

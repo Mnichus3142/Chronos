@@ -325,7 +325,15 @@
                         if (response.ok) 
                         {
                             const responseData = await response.json()
-                            success(responseData.message)
+                            if (responseData.status != 204)
+                            {
+                                success(responseData.message)
+                            }
+
+                            else
+                            {
+                                error(responseData.message, 'register')
+                            }
                         } 
 
                         else 

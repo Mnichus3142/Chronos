@@ -23,9 +23,9 @@ export async function load({ cookies })
         database: data.database,
         password: data.password,
         port: data.port,
-        ssl: {
-            ca: await fs.readFile(path.resolve('src/certificate.pem'))
-        }
+        ssl: data.ssl && data.ssl.ca ? {
+            ca: data.ssl.ca
+        } :  false
     })
 
     try 

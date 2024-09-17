@@ -18,9 +18,9 @@ export const POST = async ({ request }) => {
         database: data.database,
         password: data.password,
         port: data.port,
-        ssl: {
-            ca: await fs.readFile(path.resolve('src/certificate.pem'))
-        }
+        ssl: data.ssl && data.ssl.ca ? {
+            ca: data.ssl.ca
+        } :  false
     })
     
     try {
@@ -38,7 +38,7 @@ export const POST = async ({ request }) => {
         // If exist then tell user about it
         if (res.rows.length != 0)
         {
-            return json({ message: 'User already exists', status: 202 })
+            return json({ message: 'User already exists', status: 204 })
         }
 
         // Add user to database
