@@ -3,6 +3,5 @@
     "host": "127.0.0.1",
     "database": "timemenager",
     "password": "zaq1@WSX",
-    "port": 5432,
-    "ssl": false
+    "port": 5432
 }
