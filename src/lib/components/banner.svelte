@@ -4,12 +4,13 @@
     import { onMount } from 'svelte'
     import { page } from '$app/stores'
     import '../../app.css'
+    import { goto } from '$app/navigation'
 
     // Check if you are on landing page, if you are then do not show profile
     let isOnCorrectPage = false
 
     onMount(() => {
-        if ($page.url.pathname.substr($page.url.pathname.lastIndexOf('/')) == '/main' || $page.url.pathname.substr($page.url.pathname.lastIndexOf('/')) == '/main/')
+        if ($page.url.pathname.substr($page.url.pathname.lastIndexOf('/')) != '/')
         {
             isOnCorrectPage = true
         }
@@ -23,5 +24,7 @@
 </div>
 
 {#if isOnCorrectPage}
-  <Profile></Profile>
+    <div class="absolute top-6 right-4 text-background">
+        <Profile></Profile>
+    </div>
 {/if}

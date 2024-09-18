@@ -29,15 +29,12 @@ export const POST = async ({ cookies }) =>
 
         await client.connect()
 
-        const insertQuery = 'DELETE FROM cookies WHERE cookie_value = $1'
+        const insertQuery = 'SELECT username FROM cookies WHERE cookie_value = $1'
         const insertParams = [cookie_value]
-        await client.query(insertQuery, insertParams)
+        const res = await client.query(insertQuery, insertParams)
+        const data = res.rows[0].username
 
-        cookies.set('sessionId', undefined, {
-            path: '/',
-        })
-
-        return json({ message: 'All good', status: 200 })
+        return json({ message: `${data}`, status: 200 })
     }
 
     catch (error)

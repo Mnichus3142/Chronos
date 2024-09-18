@@ -2,6 +2,15 @@
     import { goto } from '$app/navigation';
     import '../../app.css'
 
+    // Tailwind
+    const button = "grid grid-cols-2 grid-rows-1 text-background"
+    const svg = "col-start-1"
+    const paragraph = "col-start-2 font-basic text-xl relative top-2"
+
+    // Variables
+    let isActive = false
+    let login = ""
+
     const handleLogout = async (event) => 
     {
         event.preventDefault()
@@ -37,275 +46,99 @@
         }
     }
 
-    // State in which menu is at the moment
-    let state = 'none'
-
-    // Actual height of menu
-    let height = '0px'
-
-    // Menu elements
-    let list = [
-        {data0: 'M12.296 9.015a3 3 0 1 0-.59 5.97 3 3 0 0 0 .59-5.97v0ZM19.518 12a7.238 7.238 0 0 1-.072.975l2.12 1.662a.507.507 0 0 1 .114.644l-2.005 3.469a.507.507 0 0 1-.615.215l-2.105-.847a.753.753 0 0 0-.711.082 7.703 7.703 0 0 1-1.01.588.747.747 0 0 0-.413.569l-.316 2.244a.519.519 0 0 1-.5.43h-4.01a.52.52 0 0 1-.501-.415l-.315-2.242a.753.753 0 0 0-.422-.573 7.278 7.278 0 0 1-1.006-.59.75.75 0 0 0-.708-.08l-2.105.848a.507.507 0 0 1-.616-.215L2.32 15.295a.506.506 0 0 1 .114-.644l1.792-1.406a.752.752 0 0 0 .28-.66 6.392 6.392 0 0 1 0-1.165.75.75 0 0 0-.284-.654L2.431 9.36a.507.507 0 0 1-.111-.641L4.325 5.25a.507.507 0 0 1 .616-.215l2.105.847a.755.755 0 0 0 .71-.082 7.71 7.71 0 0 1 1.01-.587.747.747 0 0 0 .414-.57L9.495 2.4a.52.52 0 0 1 .5-.43h4.01a.52.52 0 0 1 .502.416l.315 2.241a.753.753 0 0 0 .421.573c.351.17.687.366 1.006.59a.75.75 0 0 0 .709.08l2.104-.848a.507.507 0 0 1 .616.215l2.005 3.469a.506.506 0 0 1-.115.644l-1.791 1.406a.752.752 0 0 0-.284.66c.016.195.026.39.026.585Z', 
-        text: 'Settings', display: 'none', opacity: '0%', id: 0},
-
-        {data0: 'M14.25 15.75v1.875a1.875 1.875 0 0 1-1.875 1.875h-7.5A1.875 1.875 0 0 1 3 17.625V6.375A1.875 1.875 0 0 1 4.875 4.5H12c1.036 0 2.25.84 2.25 1.875V8.25', 
-        data1: 'M17.25 15.75 21 12l-3.75-3.75', 
-        data2: 'M8.25 12h12', 
-        text: 'Logout', display: 'none', opacity: '0%', id: 1, onclick: handleLogout},
-    ]
-
-    // Function which is unfolding user menu
-    function unfold()
-    {
-        if (state == 'block') 
-        {
-            changer(0, 1, 5, false)
-        }
-        else 
-        {
-            state = 'block'
-            changer(200, 1, 5, true)
-        }
+    async function getLogin() {
+        const response = await fetch("/api/getLogin", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                })
+        const json = await response.json()
+        login = json.message
     }
 
-    // Funcion which is folding user menu
-    function fold()
-    {
-        changer(0, 1, 5, false)
-    }
-
-
-    // Making menu element visible
-    function addElement(id, way)
-    {
-        if (way == 1)
-        {
-            list[id]['display'] = 'block' 
-            let i = 0
-            var intervalStart = setInterval (() => {
-                if (list[id]['opacity'] != '100%' && list[id]['display'] == 'block')
-                {
-                    i = i + 5
-                    list[id]['opacity'] = `${i}%`
-                }
-                else 
-                {
-                    clearInterval(intervalStart)
-                    return 0
-                }
-            }, 10)
-        }
-    }
-
-    // Function which is dynamicly changing state of menu
-    function changer (expected, interval, howMuchToAdd, whichWay)
-    {
-        if (whichWay)
-        {
-            const intervalStart = setInterval(() => {
-                if (height.substring(0, height.length - 2) >= expected)
-                {
-                    clearInterval(intervalStart)
-                    return 0
-                }
-                height = height.substring(0, height.length - 2)
-                height = parseInt(height) + howMuchToAdd
-                if (parseInt(height) == 125)
-                {
-                    addElement(0, 1)
-                }
-                if (parseInt(height) == 150)
-                {
-                    addElement(1, 1)
-                }
-                height = String(height) + 'px'
-            }, interval)
-        }
-
-        else 
-        {
-
-            const intervalStart = setInterval(() => {
-                if (height.substring(0, height.length - 2) == 0)
-                {
-                    state = 'none'
-                }
-                if (height.substring(0, height.length - 2) <= expected)
-                {
-                    clearInterval(intervalStart)
-                }
-                for (let i = 0; i < 2; i++)
-                {
-                    list[i]['display'] = 'none'
-                    list[i]['opacity'] = '0%'
-                }
-                height = height.substring(0, height.length - 2)
-                height = parseInt(height) - howMuchToAdd
-                height = String(height) + 'px'
-            }, interval)
-        }
-    }
-
-    // Changing colour of the svg element on hover
-    function svgChanger(id)
-    {
-        let svgDoc = id.contentDocument
-    }
+    getLogin()
 </script>
 
-<div class="profile">
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <!-- svelte-ignore a11y-missing-attribute -->
-    <a on:click={unfold}>
-        <svg width="46" height="46" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2.25c-5.376 0-9.75 4.374-9.75 9.75s4.374 9.75 9.75 9.75 9.75-4.374 9.75-9.75S17.376 2.25 12 2.25Zm.094 4.5a3.375 3.375 0 1 1 0 6.75 3.375 3.375 0 0 1 0-6.75ZM12 20.25a8.23 8.23 0 0 1-6.055-2.653C6.359 15.45 10.08 15 12 15s5.64.45 6.055 2.596A8.228 8.228 0 0 1 12 20.25Z"></path>
+<div class="cursor-pointer">
+    <button on:click={() => isActive = !isActive}>
+        <svg 
+        class="w-12 h-12 cursor-pointer transition-transform duration-100 ease-in-out z-50 relative" 
+        fill="none" stroke="currentColor" 
+        stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path 
+            d="M4 6h16" 
+            class="transition-transform duration-100 ease-in-out"
+            class:-translate-y-0={isActive} 
+            class:translate-x-2={isActive} 
+            class:rotate-45={isActive} />
+        <path 
+            d="M4 12h16" 
+            class="transition-opacity duration-100 ease-in-out"
+            class:opacity-0={isActive} />
+        <path 
+            d="M4 18h16" 
+            class="transition-transform duration-100 ease-in-out"
+            class:translate-y-[8.5px]={isActive} 
+            class:-translate-x-[9px]={isActive} 
+            class:-rotate-45={isActive} />
         </svg>
-    </a>
+    </button>
 </div>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<!-- svelte-ignore a11y-mouse-events-have-key-events -->
-<div class="menuBorder" id='menuBorder' style="--state: {state}; --height: {height}">
-    <div class="arrow-up"></div>
-    <div class="menu" id="menu" style="--state: {state}; --height: {height}" on:mouseleave={fold}>
-        <ul>
-            {#each list as item}
-                <li style="display: {item['display']}; opacity: {item['opacity']}">
-                    <button on:mouseover={svgChanger(item['id'])} on:click={item['onclick']}>
-                        <!-- <object data={item['data']} title="{item['data']}" width="25" height="25" id='{item['id']}'></object> -->
-                        <svg width="46" height="46" fill="none" stroke="#4d4b50" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="{item['data0']}"></path><path d="{item['data1']}"></path><path d="{item['data2']}"></path></svg>
-                        <!-- svelte-ignore a11y-missing-attribute -->
-                        <a>{item['text']}</a>
-                    </button>
-                </li>
-            {/each}
-        </ul>
+{#if isActive}
+    <div class="fixed inset-0 w-screen h-screen bg-gray-900 bg-opacity-40 backdrop-blur-sm flex justify-center items-center z-10">
+        <div class="absolute right-0 w-80 h-screen bg-primary">
+            <div class="absolute top-20 pl-6">
+                <p class="font-basic text-6xl text-background">Hello</p>
+                <p class="font-motto text-4xl text-mottoColor">{login}</p>
+            </div>
+            <div class="absolute top-56 pl-6">
+                <ul>
+                    <li class="mb-4">
+                        <button class="{button}">
+                            <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="{svg}">
+                                <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"></path>
+                                <path d="M13 3h-2a2 2 0 1 0 0 4h2a2 2 0 1 0 0-4Z"></path>
+                                <path d="M9 14h.01"></path>
+                                <path d="M9 17h.01"></path>
+                                <path d="m12 16 1 1 3-3"></path>
+                              </svg>
+                            <p class="{paragraph} -left-8">To Do List</p>
+                        </button>
+                    </li>
+                    <li class="mb-4">
+                        <button class="{button}">
+                            <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="{svg}">
+                                <path d="M18 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Z"></path>
+                                <path d="M16 3v4"></path>
+                                <path d="M8 3v4"></path>
+                                <path d="M4 11h16"></path>
+                                <path d="M10 15H8v2h2v-2Z"></path>
+                              </svg>
+                            <p class="{paragraph} -left-6">Calendar</p>
+                        </button>
+                    </li>
+                    <li class="mb-4">
+                        <button class="{button}">
+                            <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="{svg}">
+                                <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 0 0-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.723 1.723 0 0 0-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 0 0-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066-2.573c-.94-1.543.826-3.31 2.37-2.37 1 .608 2.296.07 2.572-1.065Z"></path>
+                                <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"></path>
+                              </svg>
+                            <p class="{paragraph} -left-[18px]">Settings</p>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <button on:click={handleLogout} class="grid grid-cols-2 grid-rows-1 absolute bottom-6 left-1/3 text-red-600 border-2 border-solid border-red-600 rounded-xl p-3 hover:scale-110 hover:bg-red-600 hover:text-background transition-all">
+                <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="col-start-1 row-start-1">
+                    <path d="M14 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-2"></path>
+                    <path d="M21 12H7"></path>
+                    <path d="m18 15 3-3-3-3"></path>
+                </svg>
+                <p class="col-start-2 row-start-1 relative top-2 font-basic text-xl">Logout</p>
+            </button>
+        </div>
     </div>
-</div>
-
-<style>
-    .arrow-up {
-        width: 1; 
-        height: 1; 
-        border-left: 15px solid transparent;
-        border-right: 15px solid transparent;
-        
-        border-bottom: 15px solid var(--3);
-
-        position: absolute;
-        top: -13px;
-        right: 9px;
-        z-index: 6;
-    }
-
-    .menuBorder {
-        position: absolute;
-        right: 20px;
-        top: 85px;
-
-        padding: 5px;
-        
-        display: var(--state);
-        height: var(--height);
-
-        background: linear-gradient(
-            to top,
-            var(--1),
-            var(--3)
-        );
-
-        border-radius: 11px;
-
-        display: var(--state);
-        place-items: center;
-    }
-
-    .menu {
-        position: relative;
-
-        display: var(--state);
-        height: var(--height);
-        width: 150px;
-        background-color: white;
-
-        border-radius: 9px;
-
-        text-align: center;
-    }
-
-    .menu ul {
-        list-style: none;
-    }
-
-    .menu ul li {
-        text-align: center;
-        padding: 10px;
-        position: relative;
-        bottom: 0;
-        left: 15%;
-        right: 0;
-        top: 0;
-        margin-top: auto;
-        margin-bottom: auto;
-        margin-left: auto;
-        margin-right: auto;
-        top: 80px
-    }
-
-    .menu ul li button {
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        width: 90px;
-        height: 37px;
-
-        background: none;
-        border: none;
-        position: relative;
-        z-index: 10;
-
-        background: white;
-        
-        transition: background 0.6s ease;
-
-        border: solid 2px var(--2);
-        border-radius: 10px;
-
-        font-family: 'Rubik', sans-serif;
-        font-weight: bold;
-    }
-
-    .menu ul li button:hover {
-        background: var(--2);
-    }
-
-    .menu ul li button:hover a {
-        color: white;
-    }
-
-    .menu ul li button:hover svg {
-        stroke: white;
-    }
-
-    .menu ul li button a {
-        margin-left: 10px;
-        margin-right: 4px;
-        color: var(--2);
-    }
-
-    .profile {
-        position: absolute;
-        top: 17px;
-        right: 20px;
-        color: white;
-        cursor: pointer;
-        transition: transform 0.15s ease-in-out;
-    }
-
-    .profile:hover {
-        transform: scale(120%);
-    }
-</style>
+{/if}
