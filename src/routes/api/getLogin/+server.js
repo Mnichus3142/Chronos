@@ -29,12 +29,17 @@ export const POST = async ({ cookies }) =>
 
         await client.connect()
 
-        const insertQuery = 'SELECT username FROM cookies WHERE cookie_value = $1'
-        const insertParams = [cookie_value]
-        const res = await client.query(insertQuery, insertParams)
-        const data = res.rows[0].username
+        let insertQuery = 'SELECT user_id FROM cookies WHERE cookie_value = $1'
+        let insertParams = [cookie_value]
+        let res = await client.query(insertQuery, insertParams)
+        const user_id = res.rows[0].user_id
 
-        return json({ message: `${data}`, status: 200 })
+        insertQuery = 'SELECT username FROM users WHERE id = $1'
+        insertParams = [user_id]
+        res = await client.query(insertQuery, insertParams)
+        const username = res.rows[0].username
+
+        return json({ message: `${username}`, status: 200 })
     }
 
     catch (error)

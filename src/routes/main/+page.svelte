@@ -29,9 +29,28 @@
     }
 </script>
 
-<body>
-    <Banner></Banner>
-    <main>
-        
+<body class="flex flex-col min-h-screen">
+    <div class="row-start-1">
+        <Banner></Banner>
+    </div>
+    <main class="flex-1 grid grid-cols-3 grid-rows-1 w-screen h-full">
+        <!-- Quick TODO list -->
+        <div class="col-start-1 row-start-1 p-3">
+            <div class="border-2 border-solid border-third w-full h-full rounded-xl">
+                <div class="grid grid-cols-2 grid-rows-1 font-basic text-xl text-third">
+                    <p class="col-start-1">Quick To Do List</p>
+                    <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="col-start-2">
+                        <path d="M12 5v14"></path>
+                        <path d="M5 12h14"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <div class="col-start-2 row-start-1 bg-red-600">
+
+        </div>
+        <div class="col-start-3 row-start-1 bg-yellow-400">
+
+        </div>
     </main>
 </body>

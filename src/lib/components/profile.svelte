@@ -105,7 +105,7 @@
                                 <path d="M9 17h.01"></path>
                                 <path d="m12 16 1 1 3-3"></path>
                               </svg>
-                            <p class="{paragraph} -left-8">To Do List</p>
+                            <p class="{paragraph} -left-[50px]">Today tasks</p>
                         </button>
                     </li>
                     <li class="mb-4">

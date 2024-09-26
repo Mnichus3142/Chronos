@@ -42,9 +42,15 @@ export const POST = async ({ request, cookies }) =>
             // Check if password is equal in database and this from user
             if (res.rows[0]["password"] === hashed)
             {
-                // Delete old cookies
-                insertQuery = 'DELETE FROM cookies WHERE username = $1'
+                // Get user id
+                insertQuery = 'SELECT id FROM users WHERE username = $1'
                 insertParams = [user]
+                const res = await client.query(insertQuery, insertParams)
+                const user_id = res.rows[0].id
+
+                // Delete old cookies
+                insertQuery = 'DELETE FROM cookies WHERE user_id = $1'
+                insertParams = [user_id]
                 await client.query(insertQuery, insertParams)
 
                 // Createe cookie
@@ -75,9 +81,11 @@ export const POST = async ({ request, cookies }) =>
 
                 }
 
+                console.log("dupa")
+
                 // Add cookie value to database
-                insertQuery = 'INSERT INTO cookies (cookie_value, username, remember_me) VALUES ($1, $2, $3)'
-                insertParams  = [cookieValue, user, rememberMe]
+                insertQuery = 'INSERT INTO cookies (cookie_value, user_id, remember_me) VALUES ($1, $2, $3)'
+                insertParams  = [cookieValue, user_id, rememberMe]
                 await client.query(insertQuery, insertParams)
 
                 return json({ message: 'All good', status: 200 })

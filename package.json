@@ -1,6 +1,6 @@
 {
 	"name": "time-rush",
-	"version": "0.0.4.1",
+	"version": "0.0.4.6",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
