@@ -7,6 +7,12 @@
     let load = false
 
     onMount(() => {
+        const cookie_value = document.cookie.split('; ').find(row => row.startsWith('sessionId='))?.split('=')[1]
+        
+        if (!cookie_value) {
+            goto('/')
+        }
+
         // Init page when it's loaded
         if (document.readyState === 'complete') 
         {
@@ -29,6 +35,7 @@
     }
 </script>
 
+{#if load}
 <body class="flex flex-col min-h-screen">
     <div class="row-start-1">
         <Banner></Banner>
@@ -46,11 +53,16 @@
                 </div>
             </div>
         </div>
+        <!-- TODO: On top welcome screen and greetings for the time we have spend togeter
+        TODO: On bottom today's weather for user localisation -->
         <div class="col-start-2 row-start-1 bg-red-600">
 
         </div>
+        <!-- TODO: How much you have done today and how much should be done 
+         TODO: Changelog and actual app version -->
         <div class="col-start-3 row-start-1 bg-yellow-400">
 
         </div>
     </main>
 </body>
+{/if}

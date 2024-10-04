@@ -34,7 +34,7 @@ export async function load({ cookies })
         if (cookie_value != undefined) {
             
             await client.connect();
-            const insertQuery = 'DELETE FROM cookies WHERE cookie_value = $1'
+            const insertQuery = 'SELECT cookie_value FROM cookies WHERE cookie_value = $1'
             const insertParams = [cookie_value]
             const check = await client.query(insertQuery, insertParams)
             
@@ -52,7 +52,8 @@ export async function load({ cookies })
         }
     }
 
-    finally {
+    finally
+    {
         await client.end()
     }
 }

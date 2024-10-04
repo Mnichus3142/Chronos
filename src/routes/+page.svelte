@@ -63,9 +63,6 @@
     let visibilityRegister = "hidden"
 
     onMount(() => {
-        // FIXME: Reload page? Do I really want it?
-        goto("/")
-
         // Init page when it's loaded
         if (document.readyState === 'complete') 
         {

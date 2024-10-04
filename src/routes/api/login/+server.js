@@ -81,8 +81,6 @@ export const POST = async ({ request, cookies }) =>
 
                 }
 
-                console.log("dupa")
-
                 // Add cookie value to database
                 insertQuery = 'INSERT INTO cookies (cookie_value, user_id, remember_me) VALUES ($1, $2, $3)'
                 insertParams  = [cookieValue, user_id, rememberMe]

@@ -11,6 +11,10 @@
     let isActive = false
     let login = ""
 
+    // Menu strings
+    const strings = ["Where are we going", "What are we going to do now", "Where should we go", "What can we do for you", "What comes next", "What's your plan", "Ready for the next step", "What’s your next move", "What would you like to do"]
+    let actual
+
     const handleLogout = async (event) => 
     {
         event.preventDefault()
@@ -57,11 +61,24 @@
         login = json.message
     }
 
+    function getRandomString () 
+    {
+        const randomIndex = Math.floor(Math.random() * strings.length)
+        actual = strings[randomIndex]
+    }
+
+    function handleButton ()
+    {
+        isActive = !isActive
+        getRandomString()
+    }
+
+    getRandomString()
     getLogin()
 </script>
 
 <div class="cursor-pointer">
-    <button on:click={() => isActive = !isActive}>
+    <button on:click={() => handleButton()}>
         <svg 
         class="w-12 h-12 cursor-pointer transition-transform duration-100 ease-in-out z-50 relative" 
         fill="none" stroke="currentColor" 
@@ -90,12 +107,22 @@
 {#if isActive}
     <div class="fixed inset-0 w-screen h-screen bg-gray-900 bg-opacity-40 backdrop-blur-sm flex justify-center items-center z-10">
         <div class="absolute right-0 w-80 h-screen bg-primary">
-            <div class="absolute top-20 pl-6">
-                <p class="font-basic text-6xl text-background">Hello</p>
-                <p class="font-motto text-4xl text-mottoColor">{login}</p>
+            <div class="relative top-20 pl-6 w-80">
+                <p class="font-basic text-6xl text-background">{actual}</p>
+                <p class="font-motto text-4xl text-mottoColor mt-2 break-words mb-28">{login}?</p>
             </div>
-            <div class="absolute top-56 pl-6">
+            <div class="relative pl-6">
                 <ul>
+                    <li class="mb-4">
+                        <button class="{button}">
+                            <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="{svg}">
+                                <path d="M5 12H3l9-9 9 9h-2"></path>
+                                <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M9 21v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6"></path>
+                            </svg>
+                            <p class="{paragraph} -left-[44px]">Dashboard</p>
+                        </button>
+                    </li>
                     <li class="mb-4">
                         <button class="{button}">
                             <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="{svg}">
