@@ -6,6 +6,10 @@
     // State of page
     let load = false
 
+    // Changelog data
+    let changelogData = new Array()
+    let version
+
     onMount(() => {
         const cookie_value = document.cookie.split('; ').find(row => row.startsWith('sessionId='))?.split('=')[1]
         
@@ -27,11 +31,41 @@
 
     function initPage() {
       load = true
+      handleChangelog()
     }
 
     const gotoChangelog = () => 
     {
         window.open('https://github.com/Mnichus3142/Time-Rush/blob/main/CHANGELOG.md', '_blank')
+    }
+
+    const handleChangelog = async () =>
+    {
+        try {
+                const response = await fetch('/api/getChangelog/', {
+                    method: 'POST'
+                })
+
+                if (response.ok)
+                {
+                    const responseData = await response.json()
+                    const data = responseData.data.split('\n')
+                    version = data[0].substr(3)
+                    for (let i = 0; i < data.length; i++)
+                    {
+                        if (i > 0)
+                        {
+                            changelogData.push(data[i])
+                        }
+                    }
+
+                    changelogData = [...changelogData]
+                }    
+            }
+            
+        catch (error) {
+            console.error('Error:', error)
+        }
     }
 </script>
 
@@ -55,13 +89,26 @@
         </div>
         <!-- TODO: On top welcome screen and greetings for the time we have spend togeter
         TODO: On bottom today's weather for user localisation -->
-        <div class="col-start-2 row-start-1 bg-red-600">
+        <div class="col-start-2 row-start-1">
+            <div class="row-start-1">
 
+            </div>
+            <div class="row-start-2 flex flex-col">
+                
+            </div>
         </div>
         <!-- TODO: How much you have done today and how much should be done 
          TODO: Changelog and actual app version -->
-        <div class="col-start-3 row-start-1 bg-yellow-400">
+        <div class="col-start-3 row-start-1 grid grid-cols-1 grid-rows-2">
+            <div class="row-start-1">
 
+            </div>
+            <div class="row-start-2 flex flex-col justify-center place-items-center">
+                <p class="text-3xl text-center border-2 border-secondary rounded-lg p-4 mb-6">Changelog<br>{version}</p>
+                {#each changelogData as changelogItem}
+                    <p>{changelogItem}</p>
+                {/each}
+            </div>
         </div>
     </main>
 </body>
