@@ -1,5 +1,6 @@
  <script>
     import Banner from '$lib/components/banner.svelte'
+    import Notification from '../lib/components/notification.svelte'
     import { onMount, onDestroy } from 'svelte'
     import { clickOutside } from '$lib/functions/clickOutside.js'
     import { sha256 } from '$lib/functions/sha256.js'
@@ -14,7 +15,7 @@
     const form = "font-basic text-3xl text-primary flex justify-center items-center flex-col gap-0"
     const svg = "relative h-9 float-left"
     const buttonForForm = "mt-10 p-3 pt-0 pb-1 bg-none border-2 border-solid border-accentNotActive text-accentNotActive text-xl cursor-pointer transition-all rounded-xl before:content-[' '] before:bg-background before:h-2 before:w-4 before:block before:relative before:-top-1 before:transition-all after:content-[' '] after:bg-background after:h-2 after:w-4 after:block after:relative after:top-2 after:left-12 after:transition-all hover:text-accent hover:scale-110 hover:border-accent hover:before:translate-x-12 hover:after:-translate-x-12"
-	
+
     // State of page
     let load = false
 	
@@ -367,7 +368,11 @@
 
 <body class="flex flex-col min-h-screen">
     {#if load}
+        <!-- <button on:click={test}>
+            AAAAAAAAAAAAAAAAAAAAAAAAA
+        </button> -->
         <Banner></Banner>
+        <Notification></Notification>
         <div class="bg-background w-full flex-1 flex justify-center place-items-center relative">
             <div class="grid grid-cols-2 bg-gradient-to-b from-secondary to-primary rounded-xl p-2 h-[800px] w-[80%]">
                 <div class="{formContainer} col-start-1">

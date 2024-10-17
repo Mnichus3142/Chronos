@@ -19,6 +19,7 @@ export default {
       fontFamily: {
         basic: ['Rubik', 'sans-serif'],
         motto: ['Playwrite HR Lijeva', 'cursive'],
+        clock: ['Orbitron', 'sans-serif'],
       },
     },
   },
