@@ -1,26 +1,37 @@
 <script>
     import { table } from '$lib/stores/notificationStore.js'
 
-    let count_value
+    let notifications
 
     table.subscribe((value) => {
-		count_value = value
-        console.log(count_value)
+		notifications = value.notifications
 	})
 
-    function increment() {
-		table.update(items => {
-            items.push("Kutas")
-            return items
-        })
-	}
+    const updateNotifications = () => {
+        table.subscribe((value) => {
+		    notifications = value.notifications
+	    })
+    }
+
+    setInterval(() => {
+        updateNotifications()
+    }, 10)
+
+    function calculate (actual, real)
+    {
+        console.log(`${actual / real * 100}%`)
+    }
 </script>
 
-<div class="h-96 w-96 bg-red-500">
-    <button on:click={increment}>
-        KUTAS
-    </button>
-    {#each count_value as item}
-        <p>{item}</p>
+<div class="w-96 absolute z-50 left-[40%] top-12">
+    {#each notifications as item}
+        <div class="relative top-1 h-1 rounded-t-md"
+        class:bg-green-500={item.type == 'success'}
+        class:bg-red-500={item.type == 'error'}
+        class:bg-blue-500={item.type == 'info'}
+        >
+
+        </div>
+        <p class="w-full h-32 mb-8 bg-background rounded-md shadow-md grid justify-center place-items-center">{item.prompt}</p>
     {/each}
 </div>

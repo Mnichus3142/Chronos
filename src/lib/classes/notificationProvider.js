@@ -5,10 +5,55 @@ export class NotificationProvider
         this.notifications = []
     }
 
+    startClock()
+    {
+        this.interval = setInterval(() => {
+            this.worker()
+        }, 10)
+    }
+
+    stopClock()
+    {
+        clearInterval(this.interval)
+    }
+
+    worker ()
+    {
+        this.notifications.forEach((item) => {
+            if (item.duration === 0)
+            {
+                this.removeNotification(item.id)
+            }
+            item.duration = item.duration - 10
+        })
+    }
+
     addNotification (prompt, type)
     {
-        this.notifications.push({ prompt, type })
+        const id = Date.now()
+
+        if (this.notifications.length === 4)
+        {
+            this.removeNotification(this.notifications[0].id)
+        }
+
+        this.notifications.push({ id, prompt, type, duration: 2000 })
+
+        if (this.notifications.length === 1)
+        {
+            this.startClock()
+        }
+
         return 0
+    }
+
+    removeNotification(id) {
+        this.notifications = this.notifications.filter(notif => notif.id !== id)
+
+        if (this.notifications.length === 0)
+        {
+            this.stopClock()
+        }
     }
 
     getNotifications ()

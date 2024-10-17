@@ -6,6 +6,7 @@
     import { sha256 } from '$lib/functions/sha256.js'
     import { validate } from '$lib/functions/passwordValidate.js'
     import { goto } from '$app/navigation'
+    import { createNotification } from '$lib/functions/createNotification.js'
     import '../app.css'
 
     // Tailwind
@@ -287,7 +288,8 @@
             return 0
         }
 
-        error("Username and/or password is empty", 'login')
+        createNotification("Username and/or password is empty", 'error')
+        // error("Username and/or password is empty", 'login')
     }
 
     // Handle connection with backend for register
