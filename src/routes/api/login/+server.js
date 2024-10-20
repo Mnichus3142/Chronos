@@ -5,6 +5,7 @@ import { sha256 } from '$lib/functions/sha256.js'
 import { generateUniqueData } from '../../../lib/functions/generateUniqueData.js'
 import fs from 'fs/promises'
 import path from 'path'
+import { generateKeys } from '../../../lib/functions/cryptoProviders.js'
 
 export const POST = async ({ request, cookies }) => 
 {
@@ -57,10 +58,22 @@ export const POST = async ({ request, cookies }) =>
                 const uniqueData = await generateUniqueData(user)
                 const cookieValue = await sha256(uniqueData)
 
+                // Create keys
+                const keyData = await sha256(`${hashed} + ${user}`)
+                const { publicKey, privateKey } = generateKeys(keyData)
+
                 // Cookie if we want to remember
                 if (rememberMe)
                 {
                     cookies.set('sessionId', cookieValue, {
+                        path: '/',
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: "lax",
+                        maxAge: 60 * 60 * 24 * 365 * 100
+                    })
+
+                    cookies.set('privateKey', privateKey, {
                         path: '/',
                         httpOnly: true,
                         secure: true,
@@ -79,6 +92,12 @@ export const POST = async ({ request, cookies }) =>
                         sameSite: "lax"
                     })
 
+                    cookies.set('privateKey', privateKey, {
+                        path: '/',
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: "lax"
+                    })
                 }
 
                 // Add cookie value to database

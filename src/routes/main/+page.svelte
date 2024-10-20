@@ -90,10 +90,10 @@
     <main class="flex-1 grid grid-cols-3 grid-rows-1 w-screen h-full">
         <!-- Quick TODO list -->
         <div class="col-start-1 row-start-1 p-3">
-            <div class="border-2 border-solid border-third w-full h-full rounded-xl p-4">
+            <div class="border-2 border-solid border-third w-full h-full rounded-xl">
                 <div class="text-third text-center grid grid-cols-1 grid-rows-1">
-                    <p class="font-basic text-3xl col-start-1 row-start-1">Qucik To Do list</p>
-                    <button class="col-start-1 row-start-1 mr-0 ml-auto relative -top-1">
+                    <p class="font-basic text-3xl col-start-1 row-start-1 w-full border-b-2 border-third mt-1">Qucik To Do list</p>
+                    <button class="col-start-1 row-start-1 mr-0 ml-auto relative -top-0.5">
                         <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 5v14"></path>
                             <path d="M5 12h14"></path>

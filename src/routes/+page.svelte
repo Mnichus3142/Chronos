@@ -128,7 +128,7 @@
     {
         if (slide == "")
         {
-            slide = "-translate-x-full"
+            slide = "-translate-x-[100.05%]"
             visibilityLogin = "hidden"
             visibilityRegister = "visible"
             state = "register"
@@ -208,38 +208,6 @@
         }
     }
 
-    // As it says
-    function error(message, mode)
-    {
-        if (mode == 'login')
-        {
-            alerts.alertLogin = true
-        }
-        
-        else 
-        {
-            alerts.alertRegister = true
-        }
-
-        alerts.alertMessage = message
-    }
-
-    // As it says
-    function success(message)
-    {
-        alerts.successRegister = true
-        alerts.alertMessage = message
-    }
-
-    // As it says
-    function resetError()
-    {
-        alerts.alertLogin = false
-        alerts.alertRegister = false
-		alerts.successRegister = false
-        alerts.alertMessage = ""
-    }
-
     // Handle connection with backend for login
     const handleLogin = async (event) =>
     {
@@ -271,7 +239,7 @@
 
                     if (responseData.status != 200)
                     {
-                        error(responseData.message, 'login')
+                        createNotification(responseData.message, 'error')
                     }
 
                     else
@@ -289,7 +257,6 @@
         }
 
         createNotification("Username and/or password is empty", 'error')
-        // error("Username and/or password is empty", 'login')
     }
 
     // Handle connection with backend for register
@@ -327,23 +294,23 @@
                             const responseData = await response.json()
                             if (responseData.status != 204)
                             {
-                                success(responseData.message)
+                                createNotification(responseData.message, 'success')
                             }
 
                             else
                             {
-                                error(responseData.message, 'register')
+                                createNotification(responseData.message, 'error')
                             }
                         } 
 
                         else 
                         {
-                            error(response.message, 'register')
+                            createNotification(response.message, 'error')
                         }
                     } 
                     
                     catch (error) {
-                        error(`Error: ${error}`, 'register')
+                        createNotification(`Error: ${error}`, 'error')
                     }
 
                     return true
@@ -351,18 +318,18 @@
 
                 else
                 {
-                    error(validator, 'register')
+                    createNotification(validator, 'error')
 
                     return false
                 }
             }
 
-            error("Passwords do not match", 'register')
+            createNotification("Passwords do not match", 'error')
 
             return false
         }
 
-        error("Username and/or password is empty", 'register')
+        createNotification("Username and/or password is empty", 'error')
 
         return false
     }
@@ -406,8 +373,7 @@
                         bind:value={username} 
                         use:clickOutside 
                         on:click_outside={resetLabels} 
-                        on:click={() => moveLabel("usr")} 
-                        on:click={resetError}>
+                        on:click={() => moveLabel("usr")}>
 
                         <label for="password" class="{label} {passLabel}">
                             <svg 
@@ -438,8 +404,7 @@
                         bind:value={password} 
                         use:clickOutside 
                         on:click_outside={resetLabels} 
-                        on:click={() => moveLabel("pass")} 
-                        on:click={resetError}>
+                        on:click={() => moveLabel("pass")}>
 
 						<p class="inline-flex items-center p-0 mt-5 -mb-7 text-primary scale-125">
                             <input type="checkbox" bind:checked={rememberMe} id="rememberMeLabel" class="appearance-none bg-background border-2 border-solid border-accentNotActive rounded w-8 h-8 cursor-pointer relative scale-50 checked:bg-accent checked:border-accent checked:after:content-['✓'] checked:after:text-background checked:after:absolute checked:after:-top-1 checked:after:left-1 transition-all">
@@ -487,8 +452,7 @@
                         bind:value={username} 
                         use:clickOutside 
                         on:click_outside={resetLabels} 
-                        on:click={() => moveLabel("usr")} 
-                        on:click={resetError}>
+                        on:click={() => moveLabel("usr")}>
 
                         <label for="passwordRegister" class="{label} {passLabelRegister}">
                             <svg 
@@ -519,8 +483,7 @@
                         bind:value={passwordRegister} 
                         use:clickOutside 
                         on:click_outside={resetLabels} 
-                        on:click={() => moveLabel("passRegister")} 
-                        on:click={resetError}>
+                        on:click={() => moveLabel("passRegister")}>
 
                         <label for="passwordRegisterConfirm" class="{label} {passLabelRegisterConfirm} -left-2">
                             <svg 
@@ -551,8 +514,7 @@
                         bind:value={passwordRegisterConfirm} 
                         use:clickOutside 
                         on:click_outside={resetLabels} 
-                        on:click={() => moveLabel("passRegisterConfirm")} 
-                        on:click={resetError}>
+                        on:click={() => moveLabel("passRegisterConfirm")}>
 
                         {#if state == 'register' && alerts.alertRegister == true}
                             <p class="font-basic text-lg mt-6 -mb-5 text-red-600 animate-pulse">
@@ -580,8 +542,7 @@
                         <p class="text-third font-basic text-xl text-center w-[80%] mt-8">You will get access to many interesting features, and the registration process will only take a moment. Click the button below</p>
                         <button 
                         class="bg-none border-2 border-solid border-third rounded-xl text-third p-2 pb-3 cursor-pointer relative top-10 scale-125 transition-all hover:bg-accent hover:border-accent hover:text-background"
-                        on:click={slider} 
-                        on:click={resetError}>
+                        on:click={slider}>
                             I want to register!
                         </button>
                     {:else}
@@ -589,8 +550,7 @@
                         <p class="text-third font-basic text-xl text-center w-[80%] mt-8">Click the button below to go to login page, and get access to your acconunt in just a while</p>
                         <button
                         class="bg-none border-2 border-solid border-third rounded-xl text-third p-2 pb-3 cursor-pointer relative top-10 scale-125 transition-all hover:bg-accent hover:border-accent hover:text-background"
-                        on:click={slider} 
-                        on:click={resetError}>
+                        on:click={slider}>
                             I want to log in!
                         </button>
                     {/if}

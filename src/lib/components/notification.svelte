@@ -16,22 +16,20 @@
     setInterval(() => {
         updateNotifications()
     }, 10)
-
-    function calculate (actual, real)
-    {
-        console.log(`${actual / real * 100}%`)
-    }
 </script>
 
 <div class="w-96 absolute z-50 left-[40%] top-12">
     {#each notifications as item}
-        <div class="relative top-1 h-1 rounded-t-md"
-        class:bg-green-500={item.type == 'success'}
-        class:bg-red-500={item.type == 'error'}
-        class:bg-blue-500={item.type == 'info'}
-        >
+        <div class="animate-bounce">
+            <div class="relative top-1 h-1 rounded-t-md"
+            class:bg-green-500={item.type == 'success'}
+            class:bg-red-500={item.type == 'error'}
+            class:bg-blue-500={item.type == 'info'}
+            style="width: {item.width}%"
+            >
 
+            </div>
+            <p class="w-full h-32 mb-8 bg-background rounded-md shadow-md grid justify-center place-items-center">{item.prompt}</p>
         </div>
-        <p class="w-full h-32 mb-8 bg-background rounded-md shadow-md grid justify-center place-items-center">{item.prompt}</p>
     {/each}
 </div>

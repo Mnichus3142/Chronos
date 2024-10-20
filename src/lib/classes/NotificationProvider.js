@@ -25,6 +25,7 @@ export class NotificationProvider
                 this.removeNotification(item.id)
             }
             item.duration = item.duration - 10
+            item.width = item.duration / 20
         })
     }
 
@@ -37,7 +38,7 @@ export class NotificationProvider
             this.removeNotification(this.notifications[0].id)
         }
 
-        this.notifications.push({ id, prompt, type, duration: 2000 })
+        this.notifications.push({ id, prompt, type, duration: 2000, width: 100 })
 
         if (this.notifications.length === 1)
         {

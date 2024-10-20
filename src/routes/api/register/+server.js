@@ -3,6 +3,8 @@ import pkg from 'pg'
 const { Client } = pkg
 import fs from 'fs/promises'
 import path from 'path'
+import { generateKeys } from '../../../lib/functions/cryptoProviders.js'
+import { sha256 } from '../../../lib/functions/sha256.js'
 
 export const POST = async ({ request }) => {
 
@@ -41,9 +43,13 @@ export const POST = async ({ request }) => {
             return json({ message: 'User already exists', status: 204 })
         }
 
+        // Create keys
+        const keyData = await sha256(`${hashed} + ${user}`)
+        const { publicKey, privateKey } = generateKeys(keyData)
+
         // Add user to database
-        insertQuery = 'INSERT INTO users (username, password) VALUES ($1, $2)'
-        insertParams = [user, hashed]
+        insertQuery = 'INSERT INTO users (username, password, public_key) VALUES ($1, $2, $3)'
+        insertParams = [user, hashed, publicKey]
         await client.query(insertQuery, insertParams)
 
         return json({ message: 'User added to database, you can now log in', status: 200 })
