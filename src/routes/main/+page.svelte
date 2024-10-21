@@ -14,6 +14,9 @@
     const strings = ["Hey there! How's it going?", "What's up? Good to see you!", "Hiya! How have you been?", "Hey there! What's happening?", "Yo! How’ve you been?", "Sup? All good?"]
     let actual = ""
 
+    // Let todo temp
+    let list = []
+
     onMount(() => {
         const cookie_value = document.cookie.split('; ').find(row => row.startsWith('sessionId='))?.split('=')[1]
         
@@ -34,7 +37,10 @@
 
         
         getRandomString()
+
     })
+
+    createNewListItem()
 
     function initPage() {
       load = true
@@ -45,6 +51,23 @@
     {
         const randomIndex = Math.floor(Math.random() * strings.length)
         actual = strings[randomIndex]
+    }
+
+    function updateTask (id, text)
+    {
+        
+    }
+
+    function createNewListItem ()
+    {
+        if (list.length != 0)
+        {
+            list[list.length - 1].isInput = false
+        }
+
+        const newItem = {id: `${list.length}`, text: "", isInput: true}
+
+        list.push(newItem)
     }
 
     const gotoChangelog = () => 
@@ -94,12 +117,23 @@
                 <div class="text-third text-center grid grid-cols-1 grid-rows-1">
                     <p class="font-basic text-3xl col-start-1 row-start-1 w-full border-b-2 border-third mt-1">Qucik To Do list</p>
                     <button class="col-start-1 row-start-1 mr-0 ml-auto relative -top-0.5">
-                        <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <!-- <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 5v14"></path>
                             <path d="M5 12h14"></path>
-                        </svg>
+                        </svg> -->
                     </button>
                 </div>
+                {#each list as element}
+                    {#if element.isInput}
+                        <div class="w-full h-12 grid justify-start place-items-center grid-cols-1 grid-rows-1">
+                            <input type="text" class="col-start-1 row-start-1 w-full h-full p-4 focus:outline-none" placeholder="Write your task here...">
+                        </div>
+                    {:else}
+                        <div class="w-full p-4 h-12 grid justify-start place-items-center">
+                            {element.text}
+                        </div>
+                    {/if}
+                {/each}
             </div>
         </div>
         <!-- TODO: On top welcome screen and greetings for the time we have spend togeter
