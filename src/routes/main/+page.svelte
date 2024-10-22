@@ -20,7 +20,7 @@
 
     onMount(() => {
         const cookie_value = document.cookie.split('; ').find(row => row.startsWith('sessionId='))?.split('=')[1]
-        
+
         if (!cookie_value) {
             goto('/')
         }
@@ -43,9 +43,10 @@
 
     createNewListItem()
 
-    function initPage() {
-      load = true
-      handleChangelog()
+    function initPage() 
+    {
+        load = true
+        handleChangelog()
     }
 
     function getRandomString () 
@@ -76,14 +77,19 @@
         else 
         {
             const newId = list[list.length - 1].id + 1
-            newItem = {id: `${newId}`, text: "", state: "input"}
+            newItem = {id: newId, text: "", state: "input"}
         }
 
         list.push(newItem)
+
+        if (load)
+        {
+            handleDatabaseSync()
+        }
     }
 
     function removeItem (id) {
-        list = list.filter(item => !(item.id === id && item.state !== "input"));
+        list = list.filter(item => !(item.id === id && item.state !== "input"))
     }
 
     function handleEdit (id)
@@ -135,6 +141,39 @@
     const gotoChangelog = () => 
     {
         window.open('https://github.com/Mnichus3142/Time-Rush/blob/main/docs/CHANGELOG.md', '_blank')
+    }
+
+    const handleDatabaseSync = async () =>
+    {
+        const listActual = JSON.stringify(list)
+        const send = true
+
+        const data =  
+        {
+            listActual,
+            send
+        }
+
+        try {
+            const response = await fetch('/api/cryptoProviders/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+
+            if (response.ok)
+            {
+                
+            }
+        }
+            
+        catch (error) {
+            console.error('Error:', error)
+        }
+
+        return 0
     }
 
     const handleChangelog = async () =>

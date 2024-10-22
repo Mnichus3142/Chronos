@@ -45,7 +45,7 @@ export const POST = async ({ request }) => {
 
         // Create keys
         const keyData = await sha256(`${hashed} + ${user}`)
-        const { publicKey, privateKey } = generateKeys(keyData)
+        const { publicKey, privateKey } = await generateKeys(keyData)
 
         // Add user to database
         insertQuery = 'INSERT INTO users (username, password, public_key) VALUES ($1, $2, $3)'

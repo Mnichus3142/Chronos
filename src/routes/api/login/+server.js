@@ -67,7 +67,7 @@ export const POST = async ({ request, cookies }) =>
                 {
                     cookies.set('sessionId', cookieValue, {
                         path: '/',
-                        httpOnly: true,
+                        httpOnly: false,
                         secure: true,
                         sameSite: "lax",
                         maxAge: 60 * 60 * 24 * 365 * 100
@@ -75,7 +75,15 @@ export const POST = async ({ request, cookies }) =>
 
                     cookies.set('privateKey', privateKey, {
                         path: '/',
-                        httpOnly: true,
+                        httpOnly: false,
+                        secure: true,
+                        sameSite: "lax",
+                        maxAge: 60 * 60 * 24 * 365 * 100
+                    })
+
+                    cookies.set('publicKey', publicKey, {
+                        path: '/',
+                        httpOnly: false,
                         secure: true,
                         sameSite: "lax",
                         maxAge: 60 * 60 * 24 * 365 * 100
@@ -87,14 +95,21 @@ export const POST = async ({ request, cookies }) =>
                 {
                     cookies.set('sessionId', cookieValue, {
                         path: '/',
-                        httpOnly: true,
+                        httpOnly: false,
                         secure: true,
                         sameSite: "lax"
                     })
 
                     cookies.set('privateKey', privateKey, {
                         path: '/',
-                        httpOnly: true,
+                        httpOnly: false,
+                        secure: true,
+                        sameSite: "lax"
+                    })
+
+                    cookies.set('publicKey', publicKey, {
+                        path: '/',
+                        httpOnly: false,
                         secure: true,
                         sameSite: "lax"
                     })

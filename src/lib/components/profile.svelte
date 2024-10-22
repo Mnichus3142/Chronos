@@ -1,5 +1,7 @@
 <script>
-    import { goto } from '$app/navigation';
+    import { goto } from '$app/navigation'
+    import { onMount } from 'svelte'
+    import { page } from '$app/stores'
     import '../../app.css'
 
     // Tailwind
