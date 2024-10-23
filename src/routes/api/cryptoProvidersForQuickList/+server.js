@@ -58,8 +58,8 @@ export const POST = async ({ cookies, request }) =>
 
             else 
             {
-                insertQuery = 'UPDATE quicktodo SET encryptedlist = $1, WHERE user_id = $2'
-                insertParams = [encryptedMessage, id]
+                insertQuery = 'UPDATE quicktodo SET encryptedlist = $1, iv = $2 WHERE user_id = $3'
+                insertParams = [encryptedMessage, iv, id]
                 await client.query(insertQuery, insertParams)
             }
 
@@ -76,11 +76,8 @@ export const POST = async ({ cookies, request }) =>
             const encryptedMessage = values.encryptedlist
 
             let decryptedMessage = decryptMessage(privateKey, encryptedMessage, iv, publicKey)
-            // decryptedMessage = JSON.parse(decryptedMessage)
 
-            console.log(decryptedMessage)
-
-            return json({ status: 200 })
+            return json({ decryptedMessage: decryptedMessage ,status: 200 })
         }
     }
 

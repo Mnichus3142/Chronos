@@ -40,8 +40,6 @@
         }
 
         handleDatabaseSync()
-
-        mode = "SET"
         
         getRandomString()
 
@@ -96,6 +94,10 @@
 
     function removeItem (id) {
         list = list.filter(item => !(item.id === id && item.state !== "input"))
+        if (load)
+        {
+            handleDatabaseSync()
+        }
     }
 
     function handleEdit (id)
@@ -125,6 +127,11 @@
 
                 list = [...list]
             }
+
+            if (load)
+            {
+                handleDatabaseSync()
+            }
         }
     }
 
@@ -140,6 +147,11 @@
                 }
 
                 createNewListItem()
+            }
+
+            if (load)
+            {
+                handleDatabaseSync()
             }
         }
     }
@@ -172,7 +184,18 @@
 
             if (response.ok)
             {
+                const responseData = await response.json()
                 
+                if (mode == "GET")
+                {
+                    const toBeSwapped = JSON.parse(responseData.decryptedMessage)
+                    list = toBeSwapped
+
+                    console.log(toBeSwapped)
+
+                    mode = "SET"
+                    createNewListItem()
+                }
             }
         }
             
@@ -224,12 +247,6 @@
             <div class="border-2 border-solid border-gray-500 w-full h-full rounded-xl">
                 <div class="text-gray-500 text-center grid grid-cols-1 grid-rows-1">
                     <p class="font-basic text-3xl col-start-1 row-start-1 w-full border-b-2 border-gray-500 mt-1">Qucik To Do list</p>
-                    <!-- <button class="col-start-1 row-start-1 mr-0 ml-auto relative -top-0.5">
-                        <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 5v14"></path>
-                            <path d="M5 12h14"></path>
-                        </svg>
-                    </button> -->
                 </div>
                 <div class="overflow-y-auto max-h-[83vh] overflow-x-hidden">
                     {#each list as element}
@@ -242,8 +259,13 @@
                                 <input type="text" class="col-start-1 row-start-1 w-full h-full p-4 focus:outline-none" value="{element.text}" on:keydown={(event) => handleChange(element.id, event)}>
                             </div>
                         {:else}
-                            <div class="w-full grid justify-start place-items-center grid-cols-1 grid-rows-1 border-b-2 border-gray-500 group h-fit">
-                                <p class="col-start-1 row-start-1 w-full p-4 text-gray-500 text-balance break-words">{element.text}</p>
+                            <div class="w-full grid justify-start place-items-center grid-cols-1 grid-rows-1 group h-fit">
+                                <p class="col-start-1 row-start-1 w-full p-4 text-gray-500 text-balance break-words">
+                                    <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="float-left relative -top-2">
+                                        <path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path>
+                                    </svg>
+                                    {element.text}
+                                </p>
                                 <button class="col-start-1 row-start-1 mr-12 ml-auto relative top-0 text-green-500 opacity-0 group-hover:opacity-100 transition-opacity" on:click={handleEdit(element.id)}>
                                     <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M9 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-3"></path>
