@@ -18,6 +18,9 @@
     // Let todo temp
     let list = []
 
+    // Mode of the connection to database
+    let mode = 'GET'
+
     onMount(() => {
         const cookie_value = document.cookie.split('; ').find(row => row.startsWith('sessionId='))?.split('=')[1]
 
@@ -36,6 +39,9 @@
             window.addEventListener('load', initPage)
         }
 
+        handleDatabaseSync()
+
+        mode = "SET"
         
         getRandomString()
 
@@ -145,17 +151,18 @@
 
     const handleDatabaseSync = async () =>
     {
-        const listActual = JSON.stringify(list)
-        const send = true
+        let listActual = Array.from(list)
+        listActual.pop()
+        listActual = JSON.stringify(listActual)
 
-        const data =  
+        let data =  
         {
             listActual,
-            send
+            mode
         }
 
         try {
-            const response = await fetch('/api/cryptoProviders/', {
+            const response = await fetch('/api/cryptoProvidersForQuickList/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
