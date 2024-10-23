@@ -2,7 +2,7 @@
 - Working login ✔
 - Logout ✔
 - Remember me option ✔
-- Simple todo app 
+- Simple todo app ✔
 - Alpha profile page ✔
 
 ## V 0.0.1:
