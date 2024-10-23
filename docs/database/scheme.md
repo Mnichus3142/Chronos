@@ -9,4 +9,4 @@ Here are schemes for tables in your database so you will be able to quickly crea
 +----+----------+----------+-------------------+------------+
 ```
 
-![UsersTable](img/users.png)
+![UsersTable](https://github.com/Mnichus3142/Time-Rush/blob/main/docs/img/users.png)
