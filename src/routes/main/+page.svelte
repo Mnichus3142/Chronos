@@ -19,10 +19,12 @@
     let list = []
 
     // Mode of the connection to database
-    let mode = 'GET'
+    let mode
 
     onMount(() => {
         const cookie_value = document.cookie.split('; ').find(row => row.startsWith('sessionId='))?.split('=')[1]
+
+        mode = 'GET'
 
         if (!cookie_value) {
             goto('/')
@@ -186,14 +188,16 @@
             {
                 const responseData = await response.json()
                 
-                if (mode == "GET")
-                {
-                    const toBeSwapped = JSON.parse(responseData.decryptedMessage)
-                    list = toBeSwapped
+                if (mode === 'GET')
+                {   
+                    if (responseData.decryptedMessage !== undefined)
+                    {
+                        const toBeSwapped = JSON.parse(responseData.decryptedMessage)
+                        list = toBeSwapped
+                    }
 
-                    console.log(toBeSwapped)
+                    mode = 'SET'
 
-                    mode = "SET"
                     createNewListItem()
                 }
             }

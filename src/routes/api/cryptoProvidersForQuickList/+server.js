@@ -1,4 +1,4 @@
-import { encryptMessage, decryptMessage } from "../../../lib/functions/cryptoProviders"
+import { encryptMessage, decryptMessage } from "../../../lib/functions/cryptoProviders.js"
 import { error, json } from '@sveltejs/kit'
 import path from 'path'
 import fs from 'fs/promises'
@@ -40,7 +40,7 @@ export const POST = async ({ cookies, request }) =>
         let res = await client.query(insertQuery, insertParams)
         const id = res.rows[0].user_id
 
-        if (mode == "SET")
+        if (mode === "SET")
         {
             const {encryptedMessage, iv} = encryptMessage(publicKey, listActual, privateKey)
 
@@ -71,11 +71,19 @@ export const POST = async ({ cookies, request }) =>
             insertQuery = 'SELECT iv, encryptedlist FROM quicktodo WHERE user_id = $1'
             insertParams = [id]
             res = await client.query(insertQuery, insertParams)
-            const values = res.rows[0]
-            const iv = values.iv
-            const encryptedMessage = values.encryptedlist
 
-            let decryptedMessage = decryptMessage(privateKey, encryptedMessage, iv, publicKey)
+            let decryptedMessage
+    
+            console.log(res.rows.length)
+
+            if (res.rows.length !== 0)
+            {
+                const values = res.rows[0]
+                const iv = values.iv
+                const encryptedMessage = values.encryptedlist
+
+                decryptedMessage = decryptMessage(privateKey, encryptedMessage, iv, publicKey)
+            }
 
             return json({ decryptedMessage: decryptedMessage ,status: 200 })
         }
