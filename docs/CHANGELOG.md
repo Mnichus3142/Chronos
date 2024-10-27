@@ -1,9 +1,14 @@
-## V 0.1.0 - in progress
+## V 1.0 - in progress:
+- Fully functional today's tasks
+- Month view allowing you to see individual days with their assigned tasks
+- Functional settings
+- Sharing notes with other people
+
+## V 0.1.0:
 - Working login ✔
 - Logout ✔
 - Remember me option ✔
 - Simple todo app ✔
-- Alpha profile page ✔
 
 ## V 0.0.1:
 - Landing page ✔

@@ -10,7 +10,5 @@
 </script>
 
 <div>
-    <!-- TODO: Add date -->
-    <!-- <p class="text-xl text-center text-textColor">Today is: {date.getDate()}.{date.getMonth() + 1}.{date.getFullYear()}</p> -->
     <p class="font-clock p-3 border-2 text-textColor border-textColor rounded-md w-36 text-center text-lg">{(date.getHours().toString().length == 1) ? `0${date.getHours()}` : date.getHours()}:{(date.getMinutes().toString().length == 1) ? `0${date.getMinutes()}` : date.getMinutes()}:{(date.getSeconds().toString().length == 1) ? `0${date.getSeconds()}` : date.getSeconds()}</p>
 </div>

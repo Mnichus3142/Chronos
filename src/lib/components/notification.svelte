@@ -18,7 +18,7 @@
     }, 10)
 </script>
 
-<div class="w-96 absolute z-50 left-[40%] top-12">
+<div class="w-96 fixed z-50 left-[40%] top-12">
     {#each notifications as item}
         <div class="animate-bounce">
             <div class="relative top-1 h-1 rounded-t-md"

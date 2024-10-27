@@ -289,28 +289,26 @@
                 </div>
             </div>
         </div>
-        <!-- TODO: On top welcome screen and greetings for the time we have spend togeter
-        TODO: On bottom today's weather for user localisation -->
+        <!-- TODO: On bottom today's weather for user localisation -->
         <div class="col-start-2 row-start-1 grid grid-cols-1 grid-rows-1">
             <div class="row-start-1 flex flex-col justify-center place-items-center">
                 <p class="text-7xl text-center p-4 mb-6 text-third">{actual}</p>
                 
             </div>
         </div>
-        <!-- TODO: How much you have done today and how much should be done 
-         TODO: Changelog and actual app version -->
+        <!-- TODO: How much you have done today and how much should be done -->
         <div class="col-start-3 row-start-1 grid grid-cols-1 grid-rows-2">
             <div class="row-start-1">
 
             </div>
-            <button on:click={gotoChangelog}>
-                <div class="row-start-2 flex flex-col justify-center place-items-center">
+            <div class="row-start-2 flex flex-col justify-center place-items-center">
+                <button on:click={gotoChangelog}>
                     <p class="text-3xl text-center border-2 border-secondary rounded-lg p-4 mb-6">Changelog<br>{version}</p>
                     {#each changelogData as changelogItem}
                         <p>{changelogItem}</p>
                     {/each}
-                </div>
-            </button>
+                </button>
+            </div>
         </div>
     </main>
 </body>
