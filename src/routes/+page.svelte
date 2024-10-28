@@ -292,14 +292,16 @@
                         if (response.ok) 
                         {
                             const responseData = await response.json()
-                            if (responseData.status != 204)
+                            console.log(responseData.status)
+                            if (responseData.status === 200)
                             {
-                                createNotification(responseData.message, 'success')
+                                goto("/main")
                             }
-
+                            
                             else
                             {
                                 createNotification(responseData.message, 'error')
+                                console.error(responseData.message)
                             }
                         } 
 

@@ -5,8 +5,9 @@ import fs from 'fs/promises'
 import path from 'path'
 import { generateKeys } from '../../../lib/functions/cryptoProviders.js'
 import { sha256 } from '../../../lib/functions/sha256.js'
+import { generateUniqueData } from '../../../lib/functions/generateUniqueData.js'
 
-export const POST = async ({ request }) => {
+export const POST = async ({ request, cookies }) => {
 
     // Get connection params
     const filePath = path.resolve('src/connectionParameters.json')
@@ -46,17 +47,57 @@ export const POST = async ({ request }) => {
         // Create keys
         const keyData = await sha256(`${hashed} + ${user}`)
         const { publicKey, privateKey } = await generateKeys(keyData)
-
+        
+        // Createe cookie
+        const uniqueData = await generateUniqueData(user)
+        const cookieValue = await sha256(uniqueData)
+        
+        cookies.set('sessionId', cookieValue, {
+            path: '/',
+            httpOnly: false,
+            secure: true,
+            sameSite: "lax"
+        })
+        
+        cookies.set('privateKey', privateKey, {
+            path: '/',
+            httpOnly: false,
+            secure: true,
+            sameSite: "lax"
+        })
+        
+        cookies.set('publicKey', publicKey, {
+            path: '/',
+            httpOnly: false,
+            secure: true,
+            sameSite: "lax"
+        })
+        
         // Add user to database
-        insertQuery = 'INSERT INTO users (username, password, public_key) VALUES ($1, $2, $3)'
+        insertQuery = 'INSERT INTO users (username, password, public_key) VALUES ($1, $2, $3) RETURNING id'
         insertParams = [user, hashed, publicKey]
+        res = await client.query(insertQuery, insertParams)
+        console.log(res)
+        const user_id = res.rows[0].id
+
+
+        // Get user id
+        // insertQuery = 'SELECT id FROM users WHERE username = $1'
+        // insertParams = [user]
+        // res = await client.query(insertQuery, insertParams)
+        // const user_id = res.rows[0].id
+        // console.error(res)
+        
+        // Add cookie value to database
+        insertQuery = 'INSERT INTO cookies (cookie_value, user_id, remember_me) VALUES ($1, $2, $3)'
+        insertParams  = [cookieValue, user_id, false]
         await client.query(insertQuery, insertParams)
 
-        return json({ message: 'User added to database, you can now log in', status: 200 })
+        return json({ message: 'User added to database', status: 200 })
     } 
 
     catch (error) {
-        return json({ message: 'Error while inserting into database', status: 201 })
+        return json({ message: error, status: 201 })
     }
 
     finally {
