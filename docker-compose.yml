@@ -1,0 +1,11 @@
+version: "3"
+services:
+  time-rush:
+    image: michus3142/timerush:V0.1-Alpha
+    container_name: "time-rush"
+    ports:
+      - "0.0.0.0:4173:4173"
+    cap_drop:
+      - ALL
+    volumes:
+      - ./connectionParameters.json:/home/node/time-rush/src/connectionParameters.json
