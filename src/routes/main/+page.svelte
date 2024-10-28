@@ -2,7 +2,6 @@
     import Banner from '$lib/components/banner.svelte'
     import { onMount, onDestroy } from 'svelte'
     import { goto } from '$app/navigation'
-    import { clickOutside } from '$lib/functions/clickOutside.js'
 
     // State of page
     let load = false
@@ -46,8 +45,6 @@
         getRandomString()
 
     })
-
-    createNewListItem()
 
     function initPage() 
     {

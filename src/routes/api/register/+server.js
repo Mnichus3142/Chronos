@@ -36,7 +36,7 @@ export const POST = async ({ request, cookies }) => {
         // Check if user exist
         let insertQuery = 'SELECT * FROM users WHERE username = $1'
         let insertParams = [user]
-        const res = await client.query(insertQuery, insertParams)
+        let res = await client.query(insertQuery, insertParams)
 
         // If exist then tell user about it
         if (res.rows.length != 0)
@@ -72,21 +72,12 @@ export const POST = async ({ request, cookies }) => {
             secure: true,
             sameSite: "lax"
         })
-        
+
         // Add user to database
         insertQuery = 'INSERT INTO users (username, password, public_key) VALUES ($1, $2, $3) RETURNING id'
         insertParams = [user, hashed, publicKey]
         res = await client.query(insertQuery, insertParams)
-        console.log(res)
         const user_id = res.rows[0].id
-
-
-        // Get user id
-        // insertQuery = 'SELECT id FROM users WHERE username = $1'
-        // insertParams = [user]
-        // res = await client.query(insertQuery, insertParams)
-        // const user_id = res.rows[0].id
-        // console.error(res)
         
         // Add cookie value to database
         insertQuery = 'INSERT INTO cookies (cookie_value, user_id, remember_me) VALUES ($1, $2, $3)'

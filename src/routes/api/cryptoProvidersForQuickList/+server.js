@@ -73,8 +73,6 @@ export const POST = async ({ cookies, request }) =>
             res = await client.query(insertQuery, insertParams)
 
             let decryptedMessage
-    
-            console.log(res.rows.length)
 
             if (res.rows.length !== 0)
             {

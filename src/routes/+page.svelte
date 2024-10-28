@@ -292,7 +292,6 @@
                         if (response.ok) 
                         {
                             const responseData = await response.json()
-                            console.log(responseData.status)
                             if (responseData.status === 200)
                             {
                                 goto("/main")
