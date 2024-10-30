@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store'
-import { NotificationProvider } from '$lib/classes/NotificationProvider.js'
+import { writable } from "svelte/store";
+import { NotificationProvider } from "$lib/classes/NotificationProvider.js";
 
-export const table = writable(new NotificationProvider())
+export const table = writable(new NotificationProvider());
