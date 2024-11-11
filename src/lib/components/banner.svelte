@@ -10,7 +10,7 @@
     let isOnCorrectPage = false;
 
     onMount(() => {
-        if ($page.url.pathname == "/main" || $page.url.pathname == "/main/") {
+        if ($page.url.pathname != "/") {
             isOnCorrectPage = true;
         }
     });
