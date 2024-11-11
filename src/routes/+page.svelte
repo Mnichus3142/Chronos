@@ -305,7 +305,7 @@
             class="bg-background w-full flex-1 flex justify-center place-items-center relative"
         >
             <div
-                class="grid grid-cols-2 bg-gradient-to-b from-secondary to-primary rounded-xl p-2 h-[800px] w-[80%]"
+                class="grid grid-cols-2 bg-gradient-to-b from-secondary to-primary rounded-[14px] p-2 h-[800px] w-[80%]"
             >
                 <div class="{formContainer} col-start-1">
                     <form class="{form} {visibilityLogin}">
