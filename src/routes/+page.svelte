@@ -1,6 +1,6 @@
 <script>
     import Banner from "$lib/components/banner.svelte";
-    import Notification from "../lib/components/notification.svelte";
+    import Notification from "$lib/components/notification.svelte";
     import { onMount, onDestroy } from "svelte";
     import { clickOutside } from "$lib/functions/clickOutside.js";
     import { sha256 } from "$lib/functions/sha256.js";
@@ -296,9 +296,6 @@
 
 <body class="flex flex-col min-h-screen">
     {#if load}
-        <!-- <button on:click={test}>
-            AAAAAAAAAAAAAAAAAAAAAAAAA
-        </button> -->
         <Banner></Banner>
         <Notification></Notification>
         <div

@@ -3,6 +3,8 @@
     import { onMount } from "svelte";
     import { page } from "$app/stores";
     import "../../app.css";
+    import { createNotification } from "$lib/functions/createNotification.js";
+    import Notification from "$lib/components/notification.svelte";
 
     // Tailwind
     const button = "grid grid-cols-2 grid-rows-1 text-background";
@@ -26,6 +28,24 @@
         "What would you like to do",
     ];
     let actual;
+
+    let canGoDashboard = true;
+    let canGoTodayTasks = true;
+    let canGoCalendar = true;
+
+    onMount(() => {
+        if ($page.url.pathname == "/main" || $page.url.pathname == "/main/") {
+            canGoDashboard = false; 
+        }
+
+        else if ($page.url.pathname == "/today" || $page.url.pathname == "/today/") {
+            canGoTodayTasks = false;
+        }
+
+        else if ($page.url.pathname == "/calendar" || $page.url.pathname == "/calendar/") {
+            canGoCalendar = false;
+        }
+    });
 
     const handleLogout = async (event) => {
         event.preventDefault();
@@ -73,10 +93,34 @@
         getRandomString();
     }
 
+    function handleGoTo (where)
+    {
+        if (where == "dashboard" && canGoDashboard)
+        {
+            goto("/main");
+        }
+
+        else if (where == "today" && canGoTodayTasks)
+        {
+            goto("/today");
+        }
+
+        else if (where == "calendar" && canGoCalendar)
+        {
+            goto("/calendar");
+        }
+
+        else
+        {
+            createNotification("You are already here", "info");
+        }
+    }
+
     getRandomString();
     getLogin();
 </script>
 
+<Notification></Notification>
 <div class="cursor-pointer">
     <button on:click={() => handleButton()}>
         <svg
@@ -128,7 +172,7 @@
             <div class="relative pl-6">
                 <ul>
                     <li class="mb-4">
-                        <button class={button}>
+                        <button class={button} on:click={() => handleGoTo("dashboard")}>
                             <svg
                                 width="46"
                                 height="46"
@@ -153,7 +197,7 @@
                         </button>
                     </li>
                     <li class="mb-4">
-                        <button class={button}>
+                        <button class={button} on:click={() => handleGoTo("today")}>
                             <svg
                                 width="46"
                                 height="46"
@@ -180,7 +224,7 @@
                         </button>
                     </li>
                     <li class="mb-4">
-                        <button class={button}>
+                        <button class={button} on:click={() => handleGoTo("calendar")}>
                             <svg
                                 width="46"
                                 height="46"
