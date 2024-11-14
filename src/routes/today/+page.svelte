@@ -9,11 +9,14 @@
     let taskName = "";
     let taskStart = "";
     let taskEnd = "";
+    let taskDescription = "";
+    let taskColor = "#000000";
+    let taskText = "#ffffff";
 
     const label =
-        "text-3xl text-accentNotActive m-3 relative transition-all select-none -left-16";
+        "text-3xl text-third m-3 relative transition-all select-none grid justify-center place-items-center";
     const input =
-        "z-10 h-8 w-72 border-b-2 text-lg focus:outline-none transition-all bg-transparent";
+        "h-8 w-72 border-b-2 text-lg focus:outline-none transition-all bg-transparent text-center";
 
     onMount(() => {
         createTimeTable("24");
@@ -31,6 +34,7 @@
     }
 
     function addTask() {
+        console.log(taskColor)
         if (taskStart && taskEnd && taskName) {
             const startPixels = timeToPixels(taskStart);
             const endPixels = timeToPixels(taskEnd);
@@ -94,47 +98,133 @@
                 </div>
 
                 <!-- Details -->
-                <div class="col-start-2 row-start-1 w-full h-full">
+                <div class="col-start-2 row-start-1 w-full h-full grid grid-cols-1 grid-rows-[7fr_3fr]">
                     <!-- Actual details LOL -->
-                    <div class="mb-4 h-1/2">
+                    <div>
                         <form
                             on:submit|preventDefault={addTask}
-                            class="grid grid-cols-2 grid-rows-2 h-full"
+                            class="h-full relative"
                         >
+                            <!-- Title -->
                             <div
-                                class="h-full grid place-items-center justify-center"
+                                class="{label} text-4xl"
                             >
-                                <label class="grid grid-cols-1 grid-rows-2">
-                                    <p class={label}>Task name</p>
-                                    <input
-                                        type="text"
-                                        bind:value={taskName}
-                                        required
-                                        class={input}
-                                    />
+                                <label for="title">
+                                    Title
                                 </label>
+                                <input
+                                    type="text"
+                                    class="{input} mt-4"
+                                    id='title'
+                                    placeholder="Here goes your title"
+                                    bind:value={taskName}
+                                    required
+                                >
                             </div>
-                            <label>
-                                Start (HH:MM):
-                                <input
-                                    type="time"
-                                    bind:value={taskStart}
-                                    required
-                                />
-                            </label>
-                            <label>
-                                Koniec (HH:MM):
-                                <input
-                                    type="time"
-                                    bind:value={taskEnd}
-                                    required
-                                />
-                            </label>
-                            <button type="submit">Dodaj zadanie</button>
+                            <!-- Details of details -->
+                            <div
+                                class="grid grid-cols-2"
+                            >
+                                <div class="w-full h-full text-center">
+                                    <!-- Description -->
+                                    <div
+                                        class="{label}"
+                                    >
+                                        <label for="description">
+                                            Description
+                                        </label>
+                                        <textarea
+                                            id="description"
+                                            type="text"
+                                            class="{input} mt-4 max-h-40 min-h-40 border-2 rounded-md"
+                                            placeholder="Here goes description"
+                                            bind:value={taskDescription}
+                                            maxlength="116"
+                                        ></textarea>
+                                    </div>
+                                    <!-- Color -->
+                                    <div
+                                        class="{label} mt-6"
+                                    >
+                                        <label for="color">
+                                            Pick a color for this task
+                                        </label>
+                                        <input
+                                            type="color"
+                                            class="{input} mt-4 w-5 h-5 rounded-full border-none"
+                                            id='color'
+                                            placeholder="Here goes your title"
+                                            bind:value={taskColor}
+                                        >
+                                    </div>
+                                    <!-- Text color -->
+                                    <div
+                                    class="{label} mt-6"
+                                >
+                                    <label for="colorText">
+                                        Pick a color for text in this task
+                                    </label>
+                                    <input
+                                        type="color"
+                                        class="{input} mt-4 w-5 h-5 rounded-full border-none"
+                                        id='colorText'
+                                        placeholder="Here goes your title"
+                                        bind:value={taskText}
+                                    >
+                                </div>
+                                </div>
+                                <div class="w-full h-full text-center">
+                                    <div
+                                        class="{label}"
+                                    >
+                                        <label for="start">
+                                            Select a start time
+                                        </label>
+                                        <input
+                                            type="time"
+                                            class="{input}"
+                                            id='start'
+                                            bind:value={taskStart}
+                                        >
+                                    </div>
+                                    <div
+                                        class="{label} mt-6"
+                                    >
+                                        <label for="end">
+                                            Select the ending time
+                                        </label>
+                                        <input
+                                            type="time"
+                                            class="{input}"
+                                            id='end'
+                                            bind:value={taskEnd}
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Controls -->
+                            <div class="absolute right-1 bottom-4">
+                                <button type="submit" class="bg-accent pr-3 text-textColor h-12 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl">
+                                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="m21.5 5.5-13.063 13L2.5 12.59"></path>
+                                      </svg>
+                                    <p class="font-basic text-2xl">
+                                        Add
+                                    </p>
+                                </button>
+                            </div>
                         </form>
                     </div>
                     <!-- Preview -->
-                    <div></div>
+                    <div class="border-t-2 border-gray-500 relative grid justify-center place-items-center">
+                        <div class="w-96 h-52 rounded-lg shadow-2xl relative grid justify-center place-items-center" style="background-color: {taskColor};">
+                            <p class="font-basic text-xl absolute top-4 left-4" style="color: {taskText};">{taskName}</p>
+                            {#if taskStart != "" || taskEnd != ""}
+                                <p class="font-basic text-xl absolute top-4 right-4" style="color: {taskText};">{taskStart} - {taskEnd}</p>
+                            {/if}
+                            <p class="font-basic text-xl w-80 break-words max-h-44 relative top-4" style="color: {taskText};">{taskDescription}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
