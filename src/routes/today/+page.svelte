@@ -1,6 +1,7 @@
 <script>
     import Banner from "$lib/components/banner.svelte";
     import { onMount } from "svelte";
+    import { TasksProvider } from "$lib/classes/TasksProvider.js";
 
     let timeArr = [];
     let tasks = [];
@@ -12,6 +13,9 @@
     let taskDescription = "";
     let taskColor = "#000000";
     let taskText = "#ffffff";
+
+    const taskProvider = new TasksProvider();
+    const date = new Date();
 
     const label =
         "text-3xl text-third m-3 relative transition-all select-none grid justify-center place-items-center";
@@ -33,34 +37,36 @@
         }
     }
 
-    function addTask() {
-        console.log(taskColor)
-        if (taskStart && taskEnd && taskName) {
-            const startPixels = timeToPixels(taskStart);
-            const endPixels = timeToPixels(taskEnd);
-            const taskDuration = endPixels - startPixels;
-
-            tasks.push({
-                name: taskName,
-                start: startPixels,
-                duration: taskDuration,
-            });
+    function createTask() {
+        if (
+            taskStart &&
+            taskEnd &&
+            taskName &&
+            taskStart &&
+            taskEnd &&
+            taskColor &&
+            taskText
+        ) {
+            taskProvider.addTask(
+                taskName,
+                taskDescription,
+                taskStart,
+                taskEnd,
+                taskColor,
+                taskText,
+                date.toDateString(),
+            );
 
             taskName = "";
             taskStart = "";
             taskEnd = "";
+            taskDescription = "";
+            taskColor = "#000000";
+            taskText = "#ffffff";
 
-            console.log(tasks);
-
+            tasks = taskProvider.getTasks();
             tasks = [...tasks];
         }
-    }
-
-    function timeToPixels(time) {
-        let [hours, minutes] = time.split(":").map(Number);
-        let pixelHours = hours * 112 + 8 + minutes / 112 + 25;
-
-        return pixelHours;
     }
 </script>
 
@@ -89,47 +95,44 @@
                     <!-- Tasks -->
                     {#each tasks as task}
                         <div
-                            class="bg-blue-500 text-white p-1 rounded absolute left-16 right-4"
-                            style="top: {task.start}px; height: {task.duration}px;"
+                            class="p-1 rounded absolute left-16 right-4"
+                            style="top: {task.task.start}px; height: {task.task
+                                .duration}px; background-color: {task.task
+                                .backgroundColor}; color: {task.task.textColor}"
                         >
-                            {task.name}
+                            {task.task.title}
                         </div>
                     {/each}
                 </div>
 
                 <!-- Details -->
-                <div class="col-start-2 row-start-1 w-full h-full grid grid-cols-1 grid-rows-[7fr_3fr]">
+                <div
+                    class="col-start-2 row-start-1 w-full h-full grid grid-cols-1 grid-rows-[7fr_3fr]"
+                >
                     <!-- Actual details LOL -->
                     <div>
                         <form
-                            on:submit|preventDefault={addTask}
+                            on:submit|preventDefault={createTask}
                             class="h-full relative"
                         >
                             <!-- Title -->
-                            <div
-                                class="{label} text-4xl"
-                            >
-                                <label for="title">
-                                    Title
-                                </label>
+                            <div class="{label} text-4xl">
+                                <label for="title"> Title </label>
                                 <input
                                     type="text"
                                     class="{input} mt-4"
-                                    id='title'
+                                    id="title"
                                     placeholder="Here goes your title"
                                     bind:value={taskName}
                                     required
-                                >
+                                    maxlength="20"
+                                />
                             </div>
                             <!-- Details of details -->
-                            <div
-                                class="grid grid-cols-2"
-                            >
+                            <div class="grid grid-cols-2">
                                 <div class="w-full h-full text-center">
                                     <!-- Description -->
-                                    <div
-                                        class="{label}"
-                                    >
+                                    <div class={label}>
                                         <label for="description">
                                             Description
                                         </label>
@@ -143,86 +146,110 @@
                                         ></textarea>
                                     </div>
                                     <!-- Color -->
-                                    <div
-                                        class="{label} mt-6"
-                                    >
+                                    <div class="{label} mt-6">
                                         <label for="color">
                                             Pick a color for this task
                                         </label>
                                         <input
                                             type="color"
                                             class="{input} mt-4 w-5 h-5 rounded-full border-none"
-                                            id='color'
+                                            id="color"
                                             placeholder="Here goes your title"
                                             bind:value={taskColor}
-                                        >
+                                        />
                                     </div>
                                     <!-- Text color -->
-                                    <div
-                                    class="{label} mt-6"
-                                >
-                                    <label for="colorText">
-                                        Pick a color for text in this task
-                                    </label>
-                                    <input
-                                        type="color"
-                                        class="{input} mt-4 w-5 h-5 rounded-full border-none"
-                                        id='colorText'
-                                        placeholder="Here goes your title"
-                                        bind:value={taskText}
-                                    >
-                                </div>
+                                    <div class="{label} mt-6">
+                                        <label for="colorText">
+                                            Pick a color for text in this task
+                                        </label>
+                                        <input
+                                            type="color"
+                                            class="{input} mt-4 w-5 h-5 rounded-full border-none"
+                                            id="colorText"
+                                            placeholder="Here goes your title"
+                                            bind:value={taskText}
+                                        />
+                                    </div>
                                 </div>
                                 <div class="w-full h-full text-center">
-                                    <div
-                                        class="{label}"
-                                    >
+                                    <div class={label}>
                                         <label for="start">
                                             Select a start time
                                         </label>
                                         <input
                                             type="time"
-                                            class="{input}"
-                                            id='start'
+                                            class={input}
+                                            id="start"
                                             bind:value={taskStart}
-                                        >
+                                        />
                                     </div>
-                                    <div
-                                        class="{label} mt-6"
-                                    >
+                                    <div class="{label} mt-6">
                                         <label for="end">
                                             Select the ending time
                                         </label>
                                         <input
                                             type="time"
-                                            class="{input}"
-                                            id='end'
+                                            class={input}
+                                            id="end"
                                             bind:value={taskEnd}
-                                        >
+                                        />
                                     </div>
                                 </div>
                             </div>
                             <!-- Controls -->
                             <div class="absolute right-1 bottom-4">
-                                <button type="submit" class="bg-accent pr-3 text-textColor h-12 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl">
-                                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="m21.5 5.5-13.063 13L2.5 12.59"></path>
-                                      </svg>
-                                    <p class="font-basic text-2xl">
-                                        Add
-                                    </p>
+                                <button
+                                    type="submit"
+                                    class="bg-accent pr-3 text-textColor h-12 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl"
+                                >
+                                    <svg
+                                        width="28"
+                                        height="28"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path d="m21.5 5.5-13.063 13L2.5 12.59"
+                                        ></path>
+                                    </svg>
+                                    <p class="font-basic text-2xl">Add</p>
                                 </button>
                             </div>
                         </form>
                     </div>
                     <!-- Preview -->
-                    <div class="border-t-2 border-gray-500 relative grid justify-center place-items-center">
-                        <div class="w-96 h-52 rounded-lg shadow-2xl relative grid justify-center place-items-center" style="background-color: {taskColor};">
-                            <p class="font-basic text-xl absolute top-4 left-4" style="color: {taskText};">{taskName}</p>
+                    <div
+                        class="border-t-2 border-gray-500 relative grid justify-center place-items-center"
+                    >
+                        <div
+                            class="w-96 h-52 rounded-lg shadow-2xl relative grid justify-center place-items-center"
+                            style="background-color: {taskColor};"
+                        >
+                            <p
+                                class="font-basic text-xl absolute top-4 left-4"
+                                style="color: {taskText};"
+                            >
+                                {taskName}
+                            </p>
                             {#if taskStart != "" || taskEnd != ""}
-                                <p class="font-basic text-xl absolute top-4 right-4" style="color: {taskText};">{taskStart} - {taskEnd}</p>
+                                <p
+                                    class="font-basic text-xl absolute top-4 right-4"
+                                    style="color: {taskText};"
+                                >
+                                    {taskStart} - {taskEnd}
+                                </p>
                             {/if}
-                            <p class="font-basic text-xl w-80 break-words max-h-44 relative top-4" style="color: {taskText};">{taskDescription}</p>
+                            <p
+                                class="font-basic text-xl w-80 break-words max-h-44 relative top-4"
+                                style="color: {taskText};"
+                            >
+                                {taskDescription}
+                            </p>
                         </div>
                     </div>
                 </div>

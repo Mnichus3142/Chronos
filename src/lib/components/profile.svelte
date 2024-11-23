@@ -35,14 +35,16 @@
 
     onMount(() => {
         if ($page.url.pathname == "/main" || $page.url.pathname == "/main/") {
-            canGoDashboard = false; 
-        }
-
-        else if ($page.url.pathname == "/today" || $page.url.pathname == "/today/") {
+            canGoDashboard = false;
+        } else if (
+            $page.url.pathname == "/today" ||
+            $page.url.pathname == "/today/"
+        ) {
             canGoTodayTasks = false;
-        }
-
-        else if ($page.url.pathname == "/calendar" || $page.url.pathname == "/calendar/") {
+        } else if (
+            $page.url.pathname == "/calendar" ||
+            $page.url.pathname == "/calendar/"
+        ) {
             canGoCalendar = false;
         }
     });
@@ -93,25 +95,14 @@
         getRandomString();
     }
 
-    function handleGoTo (where)
-    {
-        if (where == "dashboard" && canGoDashboard)
-        {
+    function handleGoTo(where) {
+        if (where == "dashboard" && canGoDashboard) {
             goto("/main");
-        }
-
-        else if (where == "today" && canGoTodayTasks)
-        {
+        } else if (where == "today" && canGoTodayTasks) {
             goto("/today");
-        }
-
-        else if (where == "calendar" && canGoCalendar)
-        {
+        } else if (where == "calendar" && canGoCalendar) {
             goto("/calendar");
-        }
-
-        else
-        {
+        } else {
             createNotification("You are already here", "info");
         }
     }
@@ -172,7 +163,10 @@
             <div class="relative pl-6">
                 <ul>
                     <li class="mb-4">
-                        <button class={button} on:click={() => handleGoTo("dashboard")}>
+                        <button
+                            class={button}
+                            on:click={() => handleGoTo("dashboard")}
+                        >
                             <svg
                                 width="46"
                                 height="46"
@@ -197,7 +191,10 @@
                         </button>
                     </li>
                     <li class="mb-4">
-                        <button class={button} on:click={() => handleGoTo("today")}>
+                        <button
+                            class={button}
+                            on:click={() => handleGoTo("today")}
+                        >
                             <svg
                                 width="46"
                                 height="46"
@@ -224,7 +221,10 @@
                         </button>
                     </li>
                     <li class="mb-4">
-                        <button class={button} on:click={() => handleGoTo("calendar")}>
+                        <button
+                            class={button}
+                            on:click={() => handleGoTo("calendar")}
+                        >
                             <svg
                                 width="46"
                                 height="46"
