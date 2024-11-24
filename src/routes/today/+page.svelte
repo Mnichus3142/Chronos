@@ -14,6 +14,8 @@
     let taskColor = "#000000";
     let taskText = "#ffffff";
 
+    let mode = "GET";
+
     const taskProvider = new TasksProvider();
     const date = new Date();
 
@@ -23,6 +25,17 @@
         "h-8 w-72 border-b-2 text-lg focus:outline-none transition-all bg-transparent text-center";
 
     onMount(() => {
+        const cookie_value = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("sessionId="))
+            ?.split("=")[1];
+
+        if (!cookie_value) {
+            goto("/");
+        }
+
+        mode = "SET";
+
         createTimeTable("24");
 
         load = true;
@@ -65,9 +78,51 @@
             taskText = "#ffffff";
 
             tasks = taskProvider.getTasks();
+            handleDatabaseSync();
             tasks = [...tasks];
         }
     }
+
+    const handleDatabaseSync = async () => {
+        let listActual = Array.from(tasks);
+        listActual = JSON.stringify(listActual);
+        console.log(listActual);
+
+        // let data = {
+        //     listActual,
+        //     mode,
+        // };
+
+        // try {
+        //     const response = await fetch("/api/cryptoProvidersForTodayTasks/", {
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //         },
+        //         body: JSON.stringify(data),
+        //     });
+
+        //     if (response.ok) {
+        //         const responseData = await response.json();
+
+        //         if (mode === "GET") {
+        //             if (responseData.decryptedMessage !== undefined) {
+        //                 const toBeSwapped = JSON.parse(
+        //                     responseData.decryptedMessage,
+        //                 );
+        //                 tasks = toBeSwapped;
+        //                 tasks = [...tasks];
+        //             }
+
+        //             mode = "SET";
+        //         }
+        //     }
+        // } catch (error) {
+        //     console.error("Error:", error);
+        // }
+
+        return 0;
+    };
 </script>
 
 {#if load}
