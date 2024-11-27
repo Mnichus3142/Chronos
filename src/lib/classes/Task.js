@@ -3,7 +3,9 @@ export class Task {
     this.title = title;
     this.description = description;
     this.start = this.timeToPixels(start);
+    this.startHour = start;
     this.end = this.timeToPixels(end);
+    this.endHour = end;
     this.duration = this.end - this.start;
     this.backgroundColor = backgroundColor;
     this.textColor = textColor;

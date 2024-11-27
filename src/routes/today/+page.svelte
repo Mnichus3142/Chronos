@@ -16,6 +16,14 @@
 
     let mode = "GET";
 
+    let popUp = false;
+    let i = 0;
+    let displayElements = "hidden";
+    let popUpWidth = "0%";
+    let popUpHeight = "0%";
+    let scale = 0.0;
+    let descriptionActual = "";
+
     const taskProvider = new TasksProvider();
     const date = new Date();
 
@@ -83,10 +91,42 @@
         }
     }
 
+    function createPopUp() {
+        popUp = true;
+        popUpWidth = `${i}%`;
+        popUpHeight = `${i}%`;
+        scale = `0.${i + 19}`;
+        console.log(i);
+        setTimeout(function () {
+            i++;
+            if (i < 81) {
+                createPopUp();
+            }
+            if (i === 10) {
+                displayElements = "visible";
+            }
+        }, 1);
+    }
+
+    const closePopUp = () => {
+        popUpWidth = `${i}%`;
+        popUpHeight = `${i}%`;
+        scale = `0.${i + 19}`;
+        setTimeout(function () {
+            i--;
+            if (i > 0) {
+                closePopUp();
+            }
+            if (i === 10) {
+                displayElements = "hidden";
+                popUp = false;
+            }
+        }, 1);
+    };
+
     const handleDatabaseSync = async () => {
         let listActual = Array.from(tasks);
         listActual = JSON.stringify(listActual);
-        console.log(listActual);
 
         // let data = {
         //     listActual,
@@ -150,12 +190,23 @@
                     <!-- Tasks -->
                     {#each tasks as task}
                         <div
-                            class="p-1 rounded absolute left-16 right-4"
+                            class="p-1 rounded absolute left-16 right-4 grid justify-center place-items-center"
                             style="top: {task.task.start}px; height: {task.task
                                 .duration}px; background-color: {task.task
                                 .backgroundColor}; color: {task.task.textColor}"
                         >
-                            {task.task.title}
+                            <p
+                                class="font-basic text-xl absolute top-4 left-4"
+                                style="color: {task.task.textColor};"
+                            >
+                                {task.task.title}
+                            </p>
+                            <p
+                                class="font-basic text-xl absolute top-4 right-4"
+                                style="color: {task.task.textColor};"
+                            >
+                                {task.task.startHour} - {task.task.endHour}
+                            </p>
                         </div>
                     {/each}
                 </div>
@@ -170,6 +221,46 @@
                             on:submit|preventDefault={createTask}
                             class="h-full relative"
                         >
+                            {#if popUp}
+                                <div
+                                    class="absolute left-0 right-0 top-0 bottom-0 mt-auto ml-auto mr-auto mb-auto z-10 bg-background rounded-2xl shadow-xl border-2 border-gray-500"
+                                    style="width: {popUpWidth}; height: {popUpHeight}"
+                                >
+                                    <div
+                                        style="visibility: {displayElements};"
+                                        class="w-full h-full"
+                                    >
+                                        <div
+                                            class="grid justify-center place-items-center w-full h-full"
+                                            style="scale: {scale};"
+                                        >
+                                            <button
+                                                class="absolute top-3 right-3"
+                                                on:click={closePopUp}
+                                            >
+                                                <svg
+                                                    width="46"
+                                                    height="46"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="1"
+                                                    viewBox="0 0 24 24"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path d="M18 6 6 18"></path>
+                                                    <path d="m6 6 12 12"></path>
+                                                </svg>
+                                            </button>
+                                            <p class="text-4xl mb-0">Title</p>
+                                            <textarea class="bg-red-400"
+                                                >{descriptionActual}</textarea
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                            {/if}
                             <!-- Title -->
                             <div class="{label} text-4xl">
                                 <label for="title"> Title </label>
@@ -257,6 +348,7 @@
                                 <button
                                     type="submit"
                                     class="bg-accent pr-3 text-textColor h-12 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl"
+                                    on:click={createPopUp}
                                 >
                                     <svg
                                         width="28"
@@ -299,12 +391,6 @@
                                     {taskStart} - {taskEnd}
                                 </p>
                             {/if}
-                            <p
-                                class="font-basic text-xl w-80 break-words max-h-44 relative top-4"
-                                style="color: {taskText};"
-                            >
-                                {taskDescription}
-                            </p>
                         </div>
                     </div>
                 </div>
