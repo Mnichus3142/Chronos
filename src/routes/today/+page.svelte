@@ -19,8 +19,6 @@
     let popUp = false;
     let i = 0;
     let displayElements = "hidden";
-    let popUpWidth = "0%";
-    let popUpHeight = "0%";
     let scale = 0.0;
     let descriptionActual = "";
 
@@ -28,9 +26,9 @@
     const date = new Date();
 
     const label =
-        "text-3xl text-third m-3 relative transition-all select-none grid justify-center place-items-center";
+        "text-3xl text-third m-3 relative transition-all select-none grid justify-center place-items-center relative left-0 right-0 ml-auto mr-auto";
     const input =
-        "h-8 w-72 border-b-2 text-lg focus:outline-none transition-all bg-transparent text-center";
+        "border-b-2 text-lg focus:outline-none transition-all bg-transparent text-center mt-2 relative left-0 right-0 ml-auto mr-auto";
 
     onMount(() => {
         const cookie_value = document.cookie
@@ -91,26 +89,21 @@
         }
     }
 
-    function createPopUp() {
-        popUp = true;
-        popUpWidth = `${i}%`;
-        popUpHeight = `${i}%`;
+    const createPopUp = () => {
         scale = `0.${i + 19}`;
-        console.log(i);
         setTimeout(function () {
             i++;
             if (i < 81) {
                 createPopUp();
             }
-            if (i === 10) {
+            if (i === 1) {
                 displayElements = "visible";
+                popUp = true;
             }
         }, 1);
     }
 
     const closePopUp = () => {
-        popUpWidth = `${i}%`;
-        popUpHeight = `${i}%`;
         scale = `0.${i + 19}`;
         setTimeout(function () {
             i--;
@@ -164,7 +157,45 @@
         return 0;
     };
 </script>
-
+{#if popUp}
+    <div
+        class="absolute left-0 right-0 top-0 bottom-0 mt-auto ml-auto mr-auto mb-auto z-10 bg-background rounded-2xl shadow-xl border-2 border-gray-500 w-3/5 h-3/5"
+        style="scale: {scale};"
+    >
+        <div
+            style="visibility: {displayElements};"
+            class="w-full h-full"
+        >
+            <div
+                class="grid justify-center place-items-center w-full h-full"
+            >
+                <button
+                    class="absolute top-3 right-3"
+                    on:click={closePopUp}
+                >
+                    <svg
+                        width="46"
+                        height="46"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path d="M18 6 6 18"></path>
+                        <path d="m6 6 12 12"></path>
+                    </svg>
+                </button>
+                <p class="text-4xl mb-0">Title</p>
+                <textarea class="bg-red-400"
+                    >{descriptionActual}</textarea
+                >
+            </div>
+        </div>
+    </div>
+{/if}
 {#if load}
     <body class="h-screen flex flex-col">
         <div class="row-start-1">
@@ -193,7 +224,7 @@
                             class="p-1 rounded absolute left-16 right-4 grid justify-center place-items-center"
                             style="top: {task.task.start}px; height: {task.task
                                 .duration}px; background-color: {task.task
-                                .backgroundColor}; color: {task.task.textColor}"
+                                .backgroundColor}; color: {task.task.textColor}; min-height: 60px;"
                         >
                             <p
                                 class="font-basic text-xl absolute top-4 left-4"
@@ -213,115 +244,34 @@
 
                 <!-- Details -->
                 <div
-                    class="col-start-2 row-start-1 w-full h-full grid grid-cols-1 grid-rows-[7fr_3fr]"
+                    class="col-start-2 row-start-1 w-full h-full grid grid-cols-1"
                 >
                     <!-- Actual details LOL -->
-                    <div>
+                    <div class="w-full h-full">
                         <form
                             on:submit|preventDefault={createTask}
-                            class="h-full relative"
+                            class="h-full w-full relative -top-3 rounded-r-md rounded-br-md"
                         >
-                            {#if popUp}
-                                <div
-                                    class="absolute left-0 right-0 top-0 bottom-0 mt-auto ml-auto mr-auto mb-auto z-10 bg-background rounded-2xl shadow-xl border-2 border-gray-500"
-                                    style="width: {popUpWidth}; height: {popUpHeight}"
-                                >
-                                    <div
-                                        style="visibility: {displayElements};"
-                                        class="w-full h-full"
-                                    >
-                                        <div
-                                            class="grid justify-center place-items-center w-full h-full"
-                                            style="scale: {scale};"
-                                        >
-                                            <button
-                                                class="absolute top-3 right-3"
-                                                on:click={closePopUp}
-                                            >
-                                                <svg
-                                                    width="46"
-                                                    height="46"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="1"
-                                                    viewBox="0 0 24 24"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                    <path d="M18 6 6 18"></path>
-                                                    <path d="m6 6 12 12"></path>
-                                                </svg>
-                                            </button>
-                                            <p class="text-4xl mb-0">Title</p>
-                                            <textarea class="bg-red-400"
-                                                >{descriptionActual}</textarea
-                                            >
-                                        </div>
-                                    </div>
-                                </div>
-                            {/if}
                             <!-- Title -->
-                            <div class="{label} text-4xl">
-                                <label for="title"> Title </label>
-                                <input
-                                    type="text"
-                                    class="{input} mt-4"
-                                    id="title"
-                                    placeholder="Here goes your title"
-                                    bind:value={taskName}
-                                    required
-                                    maxlength="20"
-                                />
-                            </div>
-                            <!-- Details of details -->
-                            <div class="grid grid-cols-2">
-                                <div class="w-full h-full text-center">
-                                    <!-- Description -->
-                                    <div class={label}>
-                                        <label for="description">
-                                            Description
-                                        </label>
-                                        <textarea
-                                            id="description"
-                                            type="text"
-                                            class="{input} mt-4 max-h-40 min-h-40 border-2 rounded-md"
-                                            placeholder="Here goes description"
-                                            bind:value={taskDescription}
-                                            maxlength="116"
-                                        ></textarea>
-                                    </div>
-                                    <!-- Color -->
-                                    <div class="{label} mt-6">
-                                        <label for="color">
-                                            Pick a color for this task
-                                        </label>
-                                        <input
-                                            type="color"
-                                            class="{input} mt-4 w-5 h-5 rounded-full border-none"
-                                            id="color"
-                                            placeholder="Here goes your title"
-                                            bind:value={taskColor}
-                                        />
-                                    </div>
-                                    <!-- Text color -->
-                                    <div class="{label} mt-6">
-                                        <label for="colorText">
-                                            Pick a color for text in this task
-                                        </label>
-                                        <input
-                                            type="color"
-                                            class="{input} mt-4 w-5 h-5 rounded-full border-none"
-                                            id="colorText"
-                                            placeholder="Here goes your title"
-                                            bind:value={taskText}
-                                        />
-                                    </div>
+                            <div class="relative left-8 top-3 w-fit">
+                                <div class="{label}">
+                                    <label for="title"> Title </label>
+                                    <input
+                                        type="text"
+                                        class="{input}"
+                                        id="title"
+                                        placeholder="Here goes your title"
+                                        bind:value={taskName}
+                                        required
+                                        maxlength="20"
+                                    />
                                 </div>
-                                <div class="w-full h-full text-center">
-                                    <div class={label}>
+                            </div>
+                            <div class="w-fit h-fit absolute top-0 right-8 p-0">
+                                <div class="{label} w-fit h-fit grid grid-cols-2 p-0 gap-4">
+                                    <div class="grid grid-rows-2 text-center">
                                         <label for="start">
-                                            Select a start time
+                                            Start time
                                         </label>
                                         <input
                                             type="time"
@@ -330,9 +280,9 @@
                                             bind:value={taskStart}
                                         />
                                     </div>
-                                    <div class="{label} mt-6">
+                                    <div class="grid grid-rows-2 text-center">
                                         <label for="end">
-                                            Select the ending time
+                                            Ending time
                                         </label>
                                         <input
                                             type="time"
@@ -343,12 +293,56 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="w-fit h-fit absolute bottom-3 left-8 p-0">
+                                <div class="{label} w-fit h-fit grid grid-cols-3 p-0">
+                                    <div class="grid grid-rows-2">
+                                        <label for="color" class="text-center">
+                                            Background color
+                                        </label>
+                                        <input
+                                            type="color"
+                                            class="{input} w-4 h-4 rounded-full border-none"
+                                            id="color"
+                                            placeholder="Here goes your title"
+                                            bind:value={taskColor}
+                                        />
+                                    </div>
+                                    <div class="grid grid-rows-2 relative">
+                                        <label for="colorText" class="text-center">
+                                            Text color
+                                        </label>
+                                        <input
+                                            type="color"
+                                            class="{input} w-4 h-4 rounded-full border-none"
+                                            id="colorText"
+                                            placeholder="Here goes your title"
+                                            bind:value={taskText}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Description -->
+                            <div class="w-full h-2/3 relative top-12">
+                                <div class="text-3xl text-third m-3 transition-all select-none ml-auto mr-auto w-full h-full text-center">
+                                    <label for="description" class="relative">
+                                        Description
+                                    </label>
+                                    <div class="w-full h-full p-4">
+                                        <textarea
+                                        id="description"
+                                        type="text"
+                                        class="border-2 rounded-md w-full h-full box-border text-lg"
+                                        placeholder="Here goes description"
+                                        bind:value={taskDescription}
+                                    ></textarea>
+                                    </div>
+                                </div>
+                            </div>
                             <!-- Controls -->
-                            <div class="absolute right-1 bottom-4">
+                            <div class="absolute right-8 bottom-8">
                                 <button
                                     type="submit"
                                     class="bg-accent pr-3 text-textColor h-12 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl"
-                                    on:click={createPopUp}
                                 >
                                     <svg
                                         width="28"
@@ -368,30 +362,6 @@
                                 </button>
                             </div>
                         </form>
-                    </div>
-                    <!-- Preview -->
-                    <div
-                        class="border-t-2 border-gray-500 relative grid justify-center place-items-center"
-                    >
-                        <div
-                            class="w-96 h-52 rounded-lg shadow-2xl relative grid justify-center place-items-center"
-                            style="background-color: {taskColor};"
-                        >
-                            <p
-                                class="font-basic text-xl absolute top-4 left-4"
-                                style="color: {taskText};"
-                            >
-                                {taskName}
-                            </p>
-                            {#if taskStart != "" || taskEnd != ""}
-                                <p
-                                    class="font-basic text-xl absolute top-4 right-4"
-                                    style="color: {taskText};"
-                                >
-                                    {taskStart} - {taskEnd}
-                                </p>
-                            {/if}
-                        </div>
                     </div>
                 </div>
             </div>
