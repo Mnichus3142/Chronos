@@ -15,6 +15,8 @@
     let taskText = "#ffffff";
 
     let mode = "GET";
+    let showDetails = false;
+    let editMode = false;
 
     const taskProvider = new TasksProvider();
     const date = new Date();
@@ -85,7 +87,13 @@
 
     const viewTask = (id) => {
         const element = tasks.find((item) => item.id === id);
-        console.log(element);
+        showDetails = true;
+        taskName = element.task.title;
+        taskStart = element.task.startHour;
+        taskEnd = element.task.endHour;
+        taskDescription = element.task.description;
+        taskColor = element.task.backgroundColor;
+        taskText = element.task.textColor;
     };
 
     const handleDatabaseSync = async () => {
@@ -192,6 +200,7 @@
                                 <div class={label}>
                                     <label for="title"> Title </label>
                                     <input
+                                        disabled={showDetails}
                                         type="text"
                                         class={input}
                                         id="title"
@@ -209,6 +218,7 @@
                                     <div class="grid grid-rows-2 text-center">
                                         <label for="start"> Start time </label>
                                         <input
+                                            disabled={showDetails}
                                             type="time"
                                             class={input}
                                             id="start"
@@ -218,6 +228,7 @@
                                     <div class="grid grid-rows-2 text-center">
                                         <label for="end"> Ending time </label>
                                         <input
+                                            disabled={showDetails}
                                             type="time"
                                             class={input}
                                             id="end"
@@ -237,6 +248,7 @@
                                             Background color
                                         </label>
                                         <input
+                                            disabled={showDetails}
                                             type="color"
                                             class="{input} w-24 h-12 rounded-full border-gray-500 border-2 p-0 m-0"
                                             id="color"
@@ -251,6 +263,7 @@
                                             Text color
                                         </label>
                                         <input
+                                            disabled={showDetails}
                                             type="color"
                                             class="{input} w-24 h-12 rounded-full border-gray-500 border-2 p-0"
                                             id="colorText"
@@ -269,6 +282,7 @@
                                     </label>
                                     <div class="w-full h-5/6 p-4">
                                         <textarea
+                                            disabled={showDetails}
                                             id="description"
                                             type="text"
                                             class="border-2 rounded-md w-full h-full box-border text-lg resize-none p-3"
@@ -281,6 +295,7 @@
                             <!-- Controls -->
                             <div class="absolute right-8 bottom-8">
                                 <button
+                                    disabled={showDetails}
                                     type="submit"
                                     class="bg-accent pr-3 text-textColor h-12 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl"
                                 >
