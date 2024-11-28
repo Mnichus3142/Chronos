@@ -1,8 +1,8 @@
-const colors = require('./src/lib/colors.js');
+const colors = require("./src/lib/colors.js");
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./src/app.html', './src/**/*.{svelte,js}'],
+  content: ["./src/app.html", "./src/**/*.{svelte,js}"],
   theme: {
     extend: {
       colors: {
@@ -17,12 +17,11 @@ export default {
       },
 
       fontFamily: {
-        basic: ['Rubik', 'sans-serif'],
-        motto: ['Playwrite HR Lijeva', 'cursive'],
-        clock: ['Orbitron', 'sans-serif'],
+        basic: ["Rubik", "sans-serif"],
+        motto: ["Playwrite HR Lijeva", "cursive"],
+        clock: ["Orbitron", "sans-serif"],
       },
     },
   },
-  plugins: [],
-}
-
+  plugins: [require("tailwind-scrollbar")],
+};

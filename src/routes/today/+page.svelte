@@ -16,12 +16,6 @@
 
     let mode = "GET";
 
-    let popUp = false;
-    let i = 0;
-    let displayElements = "hidden";
-    let scale = 0.0;
-    let descriptionActual = "";
-
     const taskProvider = new TasksProvider();
     const date = new Date();
 
@@ -89,32 +83,9 @@
         }
     }
 
-    const createPopUp = () => {
-        scale = `0.${i + 19}`;
-        setTimeout(function () {
-            i++;
-            if (i < 81) {
-                createPopUp();
-            }
-            if (i === 1) {
-                displayElements = "visible";
-                popUp = true;
-            }
-        }, 1);
-    }
-
-    const closePopUp = () => {
-        scale = `0.${i + 19}`;
-        setTimeout(function () {
-            i--;
-            if (i > 0) {
-                closePopUp();
-            }
-            if (i === 10) {
-                displayElements = "hidden";
-                popUp = false;
-            }
-        }, 1);
+    const viewTask = (id) => {
+        const element = tasks.find((item) => item.id === id);
+        console.log(element);
     };
 
     const handleDatabaseSync = async () => {
@@ -157,45 +128,7 @@
         return 0;
     };
 </script>
-{#if popUp}
-    <div
-        class="absolute left-0 right-0 top-0 bottom-0 mt-auto ml-auto mr-auto mb-auto z-10 bg-background rounded-2xl shadow-xl border-2 border-gray-500 w-3/5 h-3/5"
-        style="scale: {scale};"
-    >
-        <div
-            style="visibility: {displayElements};"
-            class="w-full h-full"
-        >
-            <div
-                class="grid justify-center place-items-center w-full h-full"
-            >
-                <button
-                    class="absolute top-3 right-3"
-                    on:click={closePopUp}
-                >
-                    <svg
-                        width="46"
-                        height="46"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="1"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path d="M18 6 6 18"></path>
-                        <path d="m6 6 12 12"></path>
-                    </svg>
-                </button>
-                <p class="text-4xl mb-0">Title</p>
-                <textarea class="bg-red-400"
-                    >{descriptionActual}</textarea
-                >
-            </div>
-        </div>
-    </div>
-{/if}
+
 {#if load}
     <body class="h-screen flex flex-col">
         <div class="row-start-1">
@@ -220,11 +153,13 @@
 
                     <!-- Tasks -->
                     {#each tasks as task}
-                        <div
-                            class="p-1 rounded absolute left-16 right-4 grid justify-center place-items-center"
+                        <button
+                            class="p-1 rounded absolute left-16 right-4 grid justify-center place-items-center shadow-lg"
                             style="top: {task.task.start}px; height: {task.task
                                 .duration}px; background-color: {task.task
-                                .backgroundColor}; color: {task.task.textColor}; min-height: 60px;"
+                                .backgroundColor}; color: {task.task
+                                .textColor}; min-height: 60px;"
+                            on:click={() => viewTask(task.id)}
                         >
                             <p
                                 class="font-basic text-xl absolute top-4 left-4"
@@ -238,7 +173,7 @@
                             >
                                 {task.task.startHour} - {task.task.endHour}
                             </p>
-                        </div>
+                        </button>
                     {/each}
                 </div>
 
@@ -254,11 +189,11 @@
                         >
                             <!-- Title -->
                             <div class="relative left-8 top-3 w-fit">
-                                <div class="{label}">
+                                <div class={label}>
                                     <label for="title"> Title </label>
                                     <input
                                         type="text"
-                                        class="{input}"
+                                        class={input}
                                         id="title"
                                         placeholder="Here goes your title"
                                         bind:value={taskName}
@@ -268,11 +203,11 @@
                                 </div>
                             </div>
                             <div class="w-fit h-fit absolute top-0 right-8 p-0">
-                                <div class="{label} w-fit h-fit grid grid-cols-2 p-0 gap-4">
+                                <div
+                                    class="{label} w-fit h-fit grid grid-cols-2 p-0 gap-4"
+                                >
                                     <div class="grid grid-rows-2 text-center">
-                                        <label for="start">
-                                            Start time
-                                        </label>
+                                        <label for="start"> Start time </label>
                                         <input
                                             type="time"
                                             class={input}
@@ -281,9 +216,7 @@
                                         />
                                     </div>
                                     <div class="grid grid-rows-2 text-center">
-                                        <label for="end">
-                                            Ending time
-                                        </label>
+                                        <label for="end"> Ending time </label>
                                         <input
                                             type="time"
                                             class={input}
@@ -293,29 +226,34 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="w-fit h-fit absolute bottom-3 left-8 p-0">
-                                <div class="{label} w-fit h-fit grid grid-cols-3 p-0">
+                            <div
+                                class="w-fit h-fit absolute bottom-3 left-8 p-0"
+                            >
+                                <div
+                                    class="{label} w-fit h-fit grid grid-cols-3 p-0"
+                                >
                                     <div class="grid grid-rows-2">
                                         <label for="color" class="text-center">
                                             Background color
                                         </label>
                                         <input
                                             type="color"
-                                            class="{input} w-4 h-4 rounded-full border-none"
+                                            class="{input} w-24 h-12 rounded-full border-gray-500 border-2 p-0 m-0"
                                             id="color"
-                                            placeholder="Here goes your title"
                                             bind:value={taskColor}
                                         />
                                     </div>
                                     <div class="grid grid-rows-2 relative">
-                                        <label for="colorText" class="text-center">
+                                        <label
+                                            for="colorText"
+                                            class="text-center"
+                                        >
                                             Text color
                                         </label>
                                         <input
                                             type="color"
-                                            class="{input} w-4 h-4 rounded-full border-none"
+                                            class="{input} w-24 h-12 rounded-full border-gray-500 border-2 p-0"
                                             id="colorText"
-                                            placeholder="Here goes your title"
                                             bind:value={taskText}
                                         />
                                     </div>
@@ -323,18 +261,20 @@
                             </div>
                             <!-- Description -->
                             <div class="w-full h-2/3 relative top-12">
-                                <div class="text-3xl text-third m-3 transition-all select-none ml-auto mr-auto w-full h-full text-center">
+                                <div
+                                    class="text-3xl text-third m-3 transition-all select-none ml-auto mr-auto w-full h-full text-center"
+                                >
                                     <label for="description" class="relative">
                                         Description
                                     </label>
-                                    <div class="w-full h-full p-4">
+                                    <div class="w-full h-5/6 p-4">
                                         <textarea
-                                        id="description"
-                                        type="text"
-                                        class="border-2 rounded-md w-full h-full box-border text-lg"
-                                        placeholder="Here goes description"
-                                        bind:value={taskDescription}
-                                    ></textarea>
+                                            id="description"
+                                            type="text"
+                                            class="border-2 rounded-md w-full h-full box-border text-lg resize-none p-3"
+                                            placeholder="Here goes description"
+                                            bind:value={taskDescription}
+                                        ></textarea>
                                     </div>
                                 </div>
                             </div>

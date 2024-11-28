@@ -15,6 +15,7 @@ export class TasksProvider {
 
   addTask(title, description, start, end, backgroundColor, textColor, date) {
     this.tasks.push({
+      id: this.tasks.length,
       date: date,
       task: new Task(
         title,
