@@ -28,4 +28,32 @@ export class TasksProvider {
     });
     return this.getTasks();
   }
+
+  editTask(
+    id,
+    title,
+    description,
+    start,
+    end,
+    backgroundColor,
+    textColor,
+    date = false,
+  ) {
+    const taskToChange = this.tasks.find((item) => item.id === id);
+    date ? (taskToChange.date = date) : (taskToChange.date = taskToChange.date);
+    taskToChange.task = taskToChange.task.updateTask(
+      title,
+      description,
+      start,
+      end,
+      backgroundColor,
+      textColor,
+    );
+
+    return this.getTasks();
+  }
+
+  removeTask(id) {
+    this.tasks = this.tasks.filter((item) => !(item.id === id));
+  }
 }

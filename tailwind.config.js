@@ -1,4 +1,5 @@
-const colors = require("./src/lib/colors.js");
+// const colors = require("./src/lib/colors.js");
+import colors from "./src/lib/colors.js";
 
 /** @type {import('tailwindcss').Config} */
 export default {

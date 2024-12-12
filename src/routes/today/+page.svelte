@@ -2,6 +2,9 @@
     import Banner from "$lib/components/banner.svelte";
     import { onMount } from "svelte";
     import { TasksProvider } from "$lib/classes/TasksProvider.js";
+    import { fade } from "svelte/transition";
+    import Notification from "$lib/components/notification.svelte";
+    import { createNotification } from "$lib/functions/createNotification.js";
 
     let timeArr = [];
     let tasks = [];
@@ -16,7 +19,9 @@
 
     let mode = "GET";
     let showDetails = false;
-    let editMode = false;
+    let editMode = true;
+    let editId = 0;
+    let removePrompt = true;
 
     const taskProvider = new TasksProvider();
     const date = new Date();
@@ -87,6 +92,8 @@
 
     const viewTask = (id) => {
         const element = tasks.find((item) => item.id === id);
+        editId = id;
+        editMode = false;
         showDetails = true;
         taskName = element.task.title;
         taskStart = element.task.startHour;
@@ -94,6 +101,43 @@
         taskDescription = element.task.description;
         taskColor = element.task.backgroundColor;
         taskText = element.task.textColor;
+    };
+
+    const editTask = () => {
+        editMode = !editMode;
+        createNotification("Your task is now in edit mode", "info");
+    };
+
+    const handleEdit = () => {
+        tasks = taskProvider.editTask(
+            editId,
+            taskName,
+            taskDescription,
+            taskStart,
+            taskEnd,
+            taskColor,
+            taskText,
+        );
+        exitView();
+        tasks = [...tasks];
+    };
+
+    const handleRemove = () => {
+        taskProvider.removeTask(editId);
+        tasks = taskProvider.getTasks();
+        exitView();
+        tasks = [...tasks];
+    };
+
+    const exitView = () => {
+        editId = 0;
+        showDetails = false;
+        taskName = "";
+        taskStart = "";
+        taskEnd = "";
+        taskDescription = "";
+        taskColor = "#000000";
+        taskText = "#ffffff";
     };
 
     const handleDatabaseSync = async () => {
@@ -138,6 +182,10 @@
 </script>
 
 {#if load}
+    <Notification></Notification>
+    {#if removePrompt}
+        <div></div>
+    {/if}
     <body class="h-screen flex flex-col">
         <div class="row-start-1">
             <Banner></Banner>
@@ -200,7 +248,7 @@
                                 <div class={label}>
                                     <label for="title"> Title </label>
                                     <input
-                                        disabled={showDetails}
+                                        disabled={!editMode}
                                         type="text"
                                         class={input}
                                         id="title"
@@ -218,7 +266,7 @@
                                     <div class="grid grid-rows-2 text-center">
                                         <label for="start"> Start time </label>
                                         <input
-                                            disabled={showDetails}
+                                            disabled={!editMode}
                                             type="time"
                                             class={input}
                                             id="start"
@@ -228,7 +276,7 @@
                                     <div class="grid grid-rows-2 text-center">
                                         <label for="end"> Ending time </label>
                                         <input
-                                            disabled={showDetails}
+                                            disabled={!editMode}
                                             type="time"
                                             class={input}
                                             id="end"
@@ -248,7 +296,7 @@
                                             Background color
                                         </label>
                                         <input
-                                            disabled={showDetails}
+                                            disabled={!editMode}
                                             type="color"
                                             class="{input} w-24 h-12 rounded-full border-gray-500 border-2 p-0 m-0"
                                             id="color"
@@ -263,7 +311,7 @@
                                             Text color
                                         </label>
                                         <input
-                                            disabled={showDetails}
+                                            disabled={!editMode}
                                             type="color"
                                             class="{input} w-24 h-12 rounded-full border-gray-500 border-2 p-0"
                                             id="colorText"
@@ -282,7 +330,7 @@
                                     </label>
                                     <div class="w-full h-5/6 p-4">
                                         <textarea
-                                            disabled={showDetails}
+                                            disabled={!editMode}
                                             id="description"
                                             type="text"
                                             class="border-2 rounded-md w-full h-full box-border text-lg resize-none p-3"
@@ -293,28 +341,148 @@
                                 </div>
                             </div>
                             <!-- Controls -->
-                            <div class="absolute right-8 bottom-8">
-                                <button
-                                    disabled={showDetails}
-                                    type="submit"
-                                    class="bg-accent pr-3 text-textColor h-12 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl"
-                                >
-                                    <svg
-                                        width="28"
-                                        height="28"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg"
+                            <div
+                                class="absolute right-8 bottom-8 grid grid-rows-1 grid-cols-3 gap-4"
+                            >
+                                {#if showDetails}
+                                    <button
+                                        type="button"
+                                        class="bg-red-500 pr-3 text-textColor h-12 col-start-1 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl"
+                                        on:click={handleRemove}
                                     >
-                                        <path d="m21.5 5.5-13.063 13L2.5 12.59"
-                                        ></path>
-                                    </svg>
-                                    <p class="font-basic text-2xl">Add</p>
-                                </button>
+                                        <svg
+                                            width="28"
+                                            height="28"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="1"
+                                            viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path d="M4 7h16"></path>
+                                            <path d="M10 11v6"></path>
+                                            <path d="M14 11v6"></path>
+                                            <path
+                                                d="m5 7 1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12"
+                                            ></path>
+                                            <path
+                                                d="M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"
+                                            ></path>
+                                        </svg>
+                                        <p class="font-basic text-2xl">
+                                            Remove
+                                        </p>
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="bg-red-600 pr-3 text-textColor h-12 row-start-1 col-start-2 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl"
+                                        on:click={exitView}
+                                    >
+                                        <svg
+                                            width="28"
+                                            height="28"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="1"
+                                            viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z"
+                                            ></path>
+                                            <path d="m5.7 5.703 12.6 12.6"
+                                            ></path>
+                                        </svg>
+                                        <p class="font-basic text-2xl">
+                                            Cancel
+                                        </p>
+                                    </button>
+
+                                    {#if !editMode}
+                                        <button
+                                            type="button"
+                                            class="bg-orange-500 pr-3 text-textColor h-12 col-start-3 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl"
+                                            on:click={editTask}
+                                        >
+                                            <svg
+                                                width="28"
+                                                height="28"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="1"
+                                                viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    d="M9 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-3"
+                                                ></path>
+                                                <path
+                                                    d="M9 14.996h3l8.5-8.5a2.121 2.121 0 0 0-3-3l-8.5 8.5v3Z"
+                                                ></path>
+                                                <path d="m16 5 3 3"></path>
+                                            </svg>
+                                            <p class="font-basic text-2xl">
+                                                Edit
+                                            </p>
+                                        </button>
+                                    {/if}
+                                {/if}
+
+                                {#if editMode && !showDetails}
+                                    <button
+                                        type="submit"
+                                        class="bg-green-500 pr-3 text-textColor h-12 col-start-3 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl"
+                                    >
+                                        <svg
+                                            width="28"
+                                            height="28"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                d="m21.5 5.5-13.063 13L2.5 12.59"
+                                            ></path>
+                                        </svg>
+                                        <p class="font-basic text-2xl">Add</p>
+                                    </button>
+                                {:else if editMode && showDetails}
+                                    <button
+                                        type="button"
+                                        class="bg-green-500 pr-3 text-textColor h-12 col-start-3 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl"
+                                        on:click={handleEdit}
+                                    >
+                                        <svg
+                                            width="28"
+                                            height="28"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                d="m21.5 5.5-13.063 13L2.5 12.59"
+                                            ></path>
+                                        </svg>
+                                        <p class="font-basic text-2xl">
+                                            Confirm
+                                        </p>
+                                    </button>
+                                {/if}
                             </div>
                         </form>
                     </div>
