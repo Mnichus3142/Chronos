@@ -132,6 +132,7 @@
     const exitView = () => {
         editId = 0;
         showDetails = false;
+        editMode = true;
         taskName = "";
         taskStart = "";
         taskEnd = "";
