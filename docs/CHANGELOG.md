@@ -1,5 +1,5 @@
 ## V 1.0 - in progress:
-- Fully functional today's tasks
+- Fully functional today's tasks ✔
 - Month view allowing you to see individual days with their assigned tasks
 - Functional settings
 - Sharing notes with other people
