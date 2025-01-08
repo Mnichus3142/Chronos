@@ -41,9 +41,8 @@
             goto("/");
         }
 
-        mode = "SET";
-
         createTimeTable("24");
+        handleDatabaseSync();
 
         load = true;
     });
@@ -87,6 +86,7 @@
             tasks = taskProvider.getTasks();
             handleDatabaseSync();
             tasks = [...tasks];
+            console.log(tasks);
         }
     }
 
@@ -118,6 +118,7 @@
             taskColor,
             taskText,
         );
+        handleDatabaseSync();
         exitView();
         tasks = [...tasks];
     };
@@ -125,6 +126,7 @@
     const handleRemove = () => {
         taskProvider.removeTask(editId);
         tasks = taskProvider.getTasks();
+        handleDatabaseSync();
         exitView();
         tasks = [...tasks];
     };
@@ -144,39 +146,53 @@
     const handleDatabaseSync = async () => {
         let listActual = Array.from(tasks);
         listActual = JSON.stringify(listActual);
+        let day = date.toISOString();
 
-        // let data = {
-        //     listActual,
-        //     mode,
-        // };
+        let data = {
+            listActual,
+            mode,
+            day,
+        };
 
-        // try {
-        //     const response = await fetch("/api/cryptoProvidersForTodayTasks/", {
-        //         method: "POST",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //         },
-        //         body: JSON.stringify(data),
-        //     });
+        try {
+            const response = await fetch("/api/cryptoProvidersForTodayTasks/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
 
-        //     if (response.ok) {
-        //         const responseData = await response.json();
+            if (response.ok) {
+                const responseData = await response.json();
 
-        //         if (mode === "GET") {
-        //             if (responseData.decryptedMessage !== undefined) {
-        //                 const toBeSwapped = JSON.parse(
-        //                     responseData.decryptedMessage,
-        //                 );
-        //                 tasks = toBeSwapped;
-        //                 tasks = [...tasks];
-        //             }
+                if (mode == "GET") {
+                    if (responseData.decryptedMessage !== undefined) {
+                        const toBeSwapped = JSON.parse(
+                            responseData.decryptedMessage,
+                        );
+                        for (let i = 0; i < toBeSwapped.length; i++) {
+                            taskProvider.addTask(
+                                toBeSwapped[i].task.title,
+                                toBeSwapped[i].task.description,
+                                toBeSwapped[i].task.startHour,
+                                toBeSwapped[i].task.endHour,
+                                toBeSwapped[i].task.backgroundColor,
+                                toBeSwapped[i].task.textColor,
+                                toBeSwapped[i].date,
+                            );
+                        }
 
-        //             mode = "SET";
-        //         }
-        //     }
-        // } catch (error) {
-        //     console.error("Error:", error);
-        // }
+                        tasks = taskProvider.getTasks();
+                        tasks = [...tasks];
+                    }
+
+                    mode = "SET";
+                }
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
 
         return 0;
     };
@@ -211,7 +227,8 @@
                     <!-- Tasks -->
                     {#each tasks as task}
                         <button
-                            class="p-1 rounded absolute left-16 right-4 grid justify-center place-items-center shadow-lg"
+                            class="p-1 rounded absolute left-16 right-4 grid justify-center place-items-center shadow-lg hover:scale-105
+                            transition"
                             style="top: {task.task.start}px; height: {task.task
                                 .duration}px; background-color: {task.task
                                 .backgroundColor}; color: {task.task
@@ -348,7 +365,7 @@
                                 {#if showDetails}
                                     <button
                                         type="button"
-                                        class="bg-red-500 pr-3 text-textColor h-12 col-start-1 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl"
+                                        class="bg-red-500 pr-3 text-textColor h-12 col-start-1 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl hover:scale-110 transition"
                                         on:click={handleRemove}
                                     >
                                         <svg
@@ -379,7 +396,7 @@
 
                                     <button
                                         type="button"
-                                        class="bg-red-600 pr-3 text-textColor h-12 row-start-1 col-start-2 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl"
+                                        class="bg-red-600 pr-3 text-textColor h-12 row-start-1 col-start-2 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl hover:scale-110 transition"
                                         on:click={exitView}
                                     >
                                         <svg
@@ -407,7 +424,7 @@
                                     {#if !editMode}
                                         <button
                                             type="button"
-                                            class="bg-orange-500 pr-3 text-textColor h-12 col-start-3 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl"
+                                            class="bg-orange-500 pr-3 text-textColor h-12 col-start-3 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl hover:scale-110 transition"
                                             on:click={editTask}
                                         >
                                             <svg
@@ -439,7 +456,7 @@
                                 {#if editMode && !showDetails}
                                     <button
                                         type="submit"
-                                        class="bg-green-500 pr-3 text-textColor h-12 col-start-3 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl"
+                                        class="bg-green-500 pr-3 text-textColor h-12 col-start-3 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl hover:scale-110 transition"
                                     >
                                         <svg
                                             width="28"
@@ -461,7 +478,7 @@
                                 {:else if editMode && showDetails}
                                     <button
                                         type="button"
-                                        class="bg-green-500 pr-3 text-textColor h-12 col-start-3 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl"
+                                        class="bg-green-500 pr-3 text-textColor h-12 col-start-3 grid grid-cols-2 grid-rows-1 place-items-center justify-center rounded-xl shadow-xl hover:scale-110 transition"
                                         on:click={handleEdit}
                                     >
                                         <svg

@@ -11,7 +11,9 @@
         src={logo}
         style="height: 400px; border-radius: 40%;"
     />
-    <h1 style="width: 400px; margin-left: 20px;">
-        {$page.status}: {$page.Error}
-    </h1>
+    {#if $page.status === 500}
+        <h1 style="width: 400px; margin-left: 20px;">
+            {$page.status}: There was a problem while connecting to database
+        </h1>
+    {/if}
 </div>

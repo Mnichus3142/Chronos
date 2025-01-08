@@ -30,7 +30,7 @@ export const POST = async ({ cookies, request }) => {
   });
 
   try {
-    const { listActual, mode } = await request.json();
+    const { listActual, mode, day } = await request.json();
 
     await client.connect();
 
@@ -56,21 +56,21 @@ export const POST = async ({ cookies, request }) => {
       const rowsCount = res.rows.length;
 
       if (rowsCount === 0) {
+        //TODO: I made a mistake in database, so there is lv as column name, i will change it in the future
         insertQuery =
-          "INSERT INTO tasks (user_id, task_day, encryptedlist, iv) VALUES ($1, $2, $4, $3)";
+          "INSERT INTO tasks (user_id, task_day, encryptedlist, lv) VALUES ($1, $2, $4, $3)";
         insertParams = [id, day, iv, encryptedMessage];
         await client.query(insertQuery, insertParams);
       } else {
         insertQuery =
-          "UPDATE tasks SET encryptedlist = $1, iv = $2 WHERE user_id = $3";
+          "UPDATE tasks SET encryptedlist = $1, lv = $2 WHERE user_id = $3";
         insertParams = [encryptedMessage, iv, id];
         await client.query(insertQuery, insertParams);
       }
 
       return json({ status: 200 });
     } else if (mode == "GET") {
-      insertQuery =
-        "SELECT iv, encryptedlist FROM quicktodo WHERE user_id = $1";
+      insertQuery = "SELECT lv, encryptedlist FROM tasks WHERE user_id = $1";
       insertParams = [id];
       res = await client.query(insertQuery, insertParams);
 
@@ -78,7 +78,7 @@ export const POST = async ({ cookies, request }) => {
 
       if (res.rows.length !== 0) {
         const values = res.rows[0];
-        const iv = values.iv;
+        const iv = values.lv;
         const encryptedMessage = values.encryptedlist;
 
         decryptedMessage = decryptMessage(
@@ -87,6 +87,8 @@ export const POST = async ({ cookies, request }) => {
           iv,
           publicKey,
         );
+
+        console.log(decryptedMessage);
       }
 
       return json({ decryptedMessage: decryptedMessage, status: 200 });
