@@ -87,8 +87,6 @@ export const POST = async ({ cookies, request }) => {
           iv,
           publicKey,
         );
-
-        console.log(decryptedMessage);
       }
 
       return json({ decryptedMessage: decryptedMessage, status: 200 });
