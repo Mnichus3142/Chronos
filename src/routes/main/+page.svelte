@@ -2,6 +2,7 @@
     import Banner from "$lib/components/banner.svelte";
     import { onMount, onDestroy } from "svelte";
     import { goto } from "$app/navigation";
+    import Loader from "$lib/components/loader.svelte";
 
     // State of page
     let load = false;
@@ -45,14 +46,12 @@
         } else {
             window.addEventListener("load", initPage);
         }
+        getRandomString();
 
         handleDatabaseSync();
-
-        getRandomString();
     });
 
     function initPage() {
-        load = true;
         handleChangelog();
     }
 
@@ -186,6 +185,7 @@
             console.error("Error:", error);
         }
 
+        load = true;
         return 0;
     };
 
@@ -363,4 +363,6 @@
             </div>
         </main>
     </body>
+{:else}
+    <Loader></Loader>
 {/if}

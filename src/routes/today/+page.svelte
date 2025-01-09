@@ -6,6 +6,7 @@
     import Notification from "$lib/components/notification.svelte";
     import { createNotification } from "$lib/functions/createNotification.js";
     import Confirmation from "$lib/components/confirmation.svelte";
+    import Loader from "$lib/components/loader.svelte";
 
     let showConfirmation = false;
     let result = null;
@@ -47,8 +48,6 @@
 
         createTimeTable("24");
         handleDatabaseSync();
-
-        load = true;
     });
 
     function createTimeTable(format) {
@@ -222,6 +221,7 @@
             console.error("Error:", error);
         }
 
+        load = true;
         return 0;
     };
 </script>
@@ -547,4 +547,6 @@
             </div>
         </div>
     </body>
+{:else}
+    <Loader></Loader>
 {/if}

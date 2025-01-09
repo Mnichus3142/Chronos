@@ -2,8 +2,6 @@
     export let onConfirm;
     export let onCancel;
 
-    const button = "";
-
     function handleConfirm() {
         onConfirm();
     }

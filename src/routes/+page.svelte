@@ -7,6 +7,7 @@
     import { validate } from "$lib/functions/passwordValidate.js";
     import { goto } from "$app/navigation";
     import { createNotification } from "$lib/functions/createNotification.js";
+    import Loader from "$lib/components/loader.svelte";
     import "../app.css";
 
     // Tailwind
@@ -595,5 +596,7 @@
                 </div>
             </div>
         </div>
+    {:else}
+        <Loader></Loader>
     {/if}
 </body>
