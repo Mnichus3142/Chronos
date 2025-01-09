@@ -5,6 +5,33 @@
     import { fade } from "svelte/transition";
     import Notification from "$lib/components/notification.svelte";
     import { createNotification } from "$lib/functions/createNotification.js";
+    import Confirmation from "$lib/components/Confirmation.svelte";
+
+    let showConfirmation = false;
+    let result = null;
+
+    function openConfirmation() {
+        return new Promise((resolve) => {
+            showConfirmation = true;
+
+            function handleConfirm() {
+                showConfirmation = false;
+                resolve(true);
+            }
+
+            function handleCancel() {
+                showConfirmation = false;
+                resolve(false);
+            }
+
+            result = { handleConfirm, handleCancel };
+        });
+    }
+
+    async function handleClick() {
+        const userConfirmed = await openConfirmation();
+        console.log("User confirmed:", userConfirmed);
+    }
 
     let timeArr = [];
     let tasks = [];
@@ -86,7 +113,6 @@
             tasks = taskProvider.getTasks();
             handleDatabaseSync();
             tasks = [...tasks];
-            console.log(tasks);
         }
     }
 
@@ -199,6 +225,17 @@
 </script>
 
 {#if load}
+    <button on:click={handleClick}>Otwórz okno</button>
+
+    {#if showConfirmation}
+        <Confirmation
+            onConfirm={result.handleConfirm}
+            onCancel={result.handleCancel}
+        >
+            <h1>Czy na pewno?</h1>
+            <p>Potwierdź swoją decyzję.</p>
+        </Confirmation>
+    {/if}
     <Notification></Notification>
     {#if removePrompt}
         <div></div>
