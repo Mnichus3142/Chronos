@@ -5,33 +5,10 @@
     import { fade } from "svelte/transition";
     import Notification from "$lib/components/notification.svelte";
     import { createNotification } from "$lib/functions/createNotification.js";
-    import Confirmation from "$lib/components/Confirmation.svelte";
+    import Confirmation from "$lib/components/confirmation.svelte";
 
     let showConfirmation = false;
     let result = null;
-
-    function openConfirmation() {
-        return new Promise((resolve) => {
-            showConfirmation = true;
-
-            function handleConfirm() {
-                showConfirmation = false;
-                resolve(true);
-            }
-
-            function handleCancel() {
-                showConfirmation = false;
-                resolve(false);
-            }
-
-            result = { handleConfirm, handleCancel };
-        });
-    }
-
-    async function handleClick() {
-        const userConfirmed = await openConfirmation();
-        console.log("User confirmed:", userConfirmed);
-    }
 
     let timeArr = [];
     let tasks = [];
@@ -149,12 +126,14 @@
         tasks = [...tasks];
     };
 
-    const handleRemove = () => {
-        taskProvider.removeTask(editId);
-        tasks = taskProvider.getTasks();
-        handleDatabaseSync();
-        exitView();
-        tasks = [...tasks];
+    const handleRemove = async () => {
+        if (await handleOpenConfirmation()) {
+            taskProvider.removeTask(editId);
+            tasks = taskProvider.getTasks();
+            handleDatabaseSync();
+            exitView();
+            tasks = [...tasks];
+        }
     };
 
     const exitView = () => {
@@ -167,6 +146,29 @@
         taskDescription = "";
         taskColor = "#000000";
         taskText = "#ffffff";
+    };
+
+    const openConfirmation = () => {
+        return new Promise((resolve) => {
+            showConfirmation = true;
+
+            function handleConfirm() {
+                showConfirmation = false;
+                resolve(true);
+            }
+
+            function handleCancel() {
+                showConfirmation = false;
+                resolve(false);
+            }
+
+            result = { handleConfirm, handleCancel };
+        });
+    };
+
+    const handleOpenConfirmation = async () => {
+        const userConfirmed = await openConfirmation();
+        return userConfirmed;
     };
 
     const handleDatabaseSync = async () => {
@@ -225,23 +227,23 @@
 </script>
 
 {#if load}
-    <button on:click={handleClick}>Otwórz okno</button>
-
     {#if showConfirmation}
-        <Confirmation
-            onConfirm={result.handleConfirm}
-            onCancel={result.handleCancel}
-        >
-            <h1>Czy na pewno?</h1>
-            <p>Potwierdź swoją decyzję.</p>
-        </Confirmation>
+        <div class="z-50">
+            <Confirmation
+                onConfirm={result.handleConfirm}
+                onCancel={result.handleCancel}
+            >
+                <h1>Do you really want to delete this task?</h1>
+                <p>This operation is irreversible.</p>
+            </Confirmation>
+        </div>
     {/if}
     <Notification></Notification>
     {#if removePrompt}
         <div></div>
     {/if}
     <body class="h-screen flex flex-col">
-        <div class="row-start-1">
+        <div class="row-start-1 z-40">
             <Banner></Banner>
         </div>
 
