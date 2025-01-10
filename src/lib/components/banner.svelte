@@ -19,14 +19,14 @@
 <div
     class="grid h-24 m-0 p-3 w-full bg-gradient-to-r from-primary to-third content-center overflow-y-hidden overflow-x-hidden static"
 >
-    <img src={logo} alt="Logo" style="height: 60px" />
+    <img src={logo} alt="Logo" style="height: 100px" />
     <p
-        class="text-textColor text-2xl font-basic float-left absolute top-4 left-20"
+        class="text-textColor text-2xl font-basic float-left absolute top-4 left-28"
     >
-        Time Rush
+        Chronos
     </p>
     <p
-        class="text-mottoColor text-l font-motto float-left absolute top-12 left-20"
+        class="text-mottoColor text-l font-motto float-left absolute top-12 left-28"
     >
         Your time is like gold to us
     </p>
