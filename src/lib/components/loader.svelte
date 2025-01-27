@@ -12,7 +12,7 @@
     });
 </script>
 
-<div class="absolute w-screen h-screen flex justify-center items-center text-third">
+<div class="absolute left-0 top-0 z-50 w-screen h-screen flex justify-center items-center text-third bg-background">
     <div class="font-basic relative -top-24 text-2xl">
         <p>
             Loading...

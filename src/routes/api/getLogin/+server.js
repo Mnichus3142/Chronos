@@ -40,7 +40,7 @@ export const POST = async ({ cookies }) => {
     res = await client.query(insertQuery, insertParams);
     const username = res.rows[0].username;
 
-    return json({ message: `${username}`, status: 200 });
+    return json({ message: `${username}`, id: `${user_id}`,  status: 200 });
   } catch (error) {
     return json({ message: "Error connecting to database", status: 203 });
   } finally {

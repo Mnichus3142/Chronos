@@ -1,5 +1,5 @@
 export class Task {
-  constructor(title, description, start, end, backgroundColor, textColor) {
+  constructor(title, description, start, end, backgroundColor, textColor, completed = false) {
     this.title = title;
     this.description = description;
     this.start = this.timeToPixels(start);
@@ -9,6 +9,7 @@ export class Task {
     this.duration = this.end - this.start;
     this.backgroundColor = backgroundColor;
     this.textColor = textColor;
+    this.completed = completed;
   }
 
   timeToPixels(time) {
@@ -31,6 +32,10 @@ export class Task {
     return this.getTask();
   }
 
+  toggleComplete() {
+    this.completed = !this.completed;
+  }
+
   getTask() {
     return {
       title: this.title,
@@ -42,6 +47,7 @@ export class Task {
       duration: this.duration,
       backgroundColor: this.backgroundColor,
       textColor: this.textColor,
+      completed: this.completed,
     };
   }
 }

@@ -12,7 +12,7 @@
 </script>
 
 <div
-    class="z-50 absolute flex justify-center place-items-center w-screen h-screen bg-gray-900 bg-opacity-40 backdrop-blur-sm font-basic"
+    class="z-50 absolute top-0 left-0 flex justify-center place-items-center w-screen h-screen bg-gray-900 bg-opacity-40 backdrop-blur-sm font-basic"
 >
     <div class="bg-background w-fit h-fit p-6 text-3xl rounded-lg shadow-lg">
         <slot class="mb-5"></slot>

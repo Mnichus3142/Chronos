@@ -3,9 +3,46 @@
     import { onMount, onDestroy } from "svelte";
     import { goto } from "$app/navigation";
     import Loader from "$lib/components/loader.svelte";
+    import Chart from 'chart.js/auto';
+    import colors from "$lib/colors.js";
 
     // State of page
     let load = false;
+    let chartInstance;
+    let chartCanvas;
+    let chart;
+
+    $: if (chart && chartData) {
+        chart.data = chartData;
+        chart.update();
+    }
+
+    // Chart data
+    let chartData = {
+        labels: ['Done', 'Need to be done'],
+        datasets: [{
+            data: [1, 1],
+            backgroundColor: [
+                colors.shadow.accent,
+                colors.shadow.primary
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    // Chart options
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    color: colors.shadow.primary
+                }
+            }
+        }
+    };
 
     // Changelog data
     let changelogData = new Array();
@@ -28,7 +65,7 @@
     // Mode of the connection to database
     let mode;
 
-    onMount(() => {
+    onMount(async () => {
         const cookie_value = document.cookie
             .split("; ")
             .find((row) => row.startsWith("sessionId="))
@@ -49,6 +86,28 @@
         getRandomString();
 
         handleDatabaseSync();
+        handleTodayTasksDone()
+
+        load = true;
+
+        await new Promise(resolve => setTimeout(resolve, 0));
+        
+        if (chartCanvas && load) {
+            chart = new Chart(chartCanvas, {
+                type: 'pie',
+                data: chartData,
+                options: chartOptions
+            });
+        }
+    });
+
+    onDestroy(() => {
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+        if (chart) {
+            chart.destroy();
+        }
     });
 
     function initPage() {
@@ -185,9 +244,25 @@
             console.error("Error:", error);
         }
 
-        load = true;
         return 0;
     };
+
+    const handleTodayTasksDone = async () => {
+        try {
+            const response = await fetch("/api/getTodaysTasksDone/", {
+                method: "POST",
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                chartData.datasets[0].data = [responseData.counterCompleted, responseData.counterAll - responseData.counterCompleted];
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+
+        load = true;
+    }
 
     const handleChangelog = async () => {
         try {
@@ -345,7 +420,12 @@
             </div>
             <!-- TODO: How much you have done today and how much should be done -->
             <div class="col-start-3 row-start-1 grid grid-cols-1 grid-rows-2">
-                <div class="row-start-1"></div>
+                <div class="row-start-1 p-4 border-2 border-solid border-gray-500 rounded-xl m-4 flex flex-col justify-center place-items-center">
+                    <p class="text-3xl text-center mb-5">Today tasks</p>
+                    <div>
+                        <canvas bind:this={chartCanvas}></canvas>
+                    </div>
+                </div>
                 <div
                     class="row-start-2 flex flex-col justify-center place-items-center"
                 >
