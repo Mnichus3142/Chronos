@@ -1,5 +1,8 @@
-// const colors = require("./src/lib/colors.js");
+// Import the colors module
 import colors from "./src/lib/colors.js";
+
+// Import the tailwind-scrollbar plugin
+import tailwindScrollbar from "tailwind-scrollbar";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -16,7 +19,6 @@ export default {
         textColor: colors.shadow.textColor,
         mottoColor: colors.shadow.mottoColor,
       },
-
       fontFamily: {
         basic: ["Rubik", "sans-serif"],
         motto: ["Playwrite HR Lijeva", "cursive"],
@@ -24,5 +26,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwind-scrollbar")],
+  plugins: [tailwindScrollbar], // Use the imported plugin
 };
