@@ -4,9 +4,12 @@ import colors from "./src/lib/colors.js";
 // Import the tailwind-scrollbar plugin
 import tailwindScrollbar from "tailwind-scrollbar";
 
+// Import fluid for tailwind
+import fluid, { extract } from 'fluid-tailwind'
+
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./src/app.html", "./src/**/*.{svelte,js}"],
+  content: ["./src/app.html", "./src/**/*.{svelte,js}", extract],
   theme: {
     extend: {
       colors: {
@@ -26,5 +29,5 @@ export default {
       },
     },
   },
-  plugins: [tailwindScrollbar], // Use the imported plugin
+  plugins: [tailwindScrollbar, fluid]
 };
