@@ -14,6 +14,11 @@
             goto("/");
         }
     });
+
+    let currentDate = new Date();
+    let currentMonth = currentDate.getMonth();
+    let currentYear = currentDate.getFullYear();
+    let day = currentDate.getDate();
 </script>
 
 <Notification></Notification>
@@ -22,7 +27,7 @@
         <Banner></Banner>
     </div>
 
-    <div class="flex-1 w-screen max-h-full p-6">
-        <DisplayTasks date={new Date()}></DisplayTasks>
+    <div class="flex-1 w-screen h-[85vh] p-6">
+        <DisplayTasks date={new Date(currentYear, currentMonth, day + 1)}></DisplayTasks>
     </div>
 </body>

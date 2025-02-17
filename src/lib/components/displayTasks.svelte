@@ -30,6 +30,7 @@
     let timelineContainer;
 
     const taskProvider = new TasksProvider();
+    taskProvider.clearTasks();
 
     const label =
         "text-2xl text-third m-3 relative transition-all select-none grid justify-center place-items-center relative left-0 right-0 ml-auto mr-auto";
@@ -43,10 +44,18 @@
         handleDatabaseSync();
 
         const updateCurrentTime = () => {
-            const [hours, minutes] = date.toDateString().split(":").map(Number);
-            const pixelHours = date.getHours() * 112 + 8 + date.getMinutes() * (9.3 / 5) + 25;
-
-            currentTime = pixelHours;
+            const now = new Date();
+            const adjustedDate = new Date(date);
+            adjustedDate.setDate(adjustedDate.getDate() - 1);
+            
+            const isToday = adjustedDate.toDateString() === now.toDateString();
+            
+            if (isToday) {
+                const pixelHours = now.getHours() * 112 + 8 + now.getMinutes() * (9.3 / 5) + 25;
+                currentTime = pixelHours;
+            } else {
+                currentTime = null;
+            }
         };
         
         updateCurrentTime();
@@ -257,19 +266,21 @@
 
 {#if load}
     <div
-        class="flex-1 grid justify-center place-items-center border-gray-500 border-2 rounded-lg grid-cols-[2fr_5fr] grid-rows-1"
+        class="flex-1 grid justify-center place-items-center border-gray-500 border-2 rounded-lg grid-cols-[2fr_5fr] grid-rows-1 bg-background h-full"
     >
         <!-- Timeline Container -->
         <div
             bind:this={timelineContainer}
-            class="col-start-2 row-start-1 w-full max-h-[85vh] overflow-x-auto overflow-y-scroll p-2 relative scrollbar scrollbar-thumb-third scrollbar-track-transparent"
+            class="col-start-2 row-start-1 w-full max-h-full overflow-x-auto overflow-y-scroll p-2 relative scrollbar scrollbar-thumb-third scrollbar-track-transparent"
         >
             <div class="relative" style="min-width: calc(200px * {columnCount} + 60px)">
                 <!-- Red timelinne -->
-                <div 
-                    class="absolute w-full border-t-2 border-red-500 z-10"
-                    style="top: calc({currentTime}px - 8px);"
-                ></div>
+                {#if currentTime !== null}
+                    <div 
+                        class="absolute w-full border-t-2 border-red-500 z-10"
+                        style="top: calc({currentTime}px - 8px);"
+                    ></div>
+                {/if}
 
                 <!-- Timeline -->
                 {#each timeArr as block}

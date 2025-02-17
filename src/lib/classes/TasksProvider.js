@@ -112,4 +112,9 @@ export class TasksProvider {
              taskDate.getFullYear() === date.getFullYear();
     });
   }
+
+  clearTasks() {
+    this.tasks = [];
+    this.nextId = 0;
+  }
 }

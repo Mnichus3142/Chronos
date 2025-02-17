@@ -50,8 +50,8 @@ export const POST = async ({ cookies, request }) => {
         privateKey,
       );
 
-      insertQuery = "SELECT * FROM tasks WHERE user_id = $1";
-      insertParams = [id];
+      insertQuery = "SELECT * FROM tasks WHERE user_id = $1 AND task_day = $2";
+      insertParams = [id, day];
       res = await client.query(insertQuery, insertParams);
       const rowsCount = res.rows.length;
 
@@ -63,15 +63,15 @@ export const POST = async ({ cookies, request }) => {
         await client.query(insertQuery, insertParams);
       } else {
         insertQuery =
-          "UPDATE tasks SET encryptedlist = $1, lv = $2 WHERE user_id = $3";
-        insertParams = [encryptedMessage, iv, id];
+          "UPDATE tasks SET encryptedlist = $1, lv = $2 WHERE user_id = $3 AND task_day = $4";
+        insertParams = [encryptedMessage, iv, id, day];
         await client.query(insertQuery, insertParams);
       }
 
       return json({ status: 200 });
     } else if (mode == "GET") {
-      insertQuery = "SELECT lv, encryptedlist FROM tasks WHERE user_id = $1";
-      insertParams = [id];
+      insertQuery = "SELECT lv, encryptedlist FROM tasks WHERE user_id = $1 AND task_day = $2";
+      insertParams = [id, day];
       res = await client.query(insertQuery, insertParams);
 
       let decryptedMessage;
