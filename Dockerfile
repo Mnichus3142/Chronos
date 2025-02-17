@@ -8,7 +8,7 @@ COPY --chown=node:node package*.json ./
 
 USER node
 
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 COPY --chown=node:node . .
 
