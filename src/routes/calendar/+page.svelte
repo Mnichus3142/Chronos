@@ -3,7 +3,7 @@
     import Notification from "$lib/components/notification.svelte";
     import DisplayTasks from "$lib/components/displayTasks.svelte";
     import { onMount } from "svelte";
-    import { scale } from 'svelte/transition';
+    import { scale, crossfade } from 'svelte/transition';
 
     let currentDate = new Date();
     let currentMonth = currentDate.getMonth();
@@ -93,14 +93,39 @@
     }); 
     
     const animationDuration = 200;
+
+    const [send, receive] = crossfade({
+        duration: 400,
+        fallback(node, params) {
+            return {
+                duration: 400,
+                css: t => `
+                    backdrop-filter: blur(${t * 5}px);
+                    background-opacity: ${t * 0.4};
+                `
+            };
+        }
+    });
 </script>
+
+<style>
+    .calendar-tasks-backdrop {
+        backdrop-filter: blur(5px);
+        background-color: rgba(17, 24, 39, 0.4);
+    }
+</style>
 
 <Notification />
 
 {#if selectedDate && isModalOpen}
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <div class="absolute z-50 flex justify-center place-items-center w-screen h-screen bg-opacity-40 backdrop-blur-sm" on:click|self={closeModal}>
+    <div 
+        class="absolute z-50 flex justify-center place-items-center w-screen h-screen calendar-tasks-backdrop" 
+        on:click|self={closeModal}
+        in:receive={{key: 'calendar-tasks'}}
+        out:send={{key: 'calendar-tasks'}}
+    >
         <div 
             transition:scale={{
                 duration: animationDuration,
@@ -110,7 +135,7 @@
             class="scale-90 w-full h-full flex justify-center place-items-center"
             on:click|self={closeModal}
         >
-            <DisplayTasks date={selectedDate} isToday={false}/>
+            <DisplayTasks date={selectedDate}/>
         </div>
     </div>
 {/if}

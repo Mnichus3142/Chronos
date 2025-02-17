@@ -5,15 +5,33 @@
     import "../../app.css";
     import { createNotification } from "$lib/functions/createNotification.js";
     import Notification from "$lib/components/notification.svelte";
+    import Settings from "./settings.svelte";
+    import { scale, slide, crossfade } from 'svelte/transition';
+
+    const [send, receive] = crossfade({
+        duration: 400,
+        fallback(node, params) {
+            return {
+                duration: 400,
+                css: t => `
+                    backdrop-filter: blur(${t * 5}px);
+                    background-opacity: ${t * 0.4};
+                `
+            };
+        }
+    });
 
     // Tailwind
-    const button = "grid grid-cols-2 grid-rows-1 text-background";
+    const button = "flex justify-center items-center gap-2";
     const svg = "col-start-1";
-    const paragraph = "col-start-2 font-basic text-xl relative top-2";
+    const paragraph = "font-basic text-xl";
 
     // Variables
     let isActive = false;
     let login = "";
+
+    // Settings
+    let settingsEnabled = false;
 
     // Menu strings
     const strings = [
@@ -83,7 +101,6 @@
         });
         const json = await response.json();
         login = json.message;
-        
     }
 
     function getRandomString() {
@@ -108,10 +125,54 @@
         }
     }
 
+    function displaySettings () {
+        settingsEnabled = true;
+    }
+
+    function hideSettings () {
+        settingsEnabled = false;
+    }
+
+    let animationDuration = 200;
+
     getRandomString();
     getLogin();
 </script>
 
+<style>
+    .menu-backdrop {
+        backdrop-filter: blur(5px);
+        background-color: rgba(17, 24, 39, 0.4);
+    }
+
+    .settings-backdrop {
+        backdrop-filter: blur(5px);
+        background-color: rgba(17, 24, 39, 0.4);
+    }
+</style>
+
+{#if settingsEnabled}
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div 
+        class="fixed top-0 left-0 w-screen h-screen z-[70] settings-backdrop flex justify-center place-items-center"
+        on:click|self={hideSettings}
+        in:receive={{key: 'settings'}}
+        out:send={{key: 'settings'}}
+    >
+        <div 
+            transition:scale={{
+                duration: animationDuration,
+                start: 0,
+                opacity: 1
+            }}
+            class="scale-90 flex justify-center place-items-center w-3/4 h-5/6"
+            on:click|self={hideSettings}
+        >
+            <Settings />
+        </div>
+    </div>
+{/if}
 <Notification></Notification>
 <div class="cursor-pointer">
     <button on:click={() => handleButton()}>
@@ -149,10 +210,18 @@
 </div>
 
 {#if isActive}
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div
-        class="fixed inset-0 w-screen h-screen bg-gray-900 bg-opacity-40 backdrop-blur-sm flex justify-center items-center z-10"
+        class="fixed inset-0 w-screen h-screen flex justify-center items-center z-10 menu-backdrop" 
+        on:click|self={handleButton}
+        in:receive={{key: 'menu'}}
+        out:send={{key: 'menu'}}
     >
-        <div class="absolute right-0 w-80 h-screen bg-primary">
+        <div 
+            class="absolute right-0 w-80 h-screen bg-primary"
+            transition:slide={{duration: 400, axis: 'x'}}
+        >
             <div class="relative top-20 pl-6 w-80">
                 <p class="font-basic text-6xl text-background">{actual}</p>
                 <p
@@ -188,7 +257,7 @@
                                     d="M9 21v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6"
                                 ></path>
                             </svg>
-                            <p class="{paragraph} -left-[44px]">Dashboard</p>
+                            <p class="{paragraph}">Dashboard</p>
                         </button>
                     </li>
                     <li class="mb-4">
@@ -218,7 +287,7 @@
                                 <path d="M9 17h.01"></path>
                                 <path d="m12 16 1 1 3-3"></path>
                             </svg>
-                            <p class="{paragraph} -left-[50px]">Today tasks</p>
+                            <p class="{paragraph} -left-[50px]">Today&nbsp;tasks</p>
                         </button>
                     </li>
                     <li class="mb-4">
@@ -250,7 +319,7 @@
                         </button>
                     </li>
                     <li class="mb-4">
-                        <button class={button}>
+                        <button class={button} on:click={displaySettings}>
                             <svg
                                 width="46"
                                 height="46"
@@ -276,7 +345,7 @@
             </div>
             <button
                 on:click={handleLogout}
-                class="grid grid-cols-2 grid-rows-1 absolute bottom-6 left-1/3 text-red-600 border-2 border-solid border-red-600 rounded-xl p-3 hover:scale-110 hover:bg-red-600 hover:text-background transition-all"
+                class="flex justify-center place-items-center gap-2 w-40 absolute bottom-6 left-1/3 text-red-600 border-2 border-solid border-red-600 rounded-xl p-3 hover:scale-110 hover:bg-red-600 hover:text-background transition-all"
             >
                 <svg
                     width="46"
@@ -297,7 +366,7 @@
                     <path d="m18 15 3-3-3-3"></path>
                 </svg>
                 <p
-                    class="col-start-2 row-start-1 relative top-2 font-basic text-xl"
+                    class="font-basic text-xl"
                 >
                     Logout
                 </p>
