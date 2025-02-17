@@ -100,7 +100,7 @@
 {#if selectedDate && isModalOpen}
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <div class="z-50 flex justify-center place-items-center w-screen h-screen bg-opacity-40 backdrop-blur-sm" on:click|self={closeModal}>
+    <div class="absolute z-50 flex justify-center place-items-center w-screen h-screen bg-opacity-40 backdrop-blur-sm" on:click|self={closeModal}>
         <div 
             transition:scale={{
                 duration: animationDuration,

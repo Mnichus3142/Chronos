@@ -1,28 +1,20 @@
 import { error, json } from "@sveltejs/kit";
 import pkg from "pg";
 const { Client } = pkg;
-import fs from "fs/promises";
-import path from "path";
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const POST = async ({ cookies }) => {
-  // Get connection params
-  const filePath = path.resolve("src/connectionParameters.json");
-  const fileContent = await fs.readFile(filePath, "utf8");
-  const data = JSON.parse(fileContent);
-
   // Create client
   const client = new Client({
-    user: data.user,
-    host: data.host,
-    database: data.database,
-    password: data.password,
-    port: data.port,
-    ssl:
-      data.ssl && data.ssl.ca
-        ? {
-            ca: data.ssl.ca,
-          }
-        : false,
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_DATABASE,
+    password: process.env.DB_PASS,
+    port: process.env.DB_PORT,
+    ssl:process.env.SSL_ENABLED ? {
+        ca: process.env.SSL_CA,
+      }: false,
   });
 
   try {

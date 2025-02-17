@@ -3,30 +3,23 @@ import {
   decryptMessage,
 } from "../../../lib/functions/cryptoProviders.js";
 import { error, json } from "@sveltejs/kit";
-import path from "path";
-import fs from "fs/promises";
+import dotenv from 'dotenv';
 import pkg from "pg";
 const { Client } = pkg;
 
-export const POST = async ({ cookies, request }) => {
-  // Get connection params
-  const filePath = path.resolve("src/connectionParameters.json");
-  const fileContent = await fs.readFile(filePath, "utf8");
-  const data = JSON.parse(fileContent);
+dotenv.config();
 
+export const POST = async ({ cookies, request }) => {
   // Create client
   const client = new Client({
-    user: data.user,
-    host: data.host,
-    database: data.database,
-    password: data.password,
-    port: data.port,
-    ssl:
-      data.ssl && data.ssl.ca
-        ? {
-            ca: data.ssl.ca,
-          }
-        : false,
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_DATABASE,
+    password: process.env.DB_PASS,
+    port: process.env.DB_PORT,
+    ssl:process.env.SSL_ENABLED ? {
+        ca: process.env.SSL_CA,
+      }: false,
   });
 
   try {
