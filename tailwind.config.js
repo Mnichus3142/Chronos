@@ -1,6 +1,3 @@
-// Import the colors module
-import colors from "./src/lib/colors.js";
-
 // Import the tailwind-scrollbar plugin
 import tailwindScrollbar from "tailwind-scrollbar";
 
@@ -13,14 +10,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: colors.shadow.primary,
-        secondary: colors.shadow.secondary,
-        third: colors.shadow.secondary,
-        accent: colors.shadow.accent,
-        accentNotActive: colors.shadow.accentNotActive,
-        background: colors.shadow.background,
-        textColor: colors.shadow.textColor,
-        mottoColor: colors.shadow.mottoColor,
+        primary: 'var(--color-primary)',
+        secondary: 'var(--color-secondary)',
+        third: 'var(--color-third)',
+        accent: 'var(--color-accent)',
+        accentNotActive: 'var(--color-accent-not-active)',
+        background: 'var(--color-background)',
+        textColor: 'var(--color-text)',
+        mottoColor: 'var(--color-motto)',
       },
       fontFamily: {
         basic: ["Rubik", "sans-serif"],

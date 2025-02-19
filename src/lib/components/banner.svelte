@@ -17,7 +17,7 @@
 </script>
 
 <div
-    class="grid h-24 m-0 p-3 w-full bg-gradient-to-r from-primary to-third content-center overflow-y-hidden overflow-x-hidden static"
+    class="grid h-24 m-0 p-3 w-full bg-gradient-to-r from-primary to-secondary content-center overflow-y-hidden overflow-x-hidden static"
 >
     <img src={logo} alt="Logo" style="height: 100px" />
     <p

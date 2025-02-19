@@ -33,9 +33,10 @@ export const POST = async ({ cookies, request }) => {
     let insertParams = [cookie_value];
     let res = await client.query(insertQuery, insertParams);
     const id = res.rows[0].user_id;
+    const day = new Date();
 
-    insertQuery = "SELECT lv, encryptedlist FROM tasks WHERE user_id = $1";
-    insertParams = [id];
+    insertQuery = "SELECT lv, encryptedlist FROM tasks WHERE user_id = $1 AND task_day = $2";
+    insertParams = [id, day];
     res = await client.query(insertQuery, insertParams);
 
     let decryptedMessage;

@@ -39,8 +39,8 @@
     }
 </script>
 
-<div class="flex flex-col justify-center place-items-center text-2xl">
-    <p class="text-3xl mb-4">Feedback form</p>
+<div class="flex flex-col justify-center place-items-center text-2xl font-basic">
+    <p class="text-3xl mb-4">Feedback report</p>
     
     <textarea class="w-full h-96 border-2 border-gray-500 p-2 resize-none rounded-lg" placeholder="Describe your problem here..." bind:value={bugMessage}></textarea>
 
