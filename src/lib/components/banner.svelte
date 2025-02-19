@@ -25,7 +25,7 @@
 </div>
 
 {#if isOnCorrectPage}
-    <div class="absolute top-5 left-[45%]">
+    <div class="absolute top-5 left-[45%] hidden lg:block">
         <Clock></Clock>
     </div>
     <div class="absolute top-6 right-4 text-background z-50">

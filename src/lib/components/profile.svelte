@@ -227,7 +227,7 @@
         out:send={{key: 'menu'}}
     >
         <div 
-            class="absolute right-0 w-80 h-screen bg-primary"
+            class="absolute right-0 w-full md:w-80 h-screen bg-primary"
             transition:slide={{duration: 400, axis: 'x'}}
         >
             <div class="relative top-20 pl-6 w-80">

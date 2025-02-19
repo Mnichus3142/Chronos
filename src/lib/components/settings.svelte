@@ -35,8 +35,8 @@
 </script>
 
 <div class="bg-background w-full h-full justify-center items-center rounded-lg shadow-xl border-2 border-gray-500 grid
-grid-cols-[2fr_5fr] grid-rows-1 text-gray-800 font-basic">
-    <div class="border-r-2 border-gray-500 h-full flex justify-center items-center text-3xl">
+grid-cols-[2fr_5fr] text-gray-800 font-basic">
+    <div class="border-r-2 border-gray-500 h-full flex justify-center items-center text-3xl row-start-1">
         <ul class="w-full h-full">
             {#each tabs as tab}
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
