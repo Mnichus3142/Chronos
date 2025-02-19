@@ -283,11 +283,8 @@
 </script>
 
 {#if load}
-    <body class="flex flex-col min-h-screen">
-        <div class="row-start-1">
-            <Banner></Banner>
-        </div>
-        <main class="flex-1 grid grid-cols-3 grid-rows-1 w-screen h-full bg-background">
+    <body class="">
+        <main class="grid grid-cols-3 grid-rows-1 w-screen h-full bg-background">
             <!-- Quick TODO list -->
             <div class="col-start-1 row-start-1 p-3">
                 <div

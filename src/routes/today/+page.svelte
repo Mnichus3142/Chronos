@@ -1,7 +1,6 @@
 <script>
     import Banner from "$lib/components/banner.svelte";
     import { onMount } from "svelte";
-    import Notification from "$lib/components/notification.svelte";
     import DisplayTasks from "../../lib/components/displayTasks.svelte";    
 
     onMount(() => {
@@ -21,13 +20,8 @@
     let day = currentDate.getDate();
 </script>
 
-<Notification></Notification>
-<body class="h-screen flex flex-col bg-background">
-    <div class="row-start-1 z-40">
-        <Banner></Banner>
-    </div>
-
-    <div class="flex-1 w-screen h-[85vh] p-6">
+<body class="bg-background">
+    <div class="w-screen h-[90vh] p-6">
         <DisplayTasks date={new Date(currentYear, currentMonth, day + 1)}></DisplayTasks>
     </div>
 </body>

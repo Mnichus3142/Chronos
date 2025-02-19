@@ -1,6 +1,4 @@
 <script>
-    import Banner from "$lib/components/banner.svelte";
-    import Notification from "$lib/components/notification.svelte";
     import { onMount, onDestroy } from "svelte";
     import { clickOutside } from "$lib/functions/clickOutside.js";
     import { sha256 } from "$lib/functions/sha256.js";
@@ -295,12 +293,10 @@
     };
 </script>
 
-<body class="flex flex-col min-h-screen">
+<body>
     {#if load}
-        <Banner></Banner>
-        <Notification></Notification>
         <div
-            class="bg-background w-full flex-1 flex justify-center place-items-center relative"
+            class="bg-background w-full h-full flex justify-center place-items-center relative"
         >
             <div
                 class="grid grid-cols-2 bg-gradient-to-b from-secondary to-primary rounded-[14px] p-2 h-[800px] w-[80%]"

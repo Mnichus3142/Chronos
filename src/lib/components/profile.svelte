@@ -4,7 +4,6 @@
     import { page } from "$app/stores";
     import "../../app.css";
     import { createNotification } from "$lib/functions/createNotification.js";
-    import Notification from "$lib/components/notification.svelte";
     import Settings from "./settings.svelte";
     import { scale, slide, crossfade } from 'svelte/transition';
 
@@ -52,20 +51,26 @@
     let canGoCalendar = true;
 
     onMount(() => {
-        if ($page.url.pathname == "/main" || $page.url.pathname == "/main/") {
+        // Reset flags
+        canGoDashboard = true;
+        canGoTodayTasks = true;
+        canGoCalendar = true;
+
+        // Set appropriate flag based on current path
+        if ($page.url.pathname === "/main") {
             canGoDashboard = false;
-        } else if (
-            $page.url.pathname == "/today" ||
-            $page.url.pathname == "/today/"
-        ) {
+        } else if ($page.url.pathname === "/today") {
             canGoTodayTasks = false;
-        } else if (
-            $page.url.pathname == "/calendar" ||
-            $page.url.pathname == "/calendar/"
-        ) {
+        } else if ($page.url.pathname === "/calendar") {
             canGoCalendar = false;
         }
     });
+
+    $: {
+        canGoDashboard = $page.url.pathname !== "/main";
+        canGoTodayTasks = $page.url.pathname !== "/today";
+        canGoCalendar = $page.url.pathname !== "/calendar";
+    }
 
     const handleLogout = async (event) => {
         event.preventDefault();
@@ -115,10 +120,13 @@
 
     function handleGoTo(where) {
         if (where == "dashboard" && canGoDashboard) {
+            handleButton();
             goto("/main");
         } else if (where == "today" && canGoTodayTasks) {
+            handleButton();
             goto("/today");
         } else if (where == "calendar" && canGoCalendar) {
+            handleButton();
             goto("/calendar");
         } else {
             createNotification("You are already here", "info");
@@ -173,7 +181,7 @@
         </div>
     </div>
 {/if}
-<Notification></Notification>
+
 <div class="cursor-pointer">
     <button on:click={() => handleButton()}>
         <svg

@@ -2,18 +2,10 @@
     import Profile from "$lib/components/profile.svelte";
     import Clock from "$lib/components/clock.svelte";
     import logo from "$lib/img/logo1.png";
-    import { onMount } from "svelte";
     import { page } from "$app/stores";
     import "../../app.css";
 
-    // Check if you are on landing page, if you are then do not show profile
-    let isOnCorrectPage = false;
-
-    onMount(() => {
-        if ($page.url.pathname != "/") {
-            isOnCorrectPage = true;
-        }
-    });
+    $: isOnCorrectPage = $page.url.pathname !== "/";
 </script>
 
 <div
@@ -36,7 +28,7 @@
     <div class="absolute top-5 left-[45%]">
         <Clock></Clock>
     </div>
-    <div class="absolute top-6 right-4 text-background">
+    <div class="absolute top-6 right-4 text-background z-50">
         <Profile></Profile>
     </div>
 {/if}

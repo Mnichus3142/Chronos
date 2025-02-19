@@ -1,6 +1,5 @@
 <script>
     import Banner from "$lib/components/banner.svelte";
-    import Notification from "$lib/components/notification.svelte";
     import DisplayTasks from "$lib/components/displayTasks.svelte";
     import { onMount } from "svelte";
     import { scale, crossfade } from 'svelte/transition';
@@ -115,13 +114,11 @@
     }
 </style>
 
-<Notification />
-
 {#if selectedDate && isModalOpen}
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div 
-        class="absolute z-50 flex justify-center place-items-center w-screen h-screen calendar-tasks-backdrop" 
+        class="absolute top-0 left-0 z-50 flex justify-center place-items-center w-screen h-screen calendar-tasks-backdrop" 
         on:click|self={closeModal}
         in:receive={{key: 'calendar-tasks'}}
         out:send={{key: 'calendar-tasks'}}
@@ -140,11 +137,7 @@
     </div>
 {/if}
 
-<body class="h-screen flex flex-col absolute z-20">
-    <div class="row-start-1 z-40">
-        <Banner />
-    </div>
-
+<body class="z-20">
     <div class="w-screen h-[calc(100vh-4rem)] max-h-full p-6 flex justify-center bg-background">
         <div class="w-full shadow-xl p-6 flex flex-col h-full border-gray-500 border-2 rounded-lg">
             <div class="text-center mb-4 flex justify-center items-center gap-4">
