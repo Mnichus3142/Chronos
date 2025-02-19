@@ -33,9 +33,9 @@
     taskProvider.clearTasks();
 
     const label =
-        "text-2xl text-third m-3 relative transition-all select-none grid justify-center place-items-center relative left-0 right-0 ml-auto mr-auto";
+        "text-2xl text-textInvertedColor m-3 relative transition-all select-none grid justify-center place-items-center relative left-0 right-0 ml-auto mr-auto";
     const input =
-        "border-b-2 text-lg focus:outline-none transition-all bg-transparent text-center mt-2 relative left-0 right-0 ml-auto mr-auto";
+        "border-b-2 text-lg focus:outline-none text-textInvertedColor transition-all bg-transparent text-center mt-2 relative left-0 right-0 ml-auto mr-auto";
 
     $: columnCount = tasks.length > 0 ? tasks[0].columnCount : 1;
 
@@ -449,7 +449,7 @@
                     <!-- Description -->
                     <div class="w-full h-2/3 relative top-12">
                         <div
-                            class="text-3xl text-third m-3 transition-all select-none ml-auto mr-auto w-full h-full text-center"
+                            class="text-3xl m-3 text-textInvertedColor transition-all select-none ml-auto mr-auto w-full h-full text-center"
                         >
                             <label for="description" class="relative">
                                 Description
@@ -459,7 +459,7 @@
                                     disabled={!editMode}
                                     id="description"
                                     type="text"
-                                    class="border-2 rounded-md w-full h-full box-border text-lg resize-none p-3"
+                                    class="border-2 rounded-md w-full h-full box-border text-lg resize-none p-3 bg-background"
                                     placeholder="Here goes description"
                                     bind:value={taskDescription}
                                 ></textarea>

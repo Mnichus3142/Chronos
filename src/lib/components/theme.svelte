@@ -25,6 +25,7 @@
         root.style.setProperty('--color-accent-not-active', themeColors.accentNotActive);
         root.style.setProperty('--color-background', themeColors.background);
         root.style.setProperty('--color-text', themeColors.textColor);
+        root.style.setProperty('--color-text-inverted-color', themeColors.textInvertedColor);
         root.style.setProperty('--color-motto', themeColors.mottoColor);
     }
 

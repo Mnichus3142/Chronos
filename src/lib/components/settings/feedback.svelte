@@ -42,7 +42,7 @@
 <div class="flex flex-col justify-center place-items-center text-2xl font-basic">
     <p class="text-3xl mb-4">Feedback report</p>
     
-    <textarea class="w-full h-96 border-2 border-gray-500 p-2 resize-none rounded-lg" placeholder="Describe your problem here..." bind:value={bugMessage}></textarea>
+    <textarea class="w-full h-96 border-2 border-gray-500 p-2 resize-none rounded-lg bg-background" placeholder="Describe your problem here..." bind:value={bugMessage}></textarea>
 
     <button on:click={submitBug} class="mt-4 border-2 border-gray-500 p-2 rounded-lg hover:bg-accent hover:text-white hover:border-accent transition-all flex">
         <svg width="34" height="34" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="mr-2">

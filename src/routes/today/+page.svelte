@@ -22,7 +22,7 @@
 </script>
 
 <Notification></Notification>
-<body class="h-screen flex flex-col">
+<body class="h-screen flex flex-col bg-background">
     <div class="row-start-1 z-40">
         <Banner></Banner>
     </div>

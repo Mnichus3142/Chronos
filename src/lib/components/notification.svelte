@@ -31,7 +31,7 @@
                 style="width: {item.width}%"
             ></div>
             <p
-                class="w-full h-32 mb-8 text-black bg-background rounded-md shadow-md grid justify-center place-items-center"
+                class="w-full h-32 mb-8 text-textInvertedColor bg-background rounded-md shadow-md grid justify-center place-items-center"
             >
                 {item.prompt}
             </p>

@@ -17,6 +17,7 @@ export default {
         accentNotActive: 'var(--color-accent-not-active)',
         background: 'var(--color-background)',
         textColor: 'var(--color-text)',
+        textInvertedColor: 'var(--color-text-inverted-color)',
         mottoColor: 'var(--color-motto)',
       },
       fontFamily: {

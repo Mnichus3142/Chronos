@@ -4,7 +4,6 @@
     import { goto } from "$app/navigation";
     import Loader from "$lib/components/loader.svelte";
     import Chart from 'chart.js/auto';
-    import colors from "$lib/colors.js";
 
     // State of page
     let load = false;
@@ -12,33 +11,28 @@
     let chartCanvas;
     let chart;
 
-    $: if (chart && chartData) {
-        chart.data = chartData;
-        chart.update();
-    }
-
     // Chart data
-    let chartData = {
+    $: chartData = {
         labels: ['Done', 'Need to be done'],
         datasets: [{
             data: [1, 1],
             backgroundColor: [
-                colors.shadow.accent,
-                colors.shadow.primary
+                '#14A684',
+                '#0D1B2A'
             ],
             borderWidth: 1
         }]
     };
 
     // Chart options
-    const chartOptions = {
+    $: chartOptions = {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
             legend: {
                 position: 'bottom',
                 labels: {
-                    color: colors.shadow.primary
+                    color: '#0D1B2A'
                 }
             }
         }
@@ -293,7 +287,7 @@
         <div class="row-start-1">
             <Banner></Banner>
         </div>
-        <main class="flex-1 grid grid-cols-3 grid-rows-1 w-screen h-full">
+        <main class="flex-1 grid grid-cols-3 grid-rows-1 w-screen h-full bg-background">
             <!-- Quick TODO list -->
             <div class="col-start-1 row-start-1 p-3">
                 <div
@@ -316,7 +310,7 @@
                                 >
                                     <input
                                         type="text"
-                                        class="col-start-1 row-start-1 w-full h-full p-4 focus:outline-none"
+                                        class="col-start-1 row-start-1 w-full h-full p-4 focus:outline-none bg-background"
                                         placeholder="Write your task here..."
                                         on:keydown={(event) =>
                                             handleEnter(element.id, event)}

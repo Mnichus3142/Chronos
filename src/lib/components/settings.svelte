@@ -1,8 +1,7 @@
 <script>
     import Feedback from './settings/feedback.svelte';
     import ThemeToogler from './settings/themeToogler.svelte';
-    import { scale, fade } from 'svelte/transition';
-    import { crossfade } from 'svelte/transition';
+    import { scale } from 'svelte/transition';
     
     let animationDuration = 200;
 
@@ -40,7 +39,9 @@ grid-cols-[2fr_5fr] grid-rows-1 text-gray-800 font-basic">
     <div class="border-r-2 border-gray-500 h-full flex justify-center items-center text-3xl">
         <ul class="w-full h-full">
             {#each tabs as tab}
-                <li class="cursor-pointer w-full h-20 flex justify-center items-center border-b-2 border-gray-500">
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                <li class="cursor-pointer w-full h-20 flex justify-center items-center border-b-2 border-gray-500" on:click={() => selectedTab = tab}>
                     <button on:click={() => selectedTab = tab} class="flex justify-center items-center">
                         <span class="relative top-1 mr-2">{@html tab.icon}</span> {tab.name}
                     </button>

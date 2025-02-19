@@ -145,7 +145,7 @@
         <Banner />
     </div>
 
-    <div class="w-screen h-[calc(100vh-4rem)] max-h-full p-6 flex justify-center">
+    <div class="w-screen h-[calc(100vh-4rem)] max-h-full p-6 flex justify-center bg-background">
         <div class="w-full shadow-xl p-6 flex flex-col h-full border-gray-500 border-2 rounded-lg">
             <div class="text-center mb-4 flex justify-center items-center gap-4">
                 <button 
@@ -181,7 +181,7 @@
                 {#each calendarDays as day}
                     <button 
                         class="h-full grow text-center p-4 border-gray-200 border-2 flex items-center justify-center rounded-lg transition-all
-                        {day === currentDate.getDate() && currentMonth === currentDate.getMonth() ? 'bg-accent ' : ''}
+                        {day === currentDate.getDate() && currentMonth === currentDate.getMonth() ? 'bg-third ' : ''}
                         {day !== null ? 'hover:bg-secondary hover:text-white cursor-pointer' : 'cursor-default'}"
                         on:click={() => handleDayClick(day)}
                     >

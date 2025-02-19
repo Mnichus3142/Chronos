@@ -551,7 +551,7 @@
                 </div>
 
                 <div
-                    class="z-30 row-start-1 col-start-2 relative bg-gradient-to-t from-primary to-third transition-all flex justify-center items-center flex-col {slide} duration-200"
+                    class="z-30 row-start-1 col-start-2 relative bg-gradient-to-t from-primary to-secondary transition-all flex justify-center items-center flex-col {slide} duration-200"
                     bind:clientWidth={width}
                     bind:this={element}
                 >
